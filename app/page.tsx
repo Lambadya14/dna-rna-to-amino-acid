@@ -206,7 +206,8 @@ interface ConversionResult {
 // React functional component for the DNA/RNA sequence converter
 const CodonConverter: React.FC = () => {
   const [dnaSequence, setDnaSequence] = useState("");
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState<JSX.Element | null>(null);
+
   const [aminoAcidCountResult, setAminoAcidCountResult] = useState<any | null>(
     null
   );
@@ -302,7 +303,7 @@ const CodonConverter: React.FC = () => {
     // Check if the sequence is valid
     if (!isValidSequence(preprocessedSequence, isDNA)) {
       setResult(
-        "Invalid sequence. Please provide a valid DNA or RNA sequence."
+        <> Invalid sequence. Please provide a valid DNA or RNA sequence.</>
       );
       setAminoAcidCountResult(null);
       return;
@@ -346,7 +347,11 @@ const CodonConverter: React.FC = () => {
         : stopCodon;
 
     setResult(
-      `Amino Acid Sequence: ${aminoAcidSequence}\nStop Codon: ${stopCodonOutput}`
+      <>
+        Amino Acid Sequence: <strong>{aminoAcidSequence}</strong>
+        <br />
+        Stop Codon: <strong></strong>
+      </>
     );
     setAminoAcidCountResult(countResult);
   };
@@ -387,8 +392,10 @@ const CodonConverter: React.FC = () => {
 
   // React component JSX
   return (
-    <div className="p-4">
-      <h1>DNA/RNA Sequence Converter</h1>
+    <div className="mx-5">
+      <h1 className="font-bold text-[50px] text-center">
+        DNA/RNA Sequence Converter
+      </h1>
       <label>Choose Sequence Type:</label>
       <br />
       <label>
@@ -414,24 +421,25 @@ const CodonConverter: React.FC = () => {
       <label>Upload File (.txt): </label>
       <br />
       <input
-        className="border-2 border-black rounded px-2 my-3"
+        className="border-2 border-black rounded my-3"
         type="file"
         accept=".txt"
         onChange={handleFileUpload}
       />
 
-      <br />
       <button
-        className="border-2 border-black rounded w-[90px]"
+        className="border-2 border-black rounded w-[90px] mx-2 h-[34px]"
         onClick={handleConvertClick}
       >
         Convert
       </button>
 
-      <div>
-        <h2>Result:</h2>
-        <pre>{result}</pre>
-      </div>
+      {result && (
+        <div className="text-justify">
+          <h2>Result:</h2>
+          <p>{result}</p>
+        </div>
+      )}
 
       {aminoAcidCountResult && (
         <div>

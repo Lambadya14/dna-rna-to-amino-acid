@@ -350,7 +350,8 @@ const CodonConverter: React.FC = () => {
       <>
         Amino Acid Sequence: <strong>{aminoAcidSequence}</strong>
         <br />
-        Stop Codon: <strong></strong>
+        Stop Codon:
+        <strong>{stopCodonOutput}</strong>
       </>
     );
     setAminoAcidCountResult(countResult);

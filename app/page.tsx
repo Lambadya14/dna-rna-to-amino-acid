@@ -1,7 +1,12 @@
 "use client";
 // Import necessary modules
-import React, { useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { useDropzone } from "react-dropzone";
+import Slider from "react-slick";
+
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 // Sample codon map data
 const codonMap = [
@@ -212,6 +217,33 @@ const CodonConverter: React.FC = () => {
     null
   );
   const [isDNA, setIsDNA] = useState(true);
+  const [isLazyLoading, setIsLazyLoading] = useState(false);
+
+  const resetLazyLoading = () => {
+    setIsLazyLoading(false);
+  };
+
+  // Event handler for file drop
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+
+      try {
+        setIsLazyLoading(true); // Set lazy loading state to true
+        const fileContent = await readFileContent(file);
+        setDnaSequence(fileContent);
+
+        // Reset lazy loading state after 3 seconds
+        setTimeout(resetLazyLoading, 2000);
+      } catch (error) {
+        console.error("Error reading file:", error);
+        setIsLazyLoading(false); // Reset lazy loading state in case of an error
+      }
+    }
+  }, []);
+
+  // UseDropzone hook configuration
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   // Function to preprocess DNA/RNA sequence (remove spaces and paragraphs)
   const preprocessNucleicAcidSequence = (sequence: string): string => {
@@ -281,8 +313,10 @@ const CodonConverter: React.FC = () => {
 
     if (file) {
       try {
+        setIsLazyLoading(true); // Set lazy loading state to true
         const fileContent = await readFileContent(file);
         setDnaSequence(fileContent);
+        setTimeout(resetLazyLoading, 2000);
       } catch (error) {
         console.error("Error reading file:", error);
       }
@@ -325,37 +359,42 @@ const CodonConverter: React.FC = () => {
       stopCodon !== "TAG" &&
       stopCodon !== "UAA" &&
       stopCodon !== "UAG"
-        ? `${stopCodon} - ${
+        ? ` ${stopCodon} - ${
             codonMap.find((item) =>
               isDNA
                 ? item.dna.includes(stopCodon)
                 : item.rna.includes(stopCodon)
             )?.name
-          } - ${
+          }(  ${
             codonMap.find((item) =>
               isDNA
                 ? item.dna.includes(stopCodon)
                 : item.rna.includes(stopCodon)
             )?.abbreviation3
-          } - ${
+          } / ${
             codonMap.find((item) =>
               isDNA
                 ? item.dna.includes(stopCodon)
                 : item.rna.includes(stopCodon)
             )?.abbreviation1
-          }`
+          } ) `
         : stopCodon;
 
     setResult(
-      <>
-        Amino Acid Sequence: <strong>{aminoAcidSequence}</strong>
+      <div className="break-words">
+        <p>Amino Acid Sequence:</p>
+        <strong>{aminoAcidSequence}</strong>
         <br />
-        Stop Codon:
+        <p className="mt-3"> Stop Codon:</p>
         <strong>{stopCodonOutput}</strong>
-      </>
+      </div>
     );
     setAminoAcidCountResult(countResult);
   };
+  // useEffect to trigger automatic conversion when dnaSequence is updated
+  useEffect(() => {
+    handleConvertClick(); // Trigger the conversion
+  }, [dnaSequence, isDNA]);
 
   // Function to get the "about" information based on the amino acid abbreviation
   const getAboutInformation = (abbreviation: string) => {
@@ -363,6 +402,18 @@ const CodonConverter: React.FC = () => {
       (item) => item.abbreviation1 === abbreviation
     );
     return aminoAcid?.about || "About information not available.";
+  };
+  const getAbbr3 = (abbreviation: string) => {
+    const aminoAcid = codonMap.find(
+      (item) => item.abbreviation1 === abbreviation
+    );
+    return aminoAcid?.abbreviation3 || "About information not available.";
+  };
+  const getSequenceName = (abbreviation: string) => {
+    const aminoAcid = codonMap.find(
+      (item) => item.abbreviation1 === abbreviation
+    );
+    return aminoAcid?.name || "About information not available.";
   };
 
   // Function to read file content
@@ -393,58 +444,50 @@ const CodonConverter: React.FC = () => {
 
   // React component JSX
   return (
-    <div className="mx-5">
-      <h1 className="font-bold text-[50px] text-center">
-        DNA/RNA Sequence Converter
-      </h1>
-      <label>Choose Sequence Type:</label>
-      <br />
-      <label>
-        <input
-          type="radio"
-          value="dna"
-          checked={isDNA}
-          onChange={handleRadioChange}
-        />{" "}
-        DNA (A, C, T, dan G)
-      </label>
-      <br />
-      <label>
-        <input
-          type="radio"
-          value="rna"
-          checked={!isDNA}
-          onChange={handleRadioChange}
-        />{" "}
-        RNA (A, C, U, dan G)
-      </label>
-      <br />
-      <label>Upload File (.txt): </label>
-      <br />
-      <input
-        className="border-2 border-black rounded my-3"
-        type="file"
-        accept=".txt"
-        onChange={handleFileUpload}
-      />
-
-      <button
-        className="border-2 border-black rounded w-[90px] mx-2 h-[34px]"
-        onClick={handleConvertClick}
-      >
-        Convert
-      </button>
-
-      {result && (
-        <div className="text-justify">
-          <h2>Result:</h2>
-          <p>{result}</p>
+    <div className="bg-[#f5f5f5]">
+      {isLazyLoading ? ( // Check lazy loading state
+        <div className="flex items-center justify-center m-auto h-screen">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-dasharray="15"
+              stroke-dashoffset="15"
+              stroke-linecap="round"
+              stroke-width="2"
+              d="M12 3C16.9706 3 21 7.02944 21 12"
+            >
+              <animate
+                fill="freeze"
+                attributeName="stroke-dashoffset"
+                dur="0.3s"
+                values="15;0"
+              />
+              <animateTransform
+                attributeName="transform"
+                dur="1.5s"
+                repeatCount="indefinite"
+                type="rotate"
+                values="0 12 12;360 12 12"
+              />
+            </path>
+          </svg>
+          <p>Please wait.</p>
         </div>
-      )}
-
-      {aminoAcidCountResult && (
-        <div>
-          <h2>Amino Acid Count:</h2>
+      ) : aminoAcidCountResult ? (
+        <div className="p-5">
+          <h1 className="font-bold text-[35px] text-center">RESULT</h1>
+          {result && (
+            <div className="text-left">
+              <p>{result}</p>
+            </div>
+          )}
+          <h2 className="mt-3">Amino Acid Count:</h2>
           <BarChart
             width={500}
             height={300}
@@ -462,7 +505,7 @@ const CodonConverter: React.FC = () => {
             <XAxis dataKey="shortName" />
             <YAxis />
             <Tooltip
-              content={({ payload, label }) => {
+              content={({ payload }) => {
                 const aminoAcidInfo = payload?.[0]?.payload;
 
                 if (!aminoAcidInfo) {
@@ -503,13 +546,77 @@ const CodonConverter: React.FC = () => {
           {/* Display about information for each amino acid */}
           <div>
             <h2>About Amino Acids:</h2>
-            <ul>
+
+            <Slider>
               {Object.keys(aminoAcidCountResult).map((aminoAcid) => (
-                <li key={aminoAcid}>
-                  <strong>{aminoAcid}:</strong> {getAboutInformation(aminoAcid)}
-                </li>
+                <div key={aminoAcid} className="text-justify">
+                  <strong>
+                    {getSequenceName(aminoAcid)} ({getAbbr3(aminoAcid)}):
+                  </strong>
+                  {getAboutInformation(aminoAcid)}
+                </div>
               ))}
-            </ul>
+            </Slider>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div
+            {...getRootProps()}
+            className={`bg-[#f2f3f4]  ${
+              isDragActive ? "bg-gray-200" : ""
+            } h-full w-full`}
+            onClick={(e) => e.stopPropagation()} // Menghentikan propagasi klik agar tidak memicu DnD saat mengklik elemen ini
+          >
+            <div className="text-center h-screen flex flex-col justify-center items-center">
+              {" "}
+              <h1 className="font-bold text-[35px] text-center">
+                DNA/RNA Sequence Converter
+              </h1>
+              <div className="flex flex-col">
+                <label>Choose Sequence Type:</label>
+                <label>
+                  <input
+                    type="radio"
+                    value="dna"
+                    checked={isDNA}
+                    onChange={handleRadioChange}
+                  />{" "}
+                  DNA (A, C, T, dan G)
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    value="rna"
+                    checked={!isDNA}
+                    onChange={handleRadioChange}
+                  />{" "}
+                  RNA (A, C, U, dan G)
+                </label>
+              </div>
+              <br />
+              <div>
+                <input {...getInputProps()} />
+                <label
+                  htmlFor="fileInput"
+                  className="inline-flex rounded-md text-white   bg-[#8884d8] h-[80px] w-[300px] font-semibold text-[25px] text-center justify-center items-center hover:bg-[#5b58a1] "
+                >
+                  Select TXT File
+                </label>
+                <input
+                  id="fileInput"
+                  type="file"
+                  accept=".txt"
+                  onChange={handleFileUpload}
+                  style={{ display: "none" }}
+                />
+                <p className="mt-5">
+                  {isDragActive
+                    ? "Drop the file here"
+                    : "Or drop the file here"}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       )}

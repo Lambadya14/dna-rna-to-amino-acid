@@ -590,7 +590,7 @@ const CodonConverter: React.FC = () => {
           onClick={(e) => e.stopPropagation()} // Menghentikan propagasi klik agar tidak memicu DnD saat mengklik elemen ini
         >
           <div className="text-justify h-screen flex flex-col justify-center items-center">
-            <h1 className="font-bold text-[35px] text-justify">
+            <h1 className="font-bold text-[35px] text-center">
               DNA/RNA Sequence Converter
             </h1>
             <div className="flex flex-col">

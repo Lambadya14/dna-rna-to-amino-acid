@@ -480,85 +480,105 @@ const CodonConverter: React.FC = () => {
           <p>Please wait.</p>
         </div>
       ) : aminoAcidCountResult ? (
-        <div className="p-5">
-          <h1 className="font-bold text-[35px] text-center">RESULT</h1>
-          {result && (
-            <div className="text-left">
-              <p>{result}</p>
-            </div>
-          )}
-          <h2 className="mt-3">Amino Acid Count:</h2>
-          <BarChart
-            width={500}
-            height={300}
-            data={Object.entries(aminoAcidCountResult).map(
-              ([aminoAcid, count]) => ({
-                aminoAcid: `${
-                  codonMap.find((item) => item.abbreviation1 === aminoAcid)
-                    ?.name || aminoAcid
-                } (${aminoAcid})`,
-                shortName: aminoAcid,
-                count,
-              })
+        <>
+          <div className="p-5  flex flex-col items-center justify-center">
+            <button
+            
+              className="rounded-[20px] border-2 w-[40px] h-[40px] flex justify-center items-center hover:bg-[#b1a6da]"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="25"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M19 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42a.996.996 0 0 0-1.41 0l-6.59 6.59a.996.996 0 0 0 0 1.41l6.59 6.59a.996.996 0 1 0 1.41-1.41L7.83 13H19c.55 0 1-.45 1-1s-.45-1-1-1"
+                />
+              </svg>
+            </button>
+            <h1 className="font-bold text-[35px] text-center  ">RESULT</h1>
+            {result && (
+              <div className="text-center">
+                <p>{result}</p>
+              </div>
             )}
-          >
-            <XAxis dataKey="shortName" />
-            <YAxis />
-            <Tooltip
-              content={({ payload }) => {
-                const aminoAcidInfo = payload?.[0]?.payload;
+            <h2 className="mt-3">Amino Acid Count:</h2>
+            <BarChart
+              width={700}
+              height={400}
+              data={Object.entries(aminoAcidCountResult).map(
+                ([aminoAcid, count]) => ({
+                  aminoAcid: `${
+                    codonMap.find((item) => item.abbreviation1 === aminoAcid)
+                      ?.name || aminoAcid
+                  } (${aminoAcid})`,
+                  shortName: aminoAcid,
+                  count,
+                })
+              )}
+            >
+              <XAxis dataKey="shortName" />
+              <YAxis />
+              <Tooltip
+                content={({ payload }) => {
+                  const aminoAcidInfo = payload?.[0]?.payload;
 
-                if (!aminoAcidInfo) {
-                  return null;
-                }
+                  if (!aminoAcidInfo) {
+                    return null;
+                  }
 
-                const { aminoAcid, shortName, count } = aminoAcidInfo;
-                const aminoAcidData = codonMap.find(
-                  (item) => item.abbreviation1 === shortName
-                );
+                  const { aminoAcid, shortName, count } = aminoAcidInfo;
+                  const aminoAcidData = codonMap.find(
+                    (item) => item.abbreviation1 === shortName
+                  );
 
-                if (!aminoAcidData) {
-                  return null;
-                }
+                  if (!aminoAcidData) {
+                    return null;
+                  }
 
-                const fullAminoAcid = `${aminoAcidData.name} (${aminoAcidData.abbreviation3})`;
+                  const fullAminoAcid = `${aminoAcidData.name} (${aminoAcidData.abbreviation3})`;
 
-                return (
-                  <div className="custom-tooltip">
-                    <p>{`${fullAminoAcid}`}</p>
-                    <p>{`Count: ${count}`}</p>
-                  </div>
-                );
-              }}
-              wrapperStyle={{
-                background: "white",
-                padding: "10px",
-                borderRadius: "10px",
-                borderColor: "black",
-                borderWidth: "1px",
-                borderStyle: "solid",
-              }} // Tambahan style untuk background putih
-            />
+                  return (
+                    <div className="custom-tooltip">
+                      <p>{`${fullAminoAcid}`}</p>
+                      <p>{`Count: ${count}`}</p>
+                    </div>
+                  );
+                }}
+                wrapperStyle={{
+                  background: "white",
+                  padding: "10px",
+                  borderRadius: "10px",
+                  borderColor: "black",
+                  borderWidth: "1px",
+                  borderStyle: "solid",
+                }} // Tambahan style untuk background putih
+              />
 
-            <Legend />
-            <Bar dataKey="count" fill="#8884d8" />
-          </BarChart>
-          {/* Display about information for each amino acid */}
-          <div>
-            <h2>About Amino Acids:</h2>
+              <Legend />
+              <Bar dataKey="count" fill="#8884d8" />
+            </BarChart>
+            {/* Display about information for each amino acid */}
+          </div>
+          <div className="text-center w-[600px] mx-auto">
+            <h2 className="mb-4">About Amino Acids:</h2>
 
             <Slider>
               {Object.keys(aminoAcidCountResult).map((aminoAcid) => (
-                <div key={aminoAcid} className="text-justify">
-                  <strong>
-                    {getSequenceName(aminoAcid)} ({getAbbr3(aminoAcid)}):
-                  </strong>
-                  {getAboutInformation(aminoAcid)}
+                <div key={aminoAcid}>
+                  <p>
+                    <strong>
+                      {getSequenceName(aminoAcid)} ({getAbbr3(aminoAcid)})
+                    </strong>
+                  </p>
+                  <p>{getAboutInformation(aminoAcid)}</p>
                 </div>
               ))}
             </Slider>
           </div>
-        </div>
+        </>
       ) : (
         <div>
           <div
@@ -569,7 +589,6 @@ const CodonConverter: React.FC = () => {
             onClick={(e) => e.stopPropagation()} // Menghentikan propagasi klik agar tidak memicu DnD saat mengklik elemen ini
           >
             <div className="text-center h-screen flex flex-col justify-center items-center">
-              {" "}
               <h1 className="font-bold text-[35px] text-center">
                 DNA/RNA Sequence Converter
               </h1>
@@ -581,7 +600,7 @@ const CodonConverter: React.FC = () => {
                     value="dna"
                     checked={isDNA}
                     onChange={handleRadioChange}
-                  />{" "}
+                  />
                   DNA (A, C, T, dan G)
                 </label>
                 <label>
@@ -590,7 +609,7 @@ const CodonConverter: React.FC = () => {
                     value="rna"
                     checked={!isDNA}
                     onChange={handleRadioChange}
-                  />{" "}
+                  />
                   RNA (A, C, U, dan G)
                 </label>
               </div>

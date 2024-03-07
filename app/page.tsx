@@ -1,7 +1,15 @@
 "use client";
 // Import necessary modules
 import React, { useCallback, useState, useEffect } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import { useDropzone } from "react-dropzone";
 import Slider from "react-slick";
 
@@ -381,11 +389,12 @@ const CodonConverter: React.FC = () => {
         : stopCodon;
 
     setResult(
-      <div className="break-words">
-        <p>Amino Acid Sequence:</p>
-        <strong>{aminoAcidSequence}</strong>
-        <br />
-        <p className="mt-3"> Stop Codon:</p>
+      <div>
+        <p className="text-xl">Amino Acid Sequence:</p>
+        <p className=" break-words">
+          <strong>{aminoAcidSequence}</strong>
+        </p>
+        <p className="mt-3 text-xl">Stop Codon:</p>
         <strong>{stopCodonOutput}</strong>
       </div>
     );
@@ -481,11 +490,8 @@ const CodonConverter: React.FC = () => {
         </div>
       ) : aminoAcidCountResult ? (
         <>
-          <div className="p-5  flex flex-col items-center justify-center">
-            <button
-            
-              className="rounded-[20px] border-2 w-[40px] h-[40px] flex justify-center items-center hover:bg-[#b1a6da]"
-            >
+          <div className="p-5  ">
+            <button className="rounded-[20px] border-2 w-[40px] h-[40px] flex justify-center items-center hover:bg-[#b1a6da]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
@@ -499,72 +505,66 @@ const CodonConverter: React.FC = () => {
               </svg>
             </button>
             <h1 className="font-bold text-[35px] text-center  ">RESULT</h1>
-            {result && (
-              <div className="text-center">
-                <p>{result}</p>
-              </div>
-            )}
+            {result && <div className="text-justify px-5">{result}</div>}
             <h2 className="mt-3">Amino Acid Count:</h2>
-            <BarChart
-              width={700}
-              height={400}
-              data={Object.entries(aminoAcidCountResult).map(
-                ([aminoAcid, count]) => ({
-                  aminoAcid: `${
-                    codonMap.find((item) => item.abbreviation1 === aminoAcid)
-                      ?.name || aminoAcid
-                  } (${aminoAcid})`,
-                  shortName: aminoAcid,
-                  count,
-                })
-              )}
-            >
-              <XAxis dataKey="shortName" />
-              <YAxis />
-              <Tooltip
-                content={({ payload }) => {
-                  const aminoAcidInfo = payload?.[0]?.payload;
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart
+                data={Object.entries(aminoAcidCountResult).map(
+                  ([aminoAcid, count]) => ({
+                    aminoAcid: `${
+                      codonMap.find((item) => item.abbreviation1 === aminoAcid)
+                        ?.name || aminoAcid
+                    } (${aminoAcid})`,
+                    shortName: aminoAcid,
+                    count,
+                  })
+                )}
+              >
+                <XAxis dataKey="shortName" />
+                <YAxis />
+                <Tooltip
+                  content={({ payload }) => {
+                    const aminoAcidInfo = payload?.[0]?.payload;
 
-                  if (!aminoAcidInfo) {
-                    return null;
-                  }
+                    if (!aminoAcidInfo) {
+                      return null;
+                    }
 
-                  const { aminoAcid, shortName, count } = aminoAcidInfo;
-                  const aminoAcidData = codonMap.find(
-                    (item) => item.abbreviation1 === shortName
-                  );
+                    const { aminoAcid, shortName, count } = aminoAcidInfo;
+                    const aminoAcidData = codonMap.find(
+                      (item) => item.abbreviation1 === shortName
+                    );
 
-                  if (!aminoAcidData) {
-                    return null;
-                  }
+                    if (!aminoAcidData) {
+                      return null;
+                    }
 
-                  const fullAminoAcid = `${aminoAcidData.name} (${aminoAcidData.abbreviation3})`;
+                    const fullAminoAcid = `${aminoAcidData.name} (${aminoAcidData.abbreviation3})`;
 
-                  return (
-                    <div className="custom-tooltip">
-                      <p>{`${fullAminoAcid}`}</p>
-                      <p>{`Count: ${count}`}</p>
-                    </div>
-                  );
-                }}
-                wrapperStyle={{
-                  background: "white",
-                  padding: "10px",
-                  borderRadius: "10px",
-                  borderColor: "black",
-                  borderWidth: "1px",
-                  borderStyle: "solid",
-                }} // Tambahan style untuk background putih
-              />
-
-              <Legend />
-              <Bar dataKey="count" fill="#8884d8" />
-            </BarChart>
+                    return (
+                      <div className="custom-tooltip">
+                        <p>{`${fullAminoAcid}`}</p>
+                        <p>{`Count: ${count}`}</p>
+                      </div>
+                    );
+                  }}
+                  wrapperStyle={{
+                    background: "white",
+                    padding: "10px",
+                    borderRadius: "10px",
+                    borderColor: "black",
+                    borderWidth: "1px",
+                    borderStyle: "solid",
+                  }}
+                />
+                <Legend />
+                <Bar dataKey="count" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
             {/* Display about information for each amino acid */}
           </div>
-          <div className="text-center w-[600px] mx-auto">
+          <div className="text-left  px-5">
             <h2 className="mb-4">About Amino Acids:</h2>
-
             <Slider>
               {Object.keys(aminoAcidCountResult).map((aminoAcid) => (
                 <div key={aminoAcid}>
@@ -573,68 +573,66 @@ const CodonConverter: React.FC = () => {
                       {getSequenceName(aminoAcid)} ({getAbbr3(aminoAcid)})
                     </strong>
                   </p>
-                  <p>{getAboutInformation(aminoAcid)}</p>
+                  <p className="text-justify">
+                    {getAboutInformation(aminoAcid)}
+                  </p>
                 </div>
               ))}
             </Slider>
           </div>
         </>
       ) : (
-        <div>
-          <div
-            {...getRootProps()}
-            className={`bg-[#f2f3f4]  ${
-              isDragActive ? "bg-gray-200" : ""
-            } h-full w-full`}
-            onClick={(e) => e.stopPropagation()} // Menghentikan propagasi klik agar tidak memicu DnD saat mengklik elemen ini
-          >
-            <div className="text-center h-screen flex flex-col justify-center items-center">
-              <h1 className="font-bold text-[35px] text-center">
-                DNA/RNA Sequence Converter
-              </h1>
-              <div className="flex flex-col">
-                <label>Choose Sequence Type:</label>
-                <label>
-                  <input
-                    type="radio"
-                    value="dna"
-                    checked={isDNA}
-                    onChange={handleRadioChange}
-                  />
-                  DNA (A, C, T, dan G)
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    value="rna"
-                    checked={!isDNA}
-                    onChange={handleRadioChange}
-                  />
-                  RNA (A, C, U, dan G)
-                </label>
-              </div>
-              <br />
-              <div>
-                <input {...getInputProps()} />
-                <label
-                  htmlFor="fileInput"
-                  className="inline-flex rounded-md text-white   bg-[#8884d8] h-[80px] w-[300px] font-semibold text-[25px] text-center justify-center items-center hover:bg-[#5b58a1] "
-                >
-                  Select TXT File
-                </label>
+        <div
+          {...getRootProps()}
+          className={`bg-[#f2f3f4]  ${
+            isDragActive ? "bg-gray-200" : ""
+          } h-full w-full`}
+          onClick={(e) => e.stopPropagation()} // Menghentikan propagasi klik agar tidak memicu DnD saat mengklik elemen ini
+        >
+          <div className="text-justify h-screen flex flex-col justify-center items-center">
+            <h1 className="font-bold text-[35px] text-justify">
+              DNA/RNA Sequence Converter
+            </h1>
+            <div className="flex flex-col">
+              <label>Choose Sequence Type:</label>
+              <label>
                 <input
-                  id="fileInput"
-                  type="file"
-                  accept=".txt"
-                  onChange={handleFileUpload}
-                  style={{ display: "none" }}
+                  type="radio"
+                  value="dna"
+                  checked={isDNA}
+                  onChange={handleRadioChange}
                 />
-                <p className="mt-5">
-                  {isDragActive
-                    ? "Drop the file here"
-                    : "Or drop the file here"}
-                </p>
-              </div>
+                DNA (A, C, T, dan G)
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="rna"
+                  checked={!isDNA}
+                  onChange={handleRadioChange}
+                />
+                RNA (A, C, U, dan G)
+              </label>
+            </div>
+            <br />
+            <div>
+              <input {...getInputProps()} />
+              <label
+                htmlFor="fileInput"
+                className="inline-flex rounded-md text-white   bg-[#8884d8] h-[80px] w-[300px] font-semibold text-[25px] text-center justify-center items-center hover:bg-[#5b58a1] "
+              >
+                Select TXT File
+              </label>
+              <input
+                id="fileInput"
+                type="file"
+                accept=".txt"
+                onChange={handleFileUpload}
+                style={{ display: "none" }}
+              />
+              <p className="mt-5 text-center">
+                {isDragActive ? "Drop the file here" : "Or drop the file here"}
+              </p>
             </div>
           </div>
         </div>

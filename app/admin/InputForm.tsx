@@ -37,6 +37,7 @@ const InputForm: React.FC = () => {
   const [dynamicRNAInputs, setDynamicRNAInputs] = useState<string[]>([""]);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const handleDeleteConfirmation = (id: string) => {
     setDeletingItemId(id);
@@ -244,25 +245,22 @@ const InputForm: React.FC = () => {
 
   // EDIT
   const handleEdit = (id: string) => {
-    // Temukan data yang akan diedit berdasarkan ID
     const editedData = data.find((item) => item.id === id);
 
-    // Isi formulir dengan data yang akan diedit
     setFormValues({
       nama: editedData?.nama || "",
       abbr1: editedData?.abbr1 || "",
       abbr3: editedData?.abbr3 || "",
-      dna: "", // Kosongkan nilai dna
-      rna: "", // Kosongkan nilai rna
+      dna: "",
+      rna: "",
       abt: editedData?.abt || "",
     });
 
-    // Set ID yang sedang diedit
     setEditingId(id);
-
-    // Isi nilai dynamicDNAInputs dan dynamicRNAInputs dengan data yang akan diedit
-    setDynamicDNAInputs(editedData?.dna || [""]);
-    setDynamicRNAInputs(editedData?.rna || [""]);
+    setDynamicDNAInputs(editedData?.dna || []);
+    setDynamicRNAInputs(editedData?.rna || []);
+    setIsEditMode(true);
+    document.getElementById("submit-button")!.textContent = "Update";
   };
 
   //CANCEL EDIT
@@ -276,12 +274,11 @@ const InputForm: React.FC = () => {
       abt: "",
     });
 
-    // Clear dynamicDNAInputs and dynamicRNAInputs
     setDynamicDNAInputs([""]);
     setDynamicRNAInputs([""]);
-
-    // Exit edit mode if currently in edit mode
     setEditingId(null);
+    setIsEditMode(false);
+    document.getElementById("submit-button")!.textContent = "Submit";
   };
 
   //DELETE
@@ -335,19 +332,19 @@ const InputForm: React.FC = () => {
   return (
     <>
       <form className="flex flex-col px-5" onSubmit={handleFormSubmit}>
-        <label htmlFor="nama">Nama Asam Amino</label>
-        <input
-          className="border-2"
-          type="text"
-          id="nama"
-          value={formValues.nama}
-          onChange={handleInputChange}
-        />
-        <div className="flex ">
-          <div className="flex flex-col w-1/2 me-3">
+        <div className="flex justify-between">
+          <div className="w-1/2 flex flex-col me-3 font-semibold">
+            <label htmlFor="nama">Nama Asam Amino</label>
+            <input
+              className="border p-3 -2 rounded-lg mb-3"
+              type="text"
+              id="nama"
+              value={formValues.nama}
+              onChange={handleInputChange}
+            />
             <label htmlFor="abbr1">Singkatan 1</label>
             <input
-              className="border-2"
+              className="border p-3 -2 rounded-lg  mb-3"
               type="text"
               id="abbr1"
               maxLength={1}
@@ -357,20 +354,18 @@ const InputForm: React.FC = () => {
             />
             <label htmlFor="abbr3">Singkatan 3</label>
             <input
-              className="border-2"
+              className="border p-3 -2 rounded-lg  mb-3"
               type="text"
               id="abbr3"
               maxLength={3}
               value={formValues.abbr3}
               onChange={handleInputChange}
             />
-          </div>
-          <div className="flex flex-col w-1/2">
             <label htmlFor="dna">DNA (A, C, T, dan G)</label>
             {dynamicDNAInputs.map((input, index) => (
-              <div key={index} className="flex">
+              <div key={index} className="relative flex">
                 <input
-                  className="border-2"
+                  className="border p-3 -2 rounded-lg w-full "
                   type="text"
                   id={index.toString()}
                   value={input}
@@ -381,7 +376,7 @@ const InputForm: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleAddDynamicDNAInput}
-                    className="mx-2"
+                    className="absolute right-8 top-1/2 transform -translate-y-1/2 text-[30px]"
                   >
                     +
                   </button>
@@ -390,18 +385,21 @@ const InputForm: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleRemoveDynamicDNAInput(index)}
-                    className="mx-2"
+                    className="absolute right-16 top-1/2 transform -translate-y-1/2 text-[30px]"
                   >
                     -
                   </button>
                 )}
               </div>
             ))}
-            <label htmlFor="rna">RNA (A, C, U, dan G)</label>
+
+            <label htmlFor="rna" className="mt-3">
+              RNA (A, C, U, dan G)
+            </label>
             {dynamicRNAInputs.map((input, index) => (
-              <div key={index} className="flex">
+              <div key={index} className="relative flex">
                 <input
-                  className="border-2"
+                  className="border p-3 -2 rounded-lg w-full"
                   type="text"
                   id={index.toString()}
                   value={input}
@@ -412,7 +410,7 @@ const InputForm: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleAddDynamicRNAInput}
-                    className="mx-2"
+                    className="absolute right-8 top-1/2 transform -translate-y-1/2 text-[30px]"
                   >
                     +
                   </button>
@@ -421,7 +419,7 @@ const InputForm: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleRemoveDynamicRNAInput(index)}
-                    className="mx-2"
+                    className="absolute right-16 top-1/2 transform -translate-y-1/2 text-[30px]"
                   >
                     -
                   </button>
@@ -429,80 +427,86 @@ const InputForm: React.FC = () => {
               </div>
             ))}
           </div>
+          <div className="w-1/2 flex flex-col">
+            <label htmlFor="abt">About</label>
+            <textarea
+              className="border p-3 -2 rounded-lg h-full"
+              id="abt"
+              value={formValues.abt}
+              onChange={handleInputChange}
+            />
+          </div>
         </div>
-        <label htmlFor="abt">About</label>
-        <textarea
-          className="border-2"
-          id="abt"
-          value={formValues.abt}
-          onChange={handleInputChange}
-        />
-        <button className="rounded-md h-[30px] my-3 bg-[#cea3a3]" type="submit">
-          Submit
-        </button>
+        <div className="flex justify-center">
+          {isEditMode && (
+            <button
+              className="rounded-md h-[40px] w-full me-3 my-3 bg-[#d9534f] text-white"
+              type="button"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+          )}
+          <button
+            id="submit-button"
+            className="rounded-md h-[40px] w-full my-3 bg-[#098c28] text-white"
+            type="submit"
+          >
+            {isEditMode ? "Update" : "Submit"}
+          </button>
+        </div>
       </form>
 
       <div className="p-5">
-        <h2>Display Data:</h2>
-        <table className="w-full text-center border">
-          <thead>
+        <table className="w-full text-center ">
+          <thead className="border-b-2">
             <tr>
-              <th className="border">Nama Asam Amino</th>
-              <th className="border">Singkatan 1 Huruf</th>
-              <th className="border">Singkatan 3 Huruf</th>
-              <th className="border">DNA</th>
-              <th className="border">RNA</th>
-              <th className="border">About</th>
-              <th className="border">Action</th>
+              <th>Nama Asam Amino</th>
+              <th>Singkatan 1 Huruf</th>
+              <th>Singkatan 3 Huruf</th>
+              <th>DNA</th>
+              <th>RNA</th>
+              <th>About</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => (
-              <tr key={item.id}>
-                <td className="border">{item.nama}</td>
-                <td className="border">{item.abbr1}</td>
-                <td className="border">{item.abbr3}</td>
-                <td className="border">{item.dna.join(", ")}</td>
-                <td className="border">{item.rna.join(", ")}</td>
-                <td className="line-clamp-3  border">{item.abt}</td>
-                <td className="border">
-                  {editingId === item.id ? (
-                    // Tombol "Cancel" saat dalam mode edit
-                    <button onClick={handleCancel}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="25px"
-                        height="25px"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          fill="#ffc800"
-                          d="m8.4 17l3.6-3.6l3.6 3.6l1.4-1.4l-3.6-3.6L17 8.4L15.6 7L12 10.6L8.4 7L7 8.4l3.6 3.6L7 15.6zm3.6 5q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22"
-                        />
-                      </svg>
-                    </button>
-                  ) : (
-                    // Tombol "Edit" saat tidak dalam mode edit
-                    <button onClick={() => handleEdit(item.id)}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="25px"
-                        height="25px"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          fill="#2483cc"
-                          d="m18.988 2.012l3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287l-3-3L8 13z"
-                        />
-                        <path
-                          fill="#2483cc"
-                          d="M19 19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2z"
-                        />
-                      </svg>
-                    </button>
-                  )}
+            {data.map((item, index) => (
+              <tr
+                key={item.id}
+                className={index % 2 === 0 ? "bg-[#b6b6b6]" : ""}
+              >
+                <td className=" p-3 ">{item.nama}</td>
+                <td className=" p-3 ">{item.abbr1}</td>
+                <td className=" p-3 ">{item.abbr3}</td>
+                <td className=" p-3 ">{item.dna.join(", ")}</td>
+                <td className=" p-3 ">{item.rna.join(", ")}</td>
+                <td className="border-s border-e px-4 py-2 group">
+                  <div className="overflow-hidden line-clamp-3 group-hover:line-clamp-none text-justify">
+                    {item.abt}
+                  </div>
+                </td>
+
+                <td className=" p-3 flex-col">
+                  <button onClick={() => handleEdit(item.id)}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="25px"
+                      height="25px"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="#2483cc"
+                        d="m18.988 2.012l3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287l-3-3L8 13z"
+                      />
+                      <path
+                        fill="#2483cc"
+                        d="M19 19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2z"
+                      />
+                    </svg>
+                  </button>
                   {/* Tombol delete */}
-                 <button onClick={() => handleDeleteConfirmation(item.id)}>
+                  <button onClick={() => handleDeleteConfirmation(item.id)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="25px"

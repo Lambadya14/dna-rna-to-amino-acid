@@ -9,6 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../lib/firebase/init"; // Sesuaikan path ke file firebase.ts
+import DeleteConfirmation from "../components/modals/DeleteConfirmation";
 
 interface AminoAcidData {
   id: string;
@@ -34,6 +35,26 @@ const InputForm: React.FC = () => {
   const [editingId, setEditingId] = useState<string | null>(null); // State untuk ID yang sedang diedit
   const [dynamicDNAInputs, setDynamicDNAInputs] = useState<string[]>([""]);
   const [dynamicRNAInputs, setDynamicRNAInputs] = useState<string[]>([""]);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
+
+  const handleDeleteConfirmation = (id: string) => {
+    setDeletingItemId(id);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deletingItemId) {
+      await handleDelete(deletingItemId);
+      setDeleteModalOpen(false);
+      setDeletingItemId(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
+    setDeletingItemId(null);
+  };
 
   const handleDynamicDNAInputChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -420,6 +441,7 @@ const InputForm: React.FC = () => {
           Submit
         </button>
       </form>
+
       <div className="p-5">
         <h2>Display Data:</h2>
         <table className="w-full text-center border">
@@ -480,7 +502,7 @@ const InputForm: React.FC = () => {
                     </button>
                   )}
                   {/* Tombol delete */}
-                  <button onClick={() => handleDelete(item.id)}>
+                 <button onClick={() => handleDeleteConfirmation(item.id)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="25px"
@@ -499,6 +521,11 @@ const InputForm: React.FC = () => {
           </tbody>
         </table>
       </div>
+      <DeleteConfirmation
+        isOpen={isDeleteModalOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
     </>
   );
 };

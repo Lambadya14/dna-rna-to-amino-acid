@@ -17,6 +17,7 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "react-slick": "^0.30.2",
+    "react-toastify": "^10.0.4",
     "recharts": "^2.12.1",
     "slick-carousel": "^1.8.1"
   },

@@ -17,7 +17,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { db } from "./lib/firebase/init";
 import { collection, getDocs } from "firebase/firestore";
-import { get } from "firebase/database";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Sample codon map data
 
@@ -52,17 +53,16 @@ const CodonConverter: React.FC = () => {
   const fetchCodonMapFromFirestore = async () => {
     const querySnapshot = await getDocs(collection(db, "aminoAcid"));
     try {
-
       const codons: Codon[] = [];
 
       querySnapshot.forEach((doc) => {
         const codonData = doc.data();
 
         if (!codonData) {
-          console.error(`Invalid data for document ${doc.id}`);
+          toast.error(`Invalid data for document ${doc.id}`);
           return;
         }
-        console.log("Firestore Document Data:", codonData);
+
         codons.push({
           name: codonData?.nama,
           abbreviation1: codonData?.abbr1,
@@ -74,7 +74,8 @@ const CodonConverter: React.FC = () => {
       });
       setCodonMap(codons);
     } catch (error) {
-      console.error("Error fetching data from Firestore:", error);
+      // Display an error toast
+      toast.error("Error fetching data from Firestore");
     }
   };
 
@@ -119,7 +120,9 @@ const CodonConverter: React.FC = () => {
         // Reset lazy loading state after 3 seconds
         setTimeout(resetLazyLoading, 2000);
       } catch (error) {
-        console.error("Error reading file:", error);
+        // Display an error toast
+        toast.error(`Error reading file: ${String(error)}`);
+
         setIsLazyLoading(false); // Reset lazy loading state in case of an error
       }
     }
@@ -209,7 +212,9 @@ const CodonConverter: React.FC = () => {
         setDnaSequence(fileContent);
         setTimeout(resetLazyLoading, 2000);
       } catch (error) {
-        console.error("Error reading file:", error);
+        // Display an error toast
+        toast.error(`Error reading file: ${String(error)}`);
+        console.log(`Error reading file: ${String(error)}`);
       }
     }
   };
@@ -228,10 +233,14 @@ const CodonConverter: React.FC = () => {
     // Check if the sequence is valid
     setIsLazyLoading(true); // Set lazy loading state to true
     if (!isValidSequence(preprocessedSequence, isDNA)) {
-      setResult(
-        <> Invalid sequence. Please provide a valid DNA or RNA sequence.</>
-      );
+      // toast.error(
+      //   " Invalid sequence. Please provide a valid DNA or RNA sequence."
+      // );
+      setResult(null);
       setAminoAcidCountResult(null);
+      console.log(
+        " Invalid sequence. Please provide a valid DNA or RNA sequence."
+      );
       return;
     }
     setIsResultView(true); // Switch to result view
@@ -399,7 +408,7 @@ const CodonConverter: React.FC = () => {
                 </button>
                 <h1 className="font-bold text-[35px] text-center  ">RESULT</h1>
                 {result && <div className="text-justify px-5">{result}</div>}
-                <h2 className="mt-3">Amino Acid Count:</h2>
+                <h2 className="mt-3 font-semibold text-[30px]">Overview</h2>
                 <ResponsiveContainer width="100%" height={400}>
                   <BarChart
                     data={Object.entries(aminoAcidCountResult).map(
@@ -533,6 +542,7 @@ const CodonConverter: React.FC = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };

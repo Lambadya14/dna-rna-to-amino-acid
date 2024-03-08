@@ -38,6 +38,16 @@ interface ConversionResult {
   stopCodon: string | null;
 }
 
+const settings = {
+  infinite: true,
+  speed: 2000,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 5000,
+  arrows: false,
+};
+
 // React functional component for the DNA/RNA sequence converter
 const CodonConverter: React.FC = () => {
   const [dnaSequence, setDnaSequence] = useState("");
@@ -287,12 +297,10 @@ const CodonConverter: React.FC = () => {
 
     setResult(
       <div>
-        <p className="text-xl">Amino Acid Sequence:</p>
-        <p className=" break-words">
-          <strong>{aminoAcidSequence}</strong>
-        </p>
-        <p className="mt-3 text-xl">Stop Codon:</p>
-        <strong>{stopCodonOutput}</strong>
+        <p className="font-bold text-[30px]">Amino Acid Sequence:</p>
+        <p className=" break-words">{aminoAcidSequence}</p>
+        <p className="font-bold text-[30px] mt-4">Stop Codon:</p>
+        <p>{stopCodonOutput}</p>
       </div>
     );
     setAminoAcidCountResult(countResult);
@@ -389,7 +397,7 @@ const CodonConverter: React.FC = () => {
             </div>
           ) : (
             <>
-              <div className="p-5  ">
+              <div className="px-5  ">
                 <button
                   className="rounded-[20px] border-2 w-[40px] h-[40px] flex justify-center items-center hover:bg-[#b1a6da]"
                   onClick={handleBackButtonClick}
@@ -407,81 +415,94 @@ const CodonConverter: React.FC = () => {
                   </svg>
                 </button>
                 <h1 className="font-bold text-[35px] text-center  ">RESULT</h1>
-                {result && <div className="text-justify px-5">{result}</div>}
-                <h2 className="mt-3 font-semibold text-[30px]">Overview</h2>
-                <ResponsiveContainer width="100%" height={400}>
-                  <BarChart
-                    data={Object.entries(aminoAcidCountResult).map(
-                      ([aminoAcid, count]) => ({
-                        aminoAcid: `${
-                          codonMap.find(
-                            (item) => item.abbreviation1 === aminoAcid
-                          )?.name || aminoAcid
-                        } (${aminoAcid})`,
-                        shortName: aminoAcid,
-                        count,
-                      })
-                    )}
-                  >
-                    <XAxis dataKey="shortName" />
-                    <YAxis />
-                    <Tooltip
-                      content={({ payload }) => {
-                        const aminoAcidInfo = payload?.[0]?.payload;
-
-                        if (!aminoAcidInfo) {
-                          return null;
-                        }
-
-                        const { aminoAcid, shortName, count } = aminoAcidInfo;
-                        const aminoAcidData = codonMap.find(
-                          (item) => item.abbreviation1 === shortName
-                        );
-
-                        if (!aminoAcidData) {
-                          return null;
-                        }
-
-                        const fullAminoAcid = `${aminoAcidData.name} (${aminoAcidData.abbreviation3})`;
-
-                        return (
-                          <div className="custom-tooltip">
-                            <p>{`${fullAminoAcid}`}</p>
-                            <p>{`Count: ${count}`}</p>
-                          </div>
-                        );
-                      }}
-                      wrapperStyle={{
-                        background: "white",
-                        padding: "10px",
-                        borderRadius: "10px",
-                        borderColor: "black",
-                        borderWidth: "1px",
-                        borderStyle: "solid",
-                      }}
-                    />
-                    <Legend />
-                    <Bar dataKey="count" fill="#8884d8" />
-                  </BarChart>
-                </ResponsiveContainer>
-                {/* Display about information for each amino acid */}
               </div>
-              <div className="text-left  px-5">
-                <h2 className="mb-4">About Amino Acids:</h2>
-                <Slider>
-                  {Object.keys(aminoAcidCountResult).map((aminoAcid) => (
-                    <div key={aminoAcid}>
-                      <p>
-                        <strong>
-                          {getSequenceName(aminoAcid)} ({getAbbr3(aminoAcid)})
-                        </strong>
-                      </p>
-                      <p className="text-justify">
-                        {getAboutInformation(aminoAcid)}
-                      </p>
+              <div className="lg:flex">
+                <div className="border-2 p-5 rounded-xl lg:w-1/2 lg:mx-5">
+                  <h2 className="font-semibold text-[30px]">Overview</h2>
+                  <ResponsiveContainer height={400}>
+                    <BarChart
+                      data={Object.entries(aminoAcidCountResult).map(
+                        ([aminoAcid, count]) => ({
+                          aminoAcid: `${
+                            codonMap.find(
+                              (item) => item.abbreviation1 === aminoAcid
+                            )?.name || aminoAcid
+                          } (${aminoAcid})`,
+                          shortName: aminoAcid,
+                          count,
+                        })
+                      )}
+                    >
+                      <XAxis dataKey="shortName" />
+                      <YAxis />
+                      <Tooltip
+                        content={({ payload }) => {
+                          const aminoAcidInfo = payload?.[0]?.payload;
+
+                          if (!aminoAcidInfo) {
+                            return null;
+                          }
+
+                          const { aminoAcid, shortName, count } = aminoAcidInfo;
+                          const aminoAcidData = codonMap.find(
+                            (item) => item.abbreviation1 === shortName
+                          );
+
+                          if (!aminoAcidData) {
+                            return null;
+                          }
+
+                          const fullAminoAcid = `${aminoAcidData.name} (${aminoAcidData.abbreviation3})`;
+
+                          return (
+                            <div className="custom-tooltip">
+                              <p>{`${fullAminoAcid}`}</p>
+                              <p>{`Count: ${count}`}</p>
+                            </div>
+                          );
+                        }}
+                        wrapperStyle={{
+                          background: "white",
+                          padding: "10px",
+                          borderRadius: "10px",
+                          borderColor: "black",
+                          borderWidth: "1px",
+                          borderStyle: "solid",
+                        }}
+                      />
+                      <Legend />
+                      <Bar dataKey="count" fill="#8884d8" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="max-lg:mt-5 lg:w-1/2 rounded-xl">
+                  {result && (
+                    <div className="text-justify p-5 border-2 rounded-xl">
+                      {result}
                     </div>
-                  ))}
-                </Slider>
+                  )}
+                  <div className="mt-5 p-5 border-2 rounded-xl">
+                    {" "}
+                    <h2 className=" font-bold text-[30px]">
+                      About Amino Acids:
+                    </h2>
+                    <Slider {...settings}>
+                      {Object.keys(aminoAcidCountResult).map((aminoAcid) => (
+                        <div key={aminoAcid} className="px-1">
+                          <p>
+                            <strong>
+                              {getSequenceName(aminoAcid)} (
+                              {getAbbr3(aminoAcid)})
+                            </strong>
+                          </p>
+                          <p className="text-justify">
+                            {getAboutInformation(aminoAcid)}
+                          </p>
+                        </div>
+                      ))}
+                    </Slider>
+                  </div>
+                </div>
               </div>
             </>
           )}

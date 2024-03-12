@@ -1,4 +1,5 @@
 // components/InputForm.tsx
+"use client"
 import { useEffect, useState } from "react";
 import {
   addDoc,
@@ -8,8 +9,8 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../lib/firebase/init"; // Sesuaikan path ke file firebase.ts
-import DeleteConfirmation from "../components/modals/DeleteConfirmation";
+import { db } from "../../lib/firebase/init"; // Sesuaikan path ke file firebase.ts
+import DeleteConfirmation from "../../components/modals/DeleteConfirmation";
 
 interface AminoAcidData {
   id: string;

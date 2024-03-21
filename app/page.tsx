@@ -19,6 +19,7 @@ import { db } from "./lib/firebase/init";
 import { collection, getDocs } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import TableDetails from "./components/tables/TableDetails";
 
 // Sample codon map data
 
@@ -165,9 +166,7 @@ const CodonConverter: React.FC = () => {
     let stopCodonFound = false;
     let i;
 
-    const stopCodons = isDNA
-      ? ["TGA", "AGA", "AGG", "TAA", "TAG"]
-      : ["UGA", "AGA", "AGG", "UAA", "UAG"];
+    const stopCodons = isDNA ? ["TAA", "TAG"] : ["UAA", "UAG"];
 
     for (i = 0; i < sequence.length - 2; i += 3) {
       const codon = sequence.slice(i, i + 3);
@@ -417,7 +416,7 @@ const CodonConverter: React.FC = () => {
                 <h1 className="font-bold text-[35px] text-center  ">RESULT</h1>
               </div>
               <div className="lg:flex">
-                <div className="border-2 p-5 rounded-xl lg:w-1/2 lg:mx-5">
+                <div className="border-2 p-5 rounded-xl lg:w-1/2 lg:me-5">
                   <h2 className="font-semibold text-[30px]">Overview</h2>
                   <ResponsiveContainer height={400}>
                     <BarChart
@@ -564,6 +563,7 @@ const CodonConverter: React.FC = () => {
         </div>
       )}
       <ToastContainer />
+      <TableDetails querySequence={dnaSequence} />
     </div>
   );
 };

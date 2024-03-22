@@ -7,7 +7,7 @@ interface TableDetailsProps {
 }
 
 const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
-  const [blastResult, setBlastResult] = useState<any[] | null>(null);
+  const [blastResult, setBlastResult] = useState<any | null>(null);
 
   useEffect(() => {
     const database = "nt";
@@ -91,7 +91,6 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
         )
         .then((response) => {
           const data = response.data.BlastOutput2[0].report.results.search;
-
           if (data) {
             setBlastResult(data);
           }
@@ -102,6 +101,38 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
     }
   }, [querySequence]); // Empty dependency array to ensure useEffect runs only once
 
+  function calculateMetrics(hit: any) {
+    let maxScore = 0;
+    let totalScore = 0;
+    let queryCover = 0;
+    let eValue = 0;
+
+    if (hit.hsps && hit.hsps.length > 0) {
+      // Menghitung max score
+      maxScore = hit.hsps[0].bit_score || 0;
+
+      // Menghitung total score
+      totalScore = hit.hsps.reduce(
+        (acc: number, hsp: any) => acc + (hsp.bit_score || 0),
+        0
+      );
+
+      // Menghitung query cover
+      const queryLength = querySequence.length;
+      const alignmentLength = hit.hsps[0].align_len || 0;
+      queryCover = (alignmentLength / queryLength) * 100;
+
+      // Mengambil E value dari HSP pertama
+      eValue = hit.hsps[0].evalue || 0;
+    }
+
+    return { maxScore, totalScore, queryCover, eValue };
+  }
+  function capitalizeEachWord(str: string) {
+    return str.replace(/\b\w/g, function (char) {
+      return char.toUpperCase();
+    });
+  }
   return (
     <div className="relative overflow-x-auto px-5 pb-5">
       {blastResult && (
@@ -114,11 +145,22 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
               <th scope="col" className="px-6 py-3">
                 Accession
               </th>
-              <th scope="col" className="px-6 py-3">
-                TaxID
-              </th>
+
               <th scope="col" className="px-6 py-3">
                 Percent Identity (%)
+              </th>
+
+              <th scope="col" className="px-6 py-3">
+                Max Score
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Total Score
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Query Cover
+              </th>
+              <th scope="col" className="px-6 py-3">
+                E. Value
               </th>
               <th scope="col" className="px-6 py-3">
                 Description
@@ -127,21 +169,41 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
           </thead>
           <tbody>
             {blastResult &&
-              blastResult.hits.map((hit: any) => (
-                <tr key={hit.num} className="bg-white border-b ">
-                  <td className="px-6 py-4">{hit.description[0].sciname}</td>
-                  <td className="px-6 py-4"> {hit.description[0].accession}</td>
-                  <td className="px-6 py-4"> {hit.description[0].taxid}</td>
-                  <td className="px-6 py-4">
-                    {(
-                      (hit.hsps[0].identity / hit.hsps[0].align_len) *
-                      100
-                    ).toFixed(2)}
-                    %
-                  </td>
-                  <td className="px-6 py-4"> {hit.description[0].title}</td>
-                </tr>
-              ))}
+              blastResult.hits.map((hit: any) => {
+                const { maxScore, totalScore, queryCover, eValue } =
+                  calculateMetrics(hit);
+
+                return (
+                  <tr key={hit.num} className="bg-white border-b ">
+                    <td className="px-6 py-4">
+                      <a
+                        href={`https://www.ncbi.nlm.nih.gov/search/all/?term=${hit.description[0].taxid}`}
+                      >
+                        {capitalizeEachWord(hit.description[0].sciname)}
+                      </a>
+                    </td>
+                    <td className="px-6 py-4">
+                      <a
+                        href={`https://www.ncbi.nlm.nih.gov/search/all/?term=${hit.description[0].accession}`}
+                      >
+                        {hit.description[0].accession}
+                      </a>
+                    </td>
+                    <td className="px-6 py-4">
+                      {(
+                        (hit.hsps[0].identity / hit.hsps[0].align_len) *
+                        100
+                      ).toFixed(2)}
+                      %
+                    </td>
+                    <td className="px-6 py-4">{Math.floor(maxScore)}</td>
+                    <td className="px-6 py-4">{Math.floor(totalScore)}</td>
+                    <td className="px-6 py-4">{Math.floor(queryCover)}%</td>
+                    <td className="px-6 py-4">{eValue}</td>
+                    <td className="px-6 py-4">{hit.description[0].title}</td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       )}

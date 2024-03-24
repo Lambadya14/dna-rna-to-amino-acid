@@ -1,16 +1,28 @@
-// components/InputForm.tsx
-"use client"
-import { useEffect, useState } from "react";
+"use client";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
   addDoc,
   collection,
   deleteDoc,
   doc,
   getDocs,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../lib/firebase/init"; // Sesuaikan path ke file firebase.ts
 import DeleteConfirmation from "../../components/modals/DeleteConfirmation";
+import FormComponent from "@/app/components/adminComponents/FormComponent";
+import DataDisplayComponent from "@/app/components/adminComponents/DataComponent";
+
+interface Option {
+  label: string;
+  value: string;
+}
+
+interface Optgroup {
+  category: string;
+  options: Option[];
+}
 
 interface AminoAcidData {
   id: string;
@@ -22,7 +34,13 @@ interface AminoAcidData {
   abt: string;
   timestamp: any;
 }
-
+interface OptionCode {
+  category: string;
+  options: {
+    label: string;
+    value: string;
+  };
+}
 const InputForm: React.FC = () => {
   const [formValues, setFormValues] = useState({
     nama: "",
@@ -39,6 +57,36 @@ const InputForm: React.FC = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedDatabase, setSelectedDatabase] = useState<string>(""); // State untuk memantau database mana yang dipilih
+  // const [optionsData, setOptionsData] = useState<Optgroup[]>([]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const aminoAcidCollection = collection(db, `allCodeTypes`);
+  //       const querySnapshot = await getDocs(aminoAcidCollection);
+
+  //       const options: Optgroup[] = [];
+  //       querySnapshot.forEach((doc) => {
+  //         const data = doc.data();
+  //         const optgroup: Optgroup = {
+  //           category: doc.id,
+  //           options: data.map((option: any) => ({
+  //             label: option.label,
+  //             value: option.value,
+  //           })),
+  //         };
+  //         options.push(optgroup);
+  //       });
+  //       setOptionsData(options);
+  //       console.log(optionsData);
+  //     } catch (error) {
+  //       console.error("Error fetching data: ", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [db]);
 
   const handleDeleteConfirmation = (id: string) => {
     setDeletingItemId(id);
@@ -166,8 +214,11 @@ const InputForm: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const aminoAcidCollection = collection(db, "aminoAcid");
+      const aminoAcidCollection = collection(db, `${selectedDatabase}`);
       const querySnapshot = await getDocs(aminoAcidCollection);
+      const optionCodeCollection = collection(db, `${selectedDatabase}`);
+      const queryOptionSnapshot = await getDocs(aminoAcidCollection);
+      console.log(queryOptionSnapshot);
 
       const fetchedData: AminoAcidData[] = [];
       querySnapshot.forEach((doc) => {
@@ -203,7 +254,7 @@ const InputForm: React.FC = () => {
     try {
       if (editingId) {
         // Jika ada ID yang sedang diedit, lakukan pembaruan data
-        await updateDoc(doc(db, "aminoAcid", editingId), {
+        await updateDoc(doc(db, `${selectedDatabase}`, editingId), {
           ...formValues,
           dna: dynamicDNAInputs.filter((item) => item !== ""),
           rna: dynamicRNAInputs.filter((item) => item !== ""),
@@ -214,7 +265,7 @@ const InputForm: React.FC = () => {
         setEditingId(null); // Keluar dari mode edit setelah pembaruan
       } else {
         // Jika tidak ada ID yang sedang diedit, tambahkan data baru
-        const docRef = await addDoc(collection(db, "aminoAcid"), {
+        const docRef = await addDoc(collection(db, `${selectedDatabase}`), {
           ...formValues,
           dna: dynamicDNAInputs.filter((item) => item !== ""),
           rna: dynamicRNAInputs.filter((item) => item !== ""),
@@ -285,9 +336,9 @@ const InputForm: React.FC = () => {
   //DELETE
   const handleDelete = async (id: string) => {
     try {
-      // Hapus dokumen dengan ID tertentu dari koleksi "aminoAcid"
+      // Hapus dokumen dengan ID tertentu dari koleksi `${selectedDatabase}`
       // Gunakan fungsi deleteDoc dari firestore
-      await deleteDoc(doc(db, "aminoAcid", id));
+      await deleteDoc(doc(db, `${selectedDatabase}`, id));
       console.log("Document deleted with ID: ", id);
 
       // Perbarui data setelah penghapusan
@@ -301,7 +352,7 @@ const InputForm: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const aminoAcidCollection = collection(db, "aminoAcid");
+        const aminoAcidCollection = collection(db, `${selectedDatabase}`); // Gunakan selectedDatabase untuk memilih koleksi yang sesuai
         const querySnapshot = await getDocs(aminoAcidCollection);
 
         const fetchedData: AminoAcidData[] = [];
@@ -319,7 +370,7 @@ const InputForm: React.FC = () => {
     };
 
     fetchData();
-  }, []); // Empty dependency array ensures useEffect runs only once after component mount
+  }, [selectedDatabase]); // Tambahkan selectedDatabase sebagai dependensi sehingga useEffect dipanggil ulang saat nilainya berubah
 
   useEffect(() => {
     const fetchDataOnMount = async () => {
@@ -330,202 +381,160 @@ const InputForm: React.FC = () => {
     fetchDataOnMount();
   }, []);
 
+  useEffect(() => {
+    fetchData();
+  }, [selectedDatabase]);
+
+  // Fungsi untuk mengubah database yang dipilih
+  const handleDatabaseChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDatabase(event.target.value);
+  };
+
+  // Fungsi untuk menyalin koleksi
+  const copyCollection = async (
+    sourceCollection: string,
+    destinationCollection: string
+  ) => {
+    try {
+      // Ambil data dari koleksi sumber
+      const sourceCollectionRef = collection(db, sourceCollection);
+      const querySnapshot = await getDocs(sourceCollectionRef);
+
+      // Iterasi melalui dokumen dan tulis ke koleksi tujuan
+      querySnapshot.forEach(async (doc) => {
+        await addDoc(collection(db, destinationCollection), doc.data());
+      });
+
+      console.log(`Collection copied successfully, ${selectedDatabase}!`);
+    } catch (error) {
+      console.error("Error copying collection:", error);
+    }
+  };
+
+  const handleCopyCollection = async () => {
+    const originalCollectionName = "standardCode"; // Ganti dengan nama koleksi asli Anda
+    const newCollectionName = `${selectedDatabase}`; // Ganti dengan nama koleksi baru yang Anda inginkan
+
+    await copyCollection(originalCollectionName, newCollectionName);
+  };
   return (
     <>
-      <form className="flex flex-col px-5" onSubmit={handleFormSubmit}>
-        <div className="flex justify-between">
-          <div className="w-1/2 flex flex-col me-3 font-semibold">
-            <label htmlFor="nama">Nama Asam Amino</label>
-            <input
-              className="border p-3 -2 rounded-lg mb-3"
-              type="text"
-              id="nama"
-              value={formValues.nama}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="abbr1">Singkatan 1</label>
-            <input
-              className="border p-3 -2 rounded-lg  mb-3"
-              type="text"
-              id="abbr1"
-              maxLength={1}
-              value={formValues.abbr1}
-              pattern="[A-Za-z]+"
-              onChange={handleInputChange}
-            />
-            <label htmlFor="abbr3">Singkatan 3</label>
-            <input
-              className="border p-3 -2 rounded-lg  mb-3"
-              type="text"
-              id="abbr3"
-              maxLength={3}
-              value={formValues.abbr3}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="dna">DNA (A, C, T, dan G)</label>
-            {dynamicDNAInputs.map((input, index) => (
-              <div key={index} className="relative flex">
-                <input
-                  className="border p-3 -2 rounded-lg w-full "
-                  type="text"
-                  id={index.toString()}
-                  value={input}
-                  maxLength={3}
-                  onChange={handleDynamicDNAInputChange}
-                />
-                {index === dynamicDNAInputs.length - 1 && (
-                  <button
-                    type="button"
-                    onClick={handleAddDynamicDNAInput}
-                    className="absolute right-8 top-1/2 transform -translate-y-1/2 text-[30px]"
-                  >
-                    +
-                  </button>
-                )}
-                {dynamicDNAInputs.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveDynamicDNAInput(index)}
-                    className="absolute right-16 top-1/2 transform -translate-y-1/2 text-[30px]"
-                  >
-                    -
-                  </button>
-                )}
-              </div>
+      <div>
+        <label>
+          Pilih Database:
+          <select value={selectedDatabase} onChange={handleDatabaseChange}>
+            <optgroup label="Mitochondrial Codes">
+              <option value="vertebrateMitochondrial">
+                The Vertebrate Mitochondrial Code
+              </option>
+              <option value="yeastMitochondrial">
+                The Yeast Mitochondrial Code
+              </option>
+              <option value="moldProtozoanCoelenterateMitochondrial">
+                The Mold, Protozoan, and Coelenterate Mitochondrial Code and the
+                Mycoplasma/Spiroplasma Code
+              </option>
+              <option value="invertebrateMitochondrial">
+                The Invertebrate Mitochondrial Code
+              </option>
+              <option value="echinodermFlatwormMitochondrial">
+                The Echinoderm and Flatworm Mitochondrial Code
+              </option>
+              <option value="ascidianMitochondrial">
+                The Ascidian Mitochondrial Code
+              </option>
+              <option value="alternativeFlatwormMitochondrial">
+                The Alternative Flatworm Mitochondrial Code
+              </option>
+              <option value="trematodeMitochondrial">
+                Trematode Mitochondrial Code
+              </option>
+              <option value="scenedesmusObliquusMitochondrial">
+                Scenedesmus obliquus Mitochondrial Code
+              </option>
+              <option value="thraustochytriumMitochondrial">
+                Thraustochytrium Mitochondrial Code
+              </option>
+              <option value="rhabdopleuridaeMitochondrial">
+                Rhabdopleuridae Mitochondrial Code
+              </option>
+              <option value="cephalodiscidaeMitochondrialUAATyr">
+                Cephalodiscidae Mitochondrial UAA-Tyr Code
+              </option>
+            </optgroup>
+            <optgroup label="Nuclear Codes">
+              <option value="ciliateDasycladaceanHexamitaNuclear">
+                The Ciliate, Dasycladacean and Hexamita Nuclear Code
+              </option>
+              <option value="euplotidNuclear">The Euplotid Nuclear Code</option>
+              <option value="alternativeYeastNuclear">
+                The Alternative Yeast Nuclear Code
+              </option>
+              <option value="blepharismaNuclear">
+                Blepharisma Nuclear Code
+              </option>
+              <option value="pachysolenTannophilusNuclear">
+                Pachysolen tannophilus Nuclear Code
+              </option>
+              <option value="karyorelictNuclear">
+                Karyorelict Nuclear Code
+              </option>
+              <option value="condylostomaNuclear">
+                Condylostoma Nuclear Code
+              </option>
+              <option value="mesodiniumNuclear">Mesodinium Nuclear Code</option>
+              <option value="peritrichNuclear">Peritrich Nuclear Code</option>
+              <option value="blastocrithidiaNuclear">
+                Blastocrithidia Nuclear Code
+              </option>
+            </optgroup>
+            <optgroup label="Others">
+              <option value="standardCode">The Standard Code</option>
+              <option value="bacterialArchaealPlantPlastid">
+                The Bacterial, Archaeal and Plant Plastid Code
+              </option>
+              <option value="chlorophyceanMitochondrial">
+                Chlorophycean Mitochondrial Code
+              </option>
+              <option value="candidateDivisionSR1Gracilibacteria">
+                Candidate Division SR1 and Gracilibacteria Code
+              </option>
+            </optgroup>
+          </select>
+          {/* <select value={selectedDatabase} onChange={handleDatabaseChange}>
+            {optionsData.map((optgroup, index) => (
+              <optgroup label={optgroup.category} key={index}>
+                {optgroup.options.map((option, optionIndex) => (
+                  <option value={option.value} key={optionIndex}>
+                    {option.label}
+                  </option>
+                ))}
+              </optgroup>
             ))}
-
-            <label htmlFor="rna" className="mt-3">
-              RNA (A, C, U, dan G)
-            </label>
-            {dynamicRNAInputs.map((input, index) => (
-              <div key={index} className="relative flex">
-                <input
-                  className="border p-3 -2 rounded-lg w-full"
-                  type="text"
-                  id={index.toString()}
-                  value={input}
-                  maxLength={3}
-                  onChange={handleDynamicRNAInputChange}
-                />
-                {index === dynamicRNAInputs.length - 1 && (
-                  <button
-                    type="button"
-                    onClick={handleAddDynamicRNAInput}
-                    className="absolute right-8 top-1/2 transform -translate-y-1/2 text-[30px]"
-                  >
-                    +
-                  </button>
-                )}
-                {dynamicRNAInputs.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveDynamicRNAInput(index)}
-                    className="absolute right-16 top-1/2 transform -translate-y-1/2 text-[30px]"
-                  >
-                    -
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="w-1/2 flex flex-col">
-            <label htmlFor="abt">About</label>
-            <textarea
-              className="border p-3 -2 rounded-lg h-full"
-              id="abt"
-              value={formValues.abt}
-              onChange={handleInputChange}
-            />
-          </div>
-        </div>
-        <div className="flex justify-center">
-          {isEditMode && (
-            <button
-              className="rounded-md h-[40px] w-full me-3 my-3 bg-[#d9534f] text-white"
-              type="button"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
-          )}
-          <button
-            id="submit-button"
-            className="rounded-md h-[40px] w-full my-3 bg-[#098c28] text-white"
-            type="submit"
-          >
-            {isEditMode ? "Update" : "Submit"}
-          </button>
-        </div>
-      </form>
-
-      <div className="p-5">
-        <table className="w-full text-center ">
-          <thead className="border-b-2">
-            <tr>
-              <th>Nama Asam Amino</th>
-              <th>Singkatan 1 Huruf</th>
-              <th>Singkatan 3 Huruf</th>
-              <th>DNA</th>
-              <th>RNA</th>
-              <th>About</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr
-                key={item.id}
-                className={index % 2 === 0 ? "bg-[#b6b6b6]" : ""}
-              >
-                <td className=" p-3 ">{item.nama}</td>
-                <td className=" p-3 ">{item.abbr1}</td>
-                <td className=" p-3 ">{item.abbr3}</td>
-                <td className=" p-3 ">{item.dna.join(", ")}</td>
-                <td className=" p-3 ">{item.rna.join(", ")}</td>
-                <td className="border-s border-e px-4 py-2 group">
-                  <div className="overflow-hidden line-clamp-3 group-hover:line-clamp-none text-justify">
-                    {item.abt}
-                  </div>
-                </td>
-
-                <td className=" p-3 flex-col">
-                  <button onClick={() => handleEdit(item.id)}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="25px"
-                      height="25px"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="#2483cc"
-                        d="m18.988 2.012l3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287l-3-3L8 13z"
-                      />
-                      <path
-                        fill="#2483cc"
-                        d="M19 19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2z"
-                      />
-                    </svg>
-                  </button>
-                  {/* Tombol delete */}
-                  <button onClick={() => handleDeleteConfirmation(item.id)}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="25px"
-                      height="25px"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="#cc0606"
-                        d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z"
-                      />
-                    </svg>
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          </select> */}
+        </label>
       </div>
+      <FormComponent
+        formValues={formValues}
+        dynamicDNAInputs={dynamicDNAInputs}
+        dynamicRNAInputs={dynamicRNAInputs}
+        handleFormSubmit={handleFormSubmit}
+        handleInputChange={handleInputChange}
+        handleDynamicDNAInputChange={handleDynamicDNAInputChange}
+        handleAddDynamicDNAInput={handleAddDynamicDNAInput}
+        handleRemoveDynamicDNAInput={handleRemoveDynamicDNAInput}
+        handleDynamicRNAInputChange={handleDynamicRNAInputChange}
+        handleAddDynamicRNAInput={handleAddDynamicRNAInput}
+        handleRemoveDynamicRNAInput={handleRemoveDynamicRNAInput}
+        isEditMode={isEditMode}
+        handleCancel={handleCancel}
+      />
+      <DataDisplayComponent
+        data={data}
+        handleEdit={handleEdit}
+        handleDeleteConfirmation={handleDeleteConfirmation}
+      />
+
       <DeleteConfirmation
         isOpen={isDeleteModalOpen}
         onClose={handleDeleteCancel}

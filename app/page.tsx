@@ -1,6 +1,6 @@
 "use client";
 // Import necessary modules
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useEffect, useRef, ChangeEvent } from "react";
 import {
   BarChart,
   Bar,

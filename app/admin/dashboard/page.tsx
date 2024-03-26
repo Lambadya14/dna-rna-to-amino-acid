@@ -14,16 +14,6 @@ import DeleteConfirmation from "../../components/modals/DeleteConfirmation";
 import FormComponent from "@/app/components/adminComponents/FormComponent";
 import DataDisplayComponent from "@/app/components/adminComponents/DataComponent";
 
-interface Option {
-  label: string;
-  value: string;
-}
-
-interface Optgroup {
-  category: string;
-  options: Option[];
-}
-
 interface AminoAcidData {
   id: string;
   nama: string;
@@ -34,13 +24,7 @@ interface AminoAcidData {
   abt: string;
   timestamp: any;
 }
-interface OptionCode {
-  category: string;
-  options: {
-    label: string;
-    value: string;
-  };
-}
+
 const InputForm: React.FC = () => {
   const [formValues, setFormValues] = useState({
     nama: "",
@@ -50,7 +34,9 @@ const InputForm: React.FC = () => {
     rna: "",
     abt: "",
   });
+  const [filteredData, setFilteredData] = useState<AminoAcidData[]>([]);
   const [data, setData] = useState<AminoAcidData[]>([]);
+  const [filterValue, setFilterValue] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null); // State untuk ID yang sedang diedit
   const [dynamicDNAInputs, setDynamicDNAInputs] = useState<string[]>([""]);
   const [dynamicRNAInputs, setDynamicRNAInputs] = useState<string[]>([""]);
@@ -58,35 +44,6 @@ const InputForm: React.FC = () => {
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedDatabase, setSelectedDatabase] = useState<string>(""); // State untuk memantau database mana yang dipilih
-  // const [optionsData, setOptionsData] = useState<Optgroup[]>([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const aminoAcidCollection = collection(db, `allCodeTypes`);
-  //       const querySnapshot = await getDocs(aminoAcidCollection);
-
-  //       const options: Optgroup[] = [];
-  //       querySnapshot.forEach((doc) => {
-  //         const data = doc.data();
-  //         const optgroup: Optgroup = {
-  //           category: doc.id,
-  //           options: data.map((option: any) => ({
-  //             label: option.label,
-  //             value: option.value,
-  //           })),
-  //         };
-  //         options.push(optgroup);
-  //       });
-  //       setOptionsData(options);
-  //       console.log(optionsData);
-  //     } catch (error) {
-  //       console.error("Error fetching data: ", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [db]);
 
   const handleDeleteConfirmation = (id: string) => {
     setDeletingItemId(id);
@@ -389,40 +346,67 @@ const InputForm: React.FC = () => {
   const handleDatabaseChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedDatabase(event.target.value);
   };
+  // Function to filter data based on criteria
+  const filterData = (criteria: string) => {
+    const filteredResult = data.filter((item) => {
+      const namaMatch = item.nama
+        .toLowerCase()
+        .includes(criteria.toLowerCase());
+      const abbr1Match = item.abbr1
+        .toLowerCase()
+        .includes(criteria.toLowerCase());
+      const abbr3Match = item.abbr3
+        .toLowerCase()
+        .includes(criteria.toLowerCase());
+      const dnaMatch = item.dna.some((sequence) =>
+        sequence.toLowerCase().includes(criteria.toLowerCase())
+      );
+      const rnaMatch = item.rna.some((sequence) =>
+        sequence.toLowerCase().includes(criteria.toLowerCase())
+      );
+      return namaMatch || abbr1Match || abbr3Match || dnaMatch || rnaMatch;
+    });
 
-  // Fungsi untuk menyalin koleksi
-  const copyCollection = async (
-    sourceCollection: string,
-    destinationCollection: string
-  ) => {
-    try {
-      // Ambil data dari koleksi sumber
-      const sourceCollectionRef = collection(db, sourceCollection);
-      const querySnapshot = await getDocs(sourceCollectionRef);
+    // Update the state with the filtered result
+    setFilteredData(filteredResult);
+  };
 
-      // Iterasi melalui dokumen dan tulis ke koleksi tujuan
-      querySnapshot.forEach(async (doc) => {
-        await addDoc(collection(db, destinationCollection), doc.data());
-      });
+  // Handler for filter input change
+  const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setFilterValue(value); // Update filter value
 
-      console.log(`Collection copied successfully, ${selectedDatabase}!`);
-    } catch (error) {
-      console.error("Error copying collection:", error);
+    // Perform filtering based on the new filter value
+    filterData(value);
+  };
+
+  // Effect to re-filter data when the filter value changes
+  useEffect(() => {
+    // Check if filterValue is empty
+    if (filterValue === "") {
+      // If filterValue is empty, display the original data without filtering
+      setFilteredData(data);
+    } else {
+      // If filterValue is not empty, perform filtering
+      filterData(filterValue);
     }
-  };
+  }, [filterValue, data]); // Add 'data' as a dependency to handle changes in the original data
 
-  const handleCopyCollection = async () => {
-    const originalCollectionName = "standardCode"; // Ganti dengan nama koleksi asli Anda
-    const newCollectionName = `${selectedDatabase}`; // Ganti dengan nama koleksi baru yang Anda inginkan
+  // Fetch initial data when the component mounts
+  useEffect(() => {
+    fetchData();
+  }, []); // Empty dependency array ensures this effect runs only once on component mount
 
-    await copyCollection(originalCollectionName, newCollectionName);
-  };
   return (
     <>
-      <div>
+      <div className="px-5 py-3">
         <label>
-          Pilih Database:
-          <select value={selectedDatabase} onChange={handleDatabaseChange}>
+          <p className="font-semibold"> Pilih Database:</p>
+          <select
+            value={selectedDatabase}
+            onChange={handleDatabaseChange}
+            className="border rounded-xl h-[40px] px-2 w-full"
+          >
             <optgroup label="Mitochondrial Codes">
               <option value="vertebrateMitochondrial">
                 The Vertebrate Mitochondrial Code
@@ -501,19 +485,19 @@ const InputForm: React.FC = () => {
               </option>
             </optgroup>
           </select>
-          {/* <select value={selectedDatabase} onChange={handleDatabaseChange}>
-            {optionsData.map((optgroup, index) => (
-              <optgroup label={optgroup.category} key={index}>
-                {optgroup.options.map((option, optionIndex) => (
-                  <option value={option.value} key={optionIndex}>
-                    {option.label}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select> */}
+        </label>
+        <label>
+          <p className="font-semibold"> Filter:</p>
+          <input
+            type="text"
+            className="border  rounded-xl h-[40px] px-3 w-full"
+            value={filterValue}
+            onChange={handleFilterChange}
+            placeholder="Cari..."
+          />
         </label>
       </div>
+
       <FormComponent
         formValues={formValues}
         dynamicDNAInputs={dynamicDNAInputs}
@@ -530,7 +514,7 @@ const InputForm: React.FC = () => {
         handleCancel={handleCancel}
       />
       <DataDisplayComponent
-        data={data}
+        data={filteredData}
         handleEdit={handleEdit}
         handleDeleteConfirmation={handleDeleteConfirmation}
       />

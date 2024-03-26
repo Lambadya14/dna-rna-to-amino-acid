@@ -51,6 +51,7 @@ const settings = {
 
 // React functional component for the DNA/RNA sequence converter
 const CodonConverter: React.FC = () => {
+  const [selectedDatabase, setSelectedDatabase] = useState<string>("");
   const [dnaSequence, setDnaSequence] = useState("");
   const [result, setResult] = useState<JSX.Element | null>(null);
 
@@ -62,38 +63,44 @@ const CodonConverter: React.FC = () => {
   const [codonMap, setCodonMap] = useState<Codon[]>([]);
 
   const fetchCodonMapFromFirestore = async () => {
-    const querySnapshot = await getDocs(collection(db, "aminoAcid"));
-    try {
-      const codons: Codon[] = [];
+    if (selectedDatabase === "") {
+      console.log("Pilih database terlebih dahulu!");
+    } else {
+      const querySnapshot = await getDocs(
+        collection(db, `${selectedDatabase}`)
+      );
+      try {
+        const codons: Codon[] = [];
 
-      querySnapshot.forEach((doc) => {
-        const codonData = doc.data();
+        querySnapshot.forEach((doc) => {
+          const codonData = doc.data();
 
-        if (!codonData) {
-          toast.error(`Invalid data for document ${doc.id}`);
-          return;
-        }
+          if (!codonData) {
+            toast.error(`Invalid data for document ${doc.id}`);
+            return;
+          }
 
-        codons.push({
-          name: codonData?.nama,
-          abbreviation1: codonData?.abbr1,
-          abbreviation3: codonData?.abbr3,
-          dna: codonData?.dna,
-          rna: codonData?.rna,
-          about: codonData?.abt,
+          codons.push({
+            name: codonData?.nama,
+            abbreviation1: codonData?.abbr1,
+            abbreviation3: codonData?.abbr3,
+            dna: codonData?.dna,
+            rna: codonData?.rna,
+            about: codonData?.abt,
+          });
         });
-      });
-      setCodonMap(codons);
-    } catch (error) {
-      // Display an error toast
-      toast.error("Error fetching data from Firestore");
+        setCodonMap(codons);
+      } catch (error) {
+        // Display an error toast
+        toast.error("Error fetching data from Firestore");
+      }
     }
   };
 
   // useEffect to fetch data from Firestore when the component mounts
   useEffect(() => {
     fetchCodonMapFromFirestore();
-  }, []);
+  }, [selectedDatabase]);
 
   // State for lazy loading
   const [isLazyLoading, setIsLazyLoading] = useState(false);
@@ -355,6 +362,10 @@ const CodonConverter: React.FC = () => {
     setIsDNA(event.target.value === "dna");
   };
 
+  const handleDatabaseChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDatabase(event.target.value);
+  };
+
   // React component JSX
   return (
     <div className="bg-[#f5f5f5]">
@@ -503,6 +514,7 @@ const CodonConverter: React.FC = () => {
                   </div>
                 </div>
               </div>
+              <TableDetails querySequence={dnaSequence} />
             </>
           )}
         </div>
@@ -539,6 +551,98 @@ const CodonConverter: React.FC = () => {
                 RNA (A, C, U, dan G)
               </label>
             </div>
+            <label>
+              <p className="font-semibold"> Pilih Database:</p>
+              <select
+                value={selectedDatabase}
+                onChange={handleDatabaseChange}
+                className="border rounded-xl h-[40px] px-2 w-full"
+              >
+                <optgroup label="Mitochondrial Codes">
+                  <option value="vertebrateMitochondrial">
+                    The Vertebrate Mitochondrial Code
+                  </option>
+                  <option value="yeastMitochondrial">
+                    The Yeast Mitochondrial Code
+                  </option>
+                  <option value="moldProtozoanCoelenterateMitochondrial">
+                    The Mold, Protozoan, and Coelenterate Mitochondrial Code and
+                    the Mycoplasma/Spiroplasma Code
+                  </option>
+                  <option value="invertebrateMitochondrial">
+                    The Invertebrate Mitochondrial Code
+                  </option>
+                  <option value="echinodermFlatwormMitochondrial">
+                    The Echinoderm and Flatworm Mitochondrial Code
+                  </option>
+                  <option value="ascidianMitochondrial">
+                    The Ascidian Mitochondrial Code
+                  </option>
+                  <option value="alternativeFlatwormMitochondrial">
+                    The Alternative Flatworm Mitochondrial Code
+                  </option>
+                  <option value="trematodeMitochondrial">
+                    Trematode Mitochondrial Code
+                  </option>
+                  <option value="scenedesmusObliquusMitochondrial">
+                    Scenedesmus obliquus Mitochondrial Code
+                  </option>
+                  <option value="thraustochytriumMitochondrial">
+                    Thraustochytrium Mitochondrial Code
+                  </option>
+                  <option value="rhabdopleuridaeMitochondrial">
+                    Rhabdopleuridae Mitochondrial Code
+                  </option>
+                  <option value="cephalodiscidaeMitochondrialUAATyr">
+                    Cephalodiscidae Mitochondrial UAA-Tyr Code
+                  </option>
+                </optgroup>
+                <optgroup label="Nuclear Codes">
+                  <option value="ciliateDasycladaceanHexamitaNuclear">
+                    The Ciliate, Dasycladacean and Hexamita Nuclear Code
+                  </option>
+                  <option value="euplotidNuclear">
+                    The Euplotid Nuclear Code
+                  </option>
+                  <option value="alternativeYeastNuclear">
+                    The Alternative Yeast Nuclear Code
+                  </option>
+                  <option value="blepharismaNuclear">
+                    Blepharisma Nuclear Code
+                  </option>
+                  <option value="pachysolenTannophilusNuclear">
+                    Pachysolen tannophilus Nuclear Code
+                  </option>
+                  <option value="karyorelictNuclear">
+                    Karyorelict Nuclear Code
+                  </option>
+                  <option value="condylostomaNuclear">
+                    Condylostoma Nuclear Code
+                  </option>
+                  <option value="mesodiniumNuclear">
+                    Mesodinium Nuclear Code
+                  </option>
+                  <option value="peritrichNuclear">
+                    Peritrich Nuclear Code
+                  </option>
+                  <option value="blastocrithidiaNuclear">
+                    Blastocrithidia Nuclear Code
+                  </option>
+                </optgroup>
+                <optgroup label="Others">
+                  <option value="standardCode">The Standard Code</option>
+                  <option value="bacterialArchaealPlantPlastid">
+                    The Bacterial, Archaeal and Plant Plastid Code
+                  </option>
+                  <option value="chlorophyceanMitochondrial">
+                    Chlorophycean Mitochondrial Code
+                  </option>
+                  <option value="candidateDivisionSR1Gracilibacteria">
+                    Candidate Division SR1 and Gracilibacteria Code
+                  </option>
+                </optgroup>
+              </select>
+            </label>
             <br />
             <div>
               <input {...getInputProps()} />
@@ -563,7 +667,6 @@ const CodonConverter: React.FC = () => {
         </div>
       )}
       <ToastContainer />
-      <TableDetails querySequence={dnaSequence} />
     </div>
   );
 };

@@ -8,6 +8,9 @@ interface TableDetailsProps {
 
 const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
   const [blastResult, setBlastResult] = useState<any | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage: number = 5;
+  const maxPagesToShow: number = 5;
 
   useEffect(() => {
     const database = "nt";
@@ -128,48 +131,124 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
 
     return { maxScore, totalScore, queryCover, eValue };
   }
+
   function capitalizeEachWord(str: string) {
     return str.replace(/\b\w/g, function (char) {
       return char.toUpperCase();
     });
   }
+
+  // Pagination
+  const lastIndex = currentPage * itemsPerPage;
+  const firstIndex = lastIndex - itemsPerPage;
+  const currentItems = blastResult
+    ? blastResult.hits.slice(firstIndex, lastIndex)
+    : [];
+
+  const totalPages = Math.ceil(blastResult?.hits.length / itemsPerPage);
+
+  const renderPageNumbers = () => {
+    const pagesToShow = Math.min(totalPages, maxPagesToShow);
+
+    const halfMaxPagesToShow = Math.floor(maxPagesToShow / 2);
+    const firstPage = Math.max(1, currentPage - halfMaxPagesToShow);
+    const lastPage = Math.min(totalPages, firstPage + maxPagesToShow - 1);
+
+    const pages: JSX.Element[] = [];
+
+    for (let i = firstPage; i <= lastPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => setCurrentPage(i)}
+          className={`mx-1 px-3 py-1 border border-gray-300 ${
+            currentPage === i
+              ? "bg-gray-300 text-gray-700"
+              : "bg-white text-gray-500"
+          } rounded`}
+        >
+          {i}
+        </button>
+      );
+    }
+ if (firstPage > 2) {
+   pages.unshift(
+     <span key="ellipsis-1" className="mx-1 text-gray-500">
+       ...
+     </span>
+   );
+ }
+    if (firstPage > 1) {
+      pages.unshift(
+        <button
+          key={1}
+          onClick={() => setCurrentPage(1)}
+          className={`mx-1 px-3 py-1 border border-gray-300 bg-white text-gray-500 rounded`}
+        >
+          1
+        </button>
+      );
+     
+    }
+
+    if (lastPage < totalPages) {
+      if (lastPage < totalPages - 1) {
+        pages.push(
+          <span key="ellipsis-2" className="mx-1 text-gray-500">
+            ...
+          </span>
+        );
+      }
+
+      pages.push(
+        <button
+          key={totalPages}
+          onClick={() => setCurrentPage(totalPages)}
+          className={`mx-1 px-3 py-1 border border-gray-300 bg-white text-gray-500 rounded`}
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    return pages;
+  };
+
   return (
-    <div className="relative overflow-x-auto px-5 pb-5">
+    <div className="relative overflow-x-auto pt-5 pb-5">
       {blastResult && (
-        <table className="w-full text-sm text-left rtl:text-right bg-[#8884d8] rounded-xl">
-          <thead className="text-xs text-white  uppercase">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Scientific Name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Accession
-              </th>
-
-              <th scope="col" className="px-6 py-3">
-                Percent Identity (%)
-              </th>
-
-              <th scope="col" className="px-6 py-3">
-                Max Score
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Total Score
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Query Cover
-              </th>
-              <th scope="col" className="px-6 py-3">
-                E. Value
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Description
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {blastResult &&
-              blastResult.hits.map((hit: any) => {
+        <>
+          <table className="w-full text-sm text-left rtl:text-right bg-[#8884d8] rounded-xl">
+            <thead className="text-xs text-white  uppercase">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  Scientific Name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Accession
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Percent Identity (%)
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Max Score
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Total Score
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Query Cover
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  E. Value
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems.map((hit: any) => {
                 const { maxScore, totalScore, queryCover, eValue } =
                   calculateMetrics(hit);
 
@@ -204,8 +283,10 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
                   </tr>
                 );
               })}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+          <div className="flex justify-center mt-4">{renderPageNumbers()}</div>
+        </>
       )}
     </div>
   );

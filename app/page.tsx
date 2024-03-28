@@ -1,6 +1,12 @@
 "use client";
 // Import necessary modules
-import React, { useCallback, useState, useEffect, useRef, ChangeEvent } from "react";
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
+  ChangeEvent,
+} from "react";
 import {
   BarChart,
   Bar,
@@ -54,7 +60,7 @@ const CodonConverter: React.FC = () => {
   const [selectedDatabase, setSelectedDatabase] = useState<string>("");
   const [dnaSequence, setDnaSequence] = useState("");
   const [result, setResult] = useState<JSX.Element | null>(null);
-
+  const [showChooseOption, setShowChooseOption] = useState(true);
   const [aminoAcidCountResult, setAminoAcidCountResult] = useState<any | null>(
     null
   );
@@ -126,25 +132,29 @@ const CodonConverter: React.FC = () => {
   };
 
   // Event handler for file drop
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0 && selectedDatabase !== "") {
+        const file = acceptedFiles[0];
+        try {
+          setIsLazyLoading(true); // Set lazy loading state to true
+          const fileContent = await readFileContent(file);
+          setDnaSequence(fileContent);
 
-      try {
-        setIsLazyLoading(true); // Set lazy loading state to true
-        const fileContent = await readFileContent(file);
-        setDnaSequence(fileContent);
-
-        // Reset lazy loading state after 3 seconds
-        setTimeout(resetLazyLoading, 2000);
-      } catch (error) {
-        // Display an error toast
-        toast.error(`Error reading file: ${String(error)}`);
-
-        setIsLazyLoading(false); // Reset lazy loading state in case of an error
+          // Reset lazy loading state after 3 seconds
+          setTimeout(resetLazyLoading, 2000);
+        } catch (error) {
+          // Display an error toast
+          toast.error(`Error reading file: ${String(error)}`);
+          setIsLazyLoading(false); // Reset lazy loading state in case of an error
+        }
+      } else {
+        // Display a warning toast
+        toast.warn("Please select a database before uploading a file.");
       }
-    }
-  }, []);
+    },
+    [selectedDatabase]
+  );
 
   // UseDropzone hook configuration
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -170,18 +180,21 @@ const CodonConverter: React.FC = () => {
     }
 
     let aminoAcidSequence = "";
-    let stopCodonFound = false;
-    let i;
+    let stopCodon: string | null = null;
+    const stopCodons: string[] = [];
 
-    const stopCodons = isDNA ? ["TAA", "TAG"] : ["UAA", "UAG"];
+    for (const codonData of codonMap) {
+      if (codonData.name.toLowerCase() === "terminator") {
+        stopCodons.push(...(isDNA ? codonData.dna : codonData.rna));
+      }
+    }
 
-    for (i = 0; i < sequence.length - 2; i += 3) {
+    for (let i = 0; i < sequence.length - 2; i += 3) {
       const codon = sequence.slice(i, i + 3);
 
       // Check if the stop codon is present
       if (stopCodons.includes(codon)) {
-        // Marking that a stop codon is found
-        stopCodonFound = true;
+        stopCodon = codon;
         break; // Stop the conversion process
       }
 
@@ -194,8 +207,6 @@ const CodonConverter: React.FC = () => {
         aminoAcidSequence += aminoAcid.abbreviation1;
       }
     }
-
-    const stopCodon = stopCodonFound ? sequence.slice(i, i + 3) : null;
 
     return {
       aminoAcidSequence,
@@ -219,8 +230,13 @@ const CodonConverter: React.FC = () => {
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
+    if (selectedDatabase === "") {
+      // Display a warning toast
+      toast.warn("Please select a database before uploading a file.");
+      return;
+    }
 
+    const file = event.target.files?.[0];
     if (file) {
       try {
         setIsLazyLoading(true); // Set lazy loading state to true
@@ -244,19 +260,23 @@ const CodonConverter: React.FC = () => {
 
   // Event handler for convert button click
   const handleConvertClick = () => {
+    if (selectedDatabase === "") {
+      // Display a warning toast
+      toast.warn("Please select a database before converting.");
+      return;
+    }
+
     const preprocessedSequence = preprocessNucleicAcidSequence(dnaSequence);
 
     // Check if the sequence is valid
     setIsLazyLoading(true); // Set lazy loading state to true
     if (!isValidSequence(preprocessedSequence, isDNA)) {
-      // toast.error(
-      //   " Invalid sequence. Please provide a valid DNA or RNA sequence."
-      // );
       setResult(null);
       setAminoAcidCountResult(null);
       console.log(
         " Invalid sequence. Please provide a valid DNA or RNA sequence."
       );
+      setIsLazyLoading(false); // Reset lazy loading state in case of an error
       return;
     }
     setIsResultView(true); // Switch to result view
@@ -363,7 +383,10 @@ const CodonConverter: React.FC = () => {
   };
 
   const handleDatabaseChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDatabase(event.target.value);
+    const selectedValue = event.target.value;
+    setSelectedDatabase(selectedValue);
+
+    setShowChooseOption(selectedValue === "");
   };
 
   // React component JSX
@@ -530,34 +553,14 @@ const CodonConverter: React.FC = () => {
             <h1 className="font-bold text-[35px] text-center">
               DNA/RNA Sequence Converter
             </h1>
-            <div className="flex flex-col">
-              <label>Choose Sequence Type:</label>
-              <label>
-                <input
-                  type="radio"
-                  value="dna"
-                  checked={isDNA}
-                  onChange={handleRadioChange}
-                />
-                DNA (A, C, T, dan G)
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value="rna"
-                  checked={!isDNA}
-                  onChange={handleRadioChange}
-                />
-                RNA (A, C, U, dan G)
-              </label>
-            </div>
-            <label>
-              <p className="font-semibold"> Pilih Database:</p>
+            <label className="my-5">
+              <p className="text-center font-semibold">Choose DNA/RNA Code:</p>
               <select
                 value={selectedDatabase}
                 onChange={handleDatabaseChange}
-                className="border rounded-xl h-[40px] px-2 w-full"
+                className="border rounded-xl h-[40px] px-2 w-[400px]"
               >
+                {showChooseOption && <option value="">Choose Code Type</option>}
                 <optgroup label="Mitochondrial Codes">
                   <option value="vertebrateMitochondrial">
                     The Vertebrate Mitochondrial Code
@@ -643,6 +646,30 @@ const CodonConverter: React.FC = () => {
                 </optgroup>
               </select>
             </label>
+            <div className="flex flex-col">
+              <label className="font-semibold">Choose Sequence Type:</label>
+              <label className="flex">
+                <input
+                  type="radio"
+                  value="dna"
+                  checked={isDNA}
+                  onChange={handleRadioChange}
+                  className="me-1"
+                />
+                DNA (A, C, T, dan G)
+              </label>
+              <label className="flex">
+                <input
+                  type="radio"
+                  className="me-1"
+                  value="rna"
+                  checked={!isDNA}
+                  onChange={handleRadioChange}
+                />
+                RNA (A, C, U, dan G)
+              </label>
+            </div>
+
             <br />
             <div>
               <input {...getInputProps()} />

@@ -67,6 +67,35 @@ const CodonConverter: React.FC = () => {
   const [isDNA, setIsDNA] = useState(true);
   const [isResultView, setIsResultView] = useState(false);
   const [codonMap, setCodonMap] = useState<Codon[]>([]);
+  const [useSpecificStopCodon, setUseSpecificStopCodon] = useState(false);
+  const [showSpecificButton, setShowSpecificButton] = useState(false);
+  const [useTerminatorAsStopCodon, setUseTerminatorAsStopCodon] =
+    useState(false);
+
+  // fungsi pengganti untuk mengatur nilai state ketika pengguna mengklik radio button
+  const handleTerminatorRadioChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const useTerminator = event.target.value === "terminator";
+    setUseTerminatorAsStopCodon(useTerminator);
+    setUseSpecificStopCodon(!useTerminator);
+  };
+
+  // Tambahkan UI untuk memilih stop codon
+
+  useEffect(() => {
+    if (
+      selectedDatabase === "karyorelictNuclear" ||
+      selectedDatabase === "condylostomaNuclear" ||
+      selectedDatabase === "condylostomaNuclear" ||
+      selectedDatabase === "peritrichNuclear" ||
+      selectedDatabase === "blastocrithidiaNuclear"
+    ) {
+      setShowSpecificButton(true);
+    } else {
+      setShowSpecificButton(false);
+    }
+  }, [selectedDatabase]);
 
   const fetchCodonMapFromFirestore = async () => {
     if (selectedDatabase === "") {
@@ -165,11 +194,11 @@ const CodonConverter: React.FC = () => {
     return sequence.replace(/\s+/g, "");
   };
 
-  // Function to convert DNA or RNA to single-letter amino acids
   const convertNucleicAcidToSingleLetterAminoAcids = (
     sequence: string,
     isDNA: boolean,
-    codonMap: Codon[]
+    codonMap: Codon[],
+    useSpecificStopCodon: boolean
   ): ConversionResult => {
     if (codonMap.length === 0) {
       // Codon map is empty, return an appropriate result
@@ -183,17 +212,23 @@ const CodonConverter: React.FC = () => {
     let stopCodon: string | null = null;
     const stopCodons: string[] = [];
 
-    for (const codonData of codonMap) {
-      if (codonData.name.toLowerCase() === "terminator") {
-        stopCodons.push(...(isDNA ? codonData.dna : codonData.rna));
+    // If "Specific Stop Codon" option is selected, then do not use terminator as stop codon
+    if (useSpecificStopCodon) {
+      // No action needed, proceed without checking for terminator as stop codon
+    } else {
+      // Use terminator as stop codon
+      for (const codonData of codonMap) {
+        if (codonData.name.toLowerCase() === "terminator") {
+          stopCodons.push(...(isDNA ? codonData.dna : codonData.rna));
+        }
       }
     }
 
     for (let i = 0; i < sequence.length - 2; i += 3) {
       const codon = sequence.slice(i, i + 3);
 
-      // Check if the stop codon is present
-      if (stopCodons.includes(codon)) {
+      // Check if the stop codon is present, unless specific stop codon option is chosen
+      if (!useSpecificStopCodon && stopCodons.includes(codon)) {
         stopCodon = codon;
         break; // Stop the conversion process
       }
@@ -288,7 +323,8 @@ const CodonConverter: React.FC = () => {
       convertNucleicAcidToSingleLetterAminoAcids(
         preprocessedSequence,
         isDNA,
-        codonMap
+        codonMap,
+        useSpecificStopCodon
       );
 
     const countResult = countAminoAcidsOccurrences(aminoAcidSequence);
@@ -669,9 +705,35 @@ const CodonConverter: React.FC = () => {
                 RNA (A, C, U, dan G)
               </label>
             </div>
+            {showSpecificButton && (
+              <div className="flex flex-col my-5">
+                <label className="font-semibold">
+                  Choose Stop Codon Option:
+                </label>
+                <label className="flex">
+                  <input
+                    type="radio"
+                    value="specific"
+                    checked={!useTerminatorAsStopCodon} // jika bukan menggunakan terminator sebagai stop codon
+                    onChange={handleTerminatorRadioChange}
+                    className="me-1"
+                  />
+                  Specific Stop Codon
+                </label>
+                <label className="flex">
+                  <input
+                    type="radio"
+                    className="me-1"
+                    value="terminator"
+                    checked={useTerminatorAsStopCodon} // jika menggunakan terminator sebagai stop codon
+                    onChange={handleTerminatorRadioChange}
+                  />
+                  Terminator as Stop Codon
+                </label>
+              </div>
+            )}
 
-            <br />
-            <div>
+            <div className={showSpecificButton ? "" : "mt-5"}>
               <input {...getInputProps()} />
               <label
                 htmlFor="fileInput"

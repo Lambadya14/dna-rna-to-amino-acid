@@ -23,6 +23,7 @@ interface AminoAcidData {
   rna: string[];
   abt: string;
   timestamp: any;
+  directory: string;
 }
 
 const InputForm: React.FC = () => {
@@ -33,6 +34,7 @@ const InputForm: React.FC = () => {
     dna: "",
     rna: "",
     abt: "",
+    directory: "",
   });
   const [file, setFile] = useState<File>();
   const [filteredData, setFilteredData] = useState<AminoAcidData[]>([]);
@@ -174,9 +176,6 @@ const InputForm: React.FC = () => {
     try {
       const aminoAcidCollection = collection(db, `${selectedDatabase}`);
       const querySnapshot = await getDocs(aminoAcidCollection);
-      const optionCodeCollection = collection(db, `${selectedDatabase}`);
-      const queryOptionSnapshot = await getDocs(aminoAcidCollection);
-      console.log(queryOptionSnapshot);
 
       const fetchedData: AminoAcidData[] = [];
       querySnapshot.forEach((doc) => {
@@ -203,32 +202,6 @@ const InputForm: React.FC = () => {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!file) return;
-
-    const namaElement = document.getElementById("nama") as HTMLInputElement;
-    if (!namaElement) {
-      console.error("Element with ID 'nama' not found");
-      return; // Menghindari lanjutan eksekusi kode
-    }
-
-    const nama = namaElement.value;
-
-    try {
-      const data = new FormData();
-      data.append("nama", nama);
-      console.log(data);
-      data.set("file", file);
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: data,
-      });
-      // handle the error
-      if (!res.ok) throw new Error(await res.text());
-    } catch (e: any) {
-      // Handle errors here
-      console.error(e);
-    }
-
     // Validasi untuk memastikan setidaknya satu input dna diisi
     if (dynamicDNAInputs.every((input) => input === "")) {
       console.error("Harap isi setidaknya satu input DNA.");
@@ -250,18 +223,57 @@ const InputForm: React.FC = () => {
           timestamp: new Date(),
         });
 
-        console.log("Document updated with ID: ", editingId);
+        console.log("Document updated with ID:", editingId);
         setEditingId(null); // Keluar dari mode edit setelah pembaruan
       } else {
-        // Jika tidak ada ID yang sedang diedit, tambahkan data baru
-        const docRef = await addDoc(collection(db, `${selectedDatabase}`), {
-          ...formValues,
-          dna: dynamicDNAInputs.filter((item) => item !== ""),
-          rna: dynamicRNAInputs.filter((item) => item !== ""),
-          timestamp: new Date(),
-        });
+        if (!file) return;
 
-        console.log("Document written with ID: ", docRef.id);
+        const namaElement = document.getElementById("nama") as HTMLInputElement;
+        if (!namaElement) {
+          console.error("Element with ID 'nama' not found");
+          return;
+        }
+
+        const nama = namaElement.value;
+
+        try {
+          const data = new FormData();
+          data.append("nama", nama);
+          data.set("file", file);
+          const res = await fetch("/api/file/upload", {
+            method: "POST",
+            body: data,
+          });
+          const response = await res.json();
+
+          if (!response.success) {
+            throw new Error(response.message);
+          }
+
+          // Dapatkan lokasi direktori dari respons API dan simpan ke dalam formValues
+          const directory = response.targetPath;
+          console.log("Directory:", directory);
+
+          // Tambahkan directory ke dalam formValues
+          const formValuesWithDirectory = {
+            ...formValues,
+            directory: directory,
+          };
+
+          // Jika tidak ada ID yang sedang diedit, tambahkan data baru
+          const docRef = await addDoc(collection(db, `${selectedDatabase}`), {
+            ...formValuesWithDirectory,
+            dna: dynamicDNAInputs.filter((item) => item !== ""),
+            rna: dynamicRNAInputs.filter((item) => item !== ""),
+            timestamp: new Date(),
+          });
+
+          console.log("Document written with ID:", docRef.id);
+        } catch (error) {
+          // Handle errors here
+          console.error("Error handling file upload:", error);
+          return;
+        }
       }
 
       // Bersihkan formulir setelah submit
@@ -272,6 +284,7 @@ const InputForm: React.FC = () => {
         dna: "",
         rna: "",
         abt: "",
+        directory: "", // Pastikan directory juga dihapus dari formValues saat bersihkan formulir
       });
       setDynamicDNAInputs([""]);
       setDynamicRNAInputs([""]);
@@ -280,7 +293,7 @@ const InputForm: React.FC = () => {
       const updatedData = await fetchData();
       setData(updatedData);
     } catch (error) {
-      console.error("Error handling form submission: ", error);
+      console.error("Error handling form submission:", error);
     }
   };
 
@@ -295,6 +308,7 @@ const InputForm: React.FC = () => {
       dna: "",
       rna: "",
       abt: editedData?.abt || "",
+      directory: "",
     });
 
     setEditingId(id);
@@ -313,6 +327,7 @@ const InputForm: React.FC = () => {
       dna: "",
       rna: "",
       abt: "",
+      directory: "",
     });
 
     setDynamicDNAInputs([""]);
@@ -333,8 +348,34 @@ const InputForm: React.FC = () => {
       // Perbarui data setelah penghapusan
       const updatedData = data.filter((item) => item.id !== id);
       setData(updatedData);
+
+      // Dapatkan nama file yang akan dihapus
+      const fileToDelete = data.find((item) => item.id === id)?.nama;
+
+      if (!fileToDelete) {
+        console.error("Nama file tidak ditemukan.");
+        return;
+      }
+
+      // Kirim permintaan DELETE ke endpoint
+      const response = await fetch("/api/file/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nama: fileToDelete }),
+      });
+
+      // Periksa status respons
+      if (!response.ok) {
+        throw new Error("Gagal menghapus file.");
+      }
+
+      console.log(`File ${fileToDelete} berhasil dihapus.`);
+
+      // Perbarui data setelah penghapusan
     } catch (error) {
-      console.error("Error deleting document: ", error);
+      console.error("Error deleting file:", error);
     }
   };
 

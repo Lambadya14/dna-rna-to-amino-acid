@@ -34,6 +34,7 @@ const InputForm: React.FC = () => {
     rna: "",
     abt: "",
   });
+  const [file, setFile] = useState<File>();
   const [filteredData, setFilteredData] = useState<AminoAcidData[]>([]);
   const [data, setData] = useState<AminoAcidData[]>([]);
   const [filterValue, setFilterValue] = useState("");
@@ -193,9 +194,40 @@ const InputForm: React.FC = () => {
     }
   };
 
+  const handleFileSubmit = (e: ChangeEvent<HTMLInputElement>) => {
+    const uploadedFile = e.target.files?.[0];
+    setFile(uploadedFile);
+  };
+
   //CREATE / EDIT
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!file) return;
+
+    const namaElement = document.getElementById("nama") as HTMLInputElement;
+    if (!namaElement) {
+      console.error("Element with ID 'nama' not found");
+      return; // Menghindari lanjutan eksekusi kode
+    }
+
+    const nama = namaElement.value;
+
+    try {
+      const data = new FormData();
+      data.append("nama", nama);
+      console.log(data);
+      data.set("file", file);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: data,
+      });
+      // handle the error
+      if (!res.ok) throw new Error(await res.text());
+    } catch (e: any) {
+      // Handle errors here
+      console.error(e);
+    }
 
     // Validasi untuk memastikan setidaknya satu input dna diisi
     if (dynamicDNAInputs.every((input) => input === "")) {
@@ -512,6 +544,7 @@ const InputForm: React.FC = () => {
         handleRemoveDynamicRNAInput={handleRemoveDynamicRNAInput}
         isEditMode={isEditMode}
         handleCancel={handleCancel}
+        handleFileSubmit={handleFileSubmit}
       />
       <DataDisplayComponent
         data={filteredData}

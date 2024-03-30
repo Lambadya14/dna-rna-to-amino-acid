@@ -16,6 +16,7 @@ interface FormComponentProps {
   handleRemoveDynamicRNAInput: (index: number) => void;
   isEditMode: boolean;
   handleCancel: () => void;
+  handleFileSubmit: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const FormComponent: React.FC<FormComponentProps> = ({
@@ -32,6 +33,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
   handleRemoveDynamicRNAInput,
   isEditMode,
   handleCancel,
+  handleFileSubmit,
 }) => {
   return (
     <form className="flex flex-col px-5" onSubmit={handleFormSubmit}>
@@ -44,6 +46,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
             id="nama"
             value={formValues.nama}
             onChange={handleInputChange}
+            name="nama"
           />
           <label htmlFor="abbr1">Singkatan 1</label>
           <input
@@ -139,6 +142,9 @@ const FormComponent: React.FC<FormComponentProps> = ({
             onChange={handleInputChange}
           />
         </div>
+      </div>
+      <div>
+        <input formEncType="multipart/form-data" type="file" onChange={handleFileSubmit} />
       </div>
       <div className="flex justify-center">
         {isEditMode && (

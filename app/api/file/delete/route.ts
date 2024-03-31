@@ -6,23 +6,23 @@ export async function DELETE(request: NextRequest) {
   try {
     // Parse JSON data from the request body
     const body = await request.json();
-    let { nama } = body; // Ubah menjadi let agar dapat diubah nanti
+    let { id } = body; // Ubah menjadi let agar dapat diubah nanti
 
-    if (!nama) {
-      return NextResponse.json({ success: false, message: 'Nama file tidak diberikan.' });
+    if (!id) {
+      return NextResponse.json({ success: false, message: 'id file tidak diberikan.' });
     }
 
-    const fileExtension = extname(nama); // Dapatkan ekstensi file
-    nama = nama + fileExtension; // Tambahkan ekstensi file ke nama
+    const fileExtension = extname(id); // Dapatkan ekstensi file
+    id = id + fileExtension; // Tambahkan ekstensi file ke id
 
-    const filePath = join(process.cwd(), "public", "images", `${nama}.jpg`);
+    const filePath = join(process.cwd(), "public", "images", `${id}.jpg`);
 
     try {
       await unlink(filePath);
-      console.log(`File ${nama} berhasil dihapus.`);
+      console.log(`File ${id} berhasil dihapus.`);
       return NextResponse.json({ success: true });
     } catch (error) {
-      console.error(`Gagal menghapus file ${nama}:`, error);
+      console.error(`Gagal menghapus file ${id}:`, error);
       return NextResponse.json({ success: false, message: 'Gagal menghapus file.' });
     }
   } catch (error) {

@@ -15,6 +15,7 @@ interface FormComponentProps {
   handleAddDynamicRNAInput: () => void;
   handleRemoveDynamicRNAInput: (index: number) => void;
   isEditMode: boolean;
+  isLoading: boolean;
   handleCancel: () => void;
   handleFileSubmit: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -34,6 +35,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
   isEditMode,
   handleCancel,
   handleFileSubmit,
+  isLoading,
 }) => {
   return (
     <form className="flex flex-col px-5" onSubmit={handleFormSubmit}>
@@ -144,7 +146,12 @@ const FormComponent: React.FC<FormComponentProps> = ({
         </div>
       </div>
       <div>
-        <input formEncType="multipart/form-data" type="file" onChange={handleFileSubmit} />
+        <input
+          formEncType="multipart/form-data"
+          type="file"
+          id="inputFile"
+          onChange={handleFileSubmit}
+        />
       </div>
       <div className="flex justify-center">
         {isEditMode && (
@@ -160,8 +167,47 @@ const FormComponent: React.FC<FormComponentProps> = ({
           id="submit-button"
           className="rounded-md h-[40px] w-full my-3 bg-[#098c28] text-white"
           type="submit"
+          disabled={isLoading}
         >
-          {isEditMode ? "Update" : "Submit"}
+          {isLoading ? (
+            <div className="flex justify-center items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-dasharray="15"
+                  stroke-dashoffset="15"
+                  stroke-linecap="round"
+                  stroke-width="2"
+                  d="M12 3C16.9706 3 21 7.02944 21 12"
+                >
+                  <animate
+                    fill="freeze"
+                    attributeName="stroke-dashoffset"
+                    dur="0.3s"
+                    values="15;0"
+                  />
+                  <animateTransform
+                    attributeName="transform"
+                    dur="1.5s"
+                    repeatCount="indefinite"
+                    type="rotate"
+                    values="0 12 12;360 12 12"
+                  />
+                </path>
+              </svg>
+              <p>Loading...</p>
+            </div>
+          ) : isEditMode ? (
+            "Update"
+          ) : (
+            "Submit"
+          )}
         </button>
       </div>
     </form>

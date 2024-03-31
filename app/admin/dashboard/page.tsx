@@ -47,6 +47,7 @@ const InputForm: React.FC = () => {
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedDatabase, setSelectedDatabase] = useState<string>(""); // State untuk memantau database mana yang dipilih
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDeleteConfirmation = (id: string) => {
     setDeletingItemId(id);
@@ -198,6 +199,13 @@ const InputForm: React.FC = () => {
     setFile(uploadedFile);
   };
 
+  const clearInputFile = () => {
+    const inputFile = document.getElementById("inputFile") as HTMLInputElement;
+    if (inputFile) {
+      inputFile.value = ""; // Mengatur nilai input file menjadi string kosong
+    }
+  };
+
   //CREATE / EDIT
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -214,10 +222,10 @@ const InputForm: React.FC = () => {
     }
 
     try {
+      setIsLoading(true); // Set loading state to true
+
       if (editingId) {
         if (!file) return;
-
-        console.log("id: ", editingId); // Tambahkan ini untuk memeriksa nilai file
 
         try {
           const data = new FormData();
@@ -250,7 +258,6 @@ const InputForm: React.FC = () => {
           });
 
           console.log("Document updated with ID:", editingId);
-          setEditingId(null); // Exit edit mode after update
         } catch (error) {
           console.error("Error updating document:", error);
         }
@@ -287,7 +294,6 @@ const InputForm: React.FC = () => {
           await updateDoc(doc(db, `${selectedDatabase}`, docRef.id), {
             directory: directory,
           });
-
           console.log("Document written with ID:", docRef.id);
         } catch (error) {
           console.error("Error handling file upload:", error);
@@ -307,12 +313,16 @@ const InputForm: React.FC = () => {
       });
       setDynamicDNAInputs([""]);
       setDynamicRNAInputs([""]);
+      clearInputFile();
 
       // Update data after addition or update
       const updatedData = await fetchData();
       setData(updatedData);
+      setIsEditMode(false);
     } catch (error) {
       console.error("Error handling form submission:", error);
+    } finally {
+      setIsLoading(false); // Set loading state to false regardless of success or failure
     }
   };
 
@@ -334,6 +344,8 @@ const InputForm: React.FC = () => {
     setDynamicDNAInputs(editedData?.dna || []);
     setDynamicRNAInputs(editedData?.rna || []);
     setIsEditMode(true);
+    clearInputFile();
+
     document.getElementById("submit-button")!.textContent = "Update";
   };
 
@@ -354,6 +366,7 @@ const InputForm: React.FC = () => {
     setEditingId(null);
     setIsEditMode(false);
     document.getElementById("submit-button")!.textContent = "Submit";
+    clearInputFile();
   };
 
   //DELETE
@@ -595,6 +608,7 @@ const InputForm: React.FC = () => {
         isEditMode={isEditMode}
         handleCancel={handleCancel}
         handleFileSubmit={handleFileSubmit}
+        isLoading={isLoading}
       />
       <DataDisplayComponent
         data={filteredData}

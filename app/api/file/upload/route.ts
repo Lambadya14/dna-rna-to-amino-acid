@@ -18,15 +18,15 @@ export async function POST(request: NextRequest) {
   const ext = extname(file.name);
 
   // Gabungkan ekstensi file dengan nama file
-  const targetPath = join(process.cwd(), "public", "images", `${nama}${ext}`);
+  const targetPath = join(process.cwd(), "public", "image", `${nama}${ext}`);
 
   try {
     // Tulis file ke path target
     await writeFile(targetPath, buffer);
     console.log(`File disimpan di ${targetPath}`);
 
-    // Ubah path agar hanya menampilkan "\public\images"
-    const modifiedPath = targetPath.replace(process.cwd(), "");
+    // Ubah path agar hanya menampilkan "/image/"
+    const modifiedPath = `/image/${nama}${ext}`;
     console.log(`Modified Path: ${modifiedPath}`);
 
     return NextResponse.json({ success: true, targetPath: modifiedPath });

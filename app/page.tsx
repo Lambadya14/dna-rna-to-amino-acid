@@ -26,7 +26,8 @@ import { collection, getDocs } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TableDetails from "./components/tables/TableDetails";
-
+import Image from "next/image";
+import Image6 from "../public/images/1BZyhUtiI6Wb6XWXbMhe.jpg";
 // Sample codon map data
 
 // Interface for codon objects
@@ -37,6 +38,7 @@ interface Codon {
   dna: string[];
   rna: string[];
   about: string;
+  directory: string;
 }
 
 // Interface for the conversion result
@@ -122,6 +124,7 @@ const CodonConverter: React.FC = () => {
             dna: codonData?.dna,
             rna: codonData?.rna,
             about: codonData?.abt,
+            directory: codonData?.directory,
           });
         });
         setCodonMap(codons);
@@ -377,8 +380,28 @@ const CodonConverter: React.FC = () => {
     const aminoAcid = codonMap.find(
       (item) => item.abbreviation1 === abbreviation
     );
-    return aminoAcid?.about || "About information not available.";
+
+    if (!aminoAcid) return "About information not available.";
+
+    return (
+      <>
+        <strong>
+          {aminoAcid.name} ({aminoAcid.abbreviation3})
+        </strong>
+        <p className="text-justify">{aminoAcid.about}</p>
+        {aminoAcid.directory && (
+          <Image
+            src={`http://localhost:3000/${aminoAcid.directory}`} // Sesuaikan dengan protokol dan port yang sesuai
+            alt={`${aminoAcid.name}`}
+            width={400}
+            height={400}
+            className=""
+          />
+        )}
+      </>
+    );
   };
+
   const getAbbr3 = (abbreviation: string) => {
     const aminoAcid = codonMap.find(
       (item) => item.abbreviation1 === abbreviation
@@ -558,12 +581,6 @@ const CodonConverter: React.FC = () => {
                     <Slider {...settings}>
                       {Object.keys(aminoAcidCountResult).map((aminoAcid) => (
                         <div key={aminoAcid} className="px-1">
-                          <p>
-                            <strong>
-                              {getSequenceName(aminoAcid)} (
-                              {getAbbr3(aminoAcid)})
-                            </strong>
-                          </p>
                           <p className="text-justify">
                             {getAboutInformation(aminoAcid)}
                           </p>
@@ -573,7 +590,7 @@ const CodonConverter: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <TableDetails querySequence={dnaSequence} />
+              {/* <TableDetails querySequence={dnaSequence} /> */}
             </>
           )}
         </div>

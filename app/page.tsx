@@ -79,23 +79,25 @@ const CodonConverter: React.FC = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const useTerminator = event.target.value === "terminator";
+    const useSpecificStopCodon = !useTerminator;
     setUseTerminatorAsStopCodon(useTerminator);
-    setUseSpecificStopCodon(!useTerminator);
+    setUseSpecificStopCodon(useSpecificStopCodon); // Update useSpecificStopCodon state
   };
 
   // Tambahkan UI untuk memilih stop codon
-
   useEffect(() => {
     if (
       selectedDatabase === "karyorelictNuclear" ||
       selectedDatabase === "condylostomaNuclear" ||
-      selectedDatabase === "condylostomaNuclear" ||
+      selectedDatabase === "mesodiniumNuclear" ||
       selectedDatabase === "peritrichNuclear" ||
       selectedDatabase === "blastocrithidiaNuclear"
     ) {
       setShowSpecificButton(true);
+      setUseSpecificStopCodon(true); // Set useSpecificStopCodon to true
     } else {
       setShowSpecificButton(false);
+      setUseSpecificStopCodon(false); // Set useSpecificStopCodon to false
     }
   }, [selectedDatabase]);
 
@@ -216,9 +218,7 @@ const CodonConverter: React.FC = () => {
     const stopCodons: string[] = [];
 
     // If "Specific Stop Codon" option is selected, then do not use terminator as stop codon
-    if (useSpecificStopCodon) {
-      // No action needed, proceed without checking for terminator as stop codon
-    } else {
+    if (!useSpecificStopCodon) {
       // Use terminator as stop codon
       for (const codonData of codonMap) {
         if (codonData.name.toLowerCase() === "terminator") {
@@ -388,7 +388,7 @@ const CodonConverter: React.FC = () => {
         <div className="flex">
           {aminoAcid.directory && (
             <Image
-              src={`http://localhost:3000/${aminoAcid.directory}`} // Sesuaikan dengan protokol dan port yang sesuai
+              src={`${aminoAcid.directory}`} // Sesuaikan dengan protokol dan port yang sesuai
               alt={`${aminoAcid.name}`}
               width={400}
               height={400}

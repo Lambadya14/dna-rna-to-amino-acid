@@ -328,6 +328,14 @@ const InputForm: React.FC = () => {
 
   // EDIT
   const handleEdit = (id: string) => {
+    const targetElement = document.getElementById("nama");
+    if (targetElement) {
+      const offsetTop = targetElement.offsetTop;
+      window.scrollTo({
+        top: offsetTop,
+        behavior: "smooth",
+      });
+    }
     const editedData = data.find((item) => item.id === id);
 
     setFormValues({

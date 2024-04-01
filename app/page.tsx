@@ -385,19 +385,23 @@ const CodonConverter: React.FC = () => {
 
     return (
       <>
-        <strong>
-          {aminoAcid.name} ({aminoAcid.abbreviation3})
-        </strong>
-        <p className="text-justify">{aminoAcid.about}</p>
-        {aminoAcid.directory && (
-          <Image
-            src={`http://localhost:3000/${aminoAcid.directory}`} // Sesuaikan dengan protokol dan port yang sesuai
-            alt={`${aminoAcid.name}`}
-            width={400}
-            height={400}
-            className=""
-          />
-        )}
+        <div className="flex">
+          {aminoAcid.directory && (
+            <Image
+              src={`http://localhost:3000/${aminoAcid.directory}`} // Sesuaikan dengan protokol dan port yang sesuai
+              alt={`${aminoAcid.name}`}
+              width={400}
+              height={400}
+              className="object-cover"
+            />
+          )}
+          <div className="ms-3">
+            <strong>
+              {aminoAcid.name} ({aminoAcid.abbreviation3})
+            </strong>
+            <p className="text-justify">{aminoAcid.about}</p>
+          </div>
+        </div>
       </>
     );
   };

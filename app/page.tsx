@@ -594,7 +594,7 @@ const CodonConverter: React.FC = () => {
                   </div>
                 </div>
               </div>
-              {/* <TableDetails querySequence={dnaSequence} /> */}
+              <TableDetails querySequence={dnaSequence} />
             </>
           )}
         </div>

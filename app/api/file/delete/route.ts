@@ -15,7 +15,7 @@ export async function DELETE(request: NextRequest) {
     const fileExtension = extname(id); // Dapatkan ekstensi file
     id = id + fileExtension; // Tambahkan ekstensi file ke id
 
-    const filePath = join(process.cwd(), "public", "images", `${id}.jpg`);
+    const filePath = join(process.cwd(), "public", "image", `${id}.jpg`);
 
     try {
       await unlink(filePath);

@@ -402,15 +402,6 @@ const InputForm: React.FC = () => {
   //DELETE
   const handleDelete = async (id: string) => {
     try {
-      // Hapus dokumen dengan ID tertentu dari koleksi `${selectedDatabase}`
-      // Gunakan fungsi deleteDoc dari firestore
-      await deleteDoc(doc(db, `${selectedDatabase}`, id));
-      console.log("Document deleted with ID: ", id);
-
-      // Perbarui data setelah penghapusan
-      const updatedData = data.filter((item) => item.id !== id);
-      setData(updatedData);
-
       // Kirim permintaan DELETE ke endpoint
       const response = await fetch("/api/file/delete", {
         method: "DELETE",
@@ -419,6 +410,13 @@ const InputForm: React.FC = () => {
         },
         body: JSON.stringify({ id: id }), // Menggunakan ID dokumen sebagai payload
       });
+
+      await deleteDoc(doc(db, `${selectedDatabase}`, id));
+      console.log("Document deleted with ID: ", id);
+
+      // Perbarui data setelah penghapusan
+      const updatedData = data.filter((item) => item.id !== id);
+      setData(updatedData);
 
       // Periksa status respons
       if (!response.ok) {

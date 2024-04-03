@@ -5,6 +5,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   setDoc,
   updateDoc,
@@ -210,14 +211,12 @@ const InputForm: React.FC = () => {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validasi untuk memastikan setidaknya satu input dna diisi
-    if (dynamicDNAInputs.every((input) => input === "")) {
-      console.error("Harap isi setidaknya satu input DNA.");
-      return;
-    }
-    // Validasi untuk memastikan setidaknya satu input dna diisi
-    if (dynamicRNAInputs.every((input) => input === "")) {
-      console.error("Harap isi setidaknya satu input RNA.");
+    // Validasi untuk memastikan setidaknya satu input DNA dan RNA diisi
+    if (
+      dynamicDNAInputs.every((input) => input === "") ||
+      dynamicRNAInputs.every((input) => input === "")
+    ) {
+      console.error("Harap isi setidaknya satu input DNA dan RNA.");
       return;
     }
 
@@ -225,76 +224,99 @@ const InputForm: React.FC = () => {
       setIsLoading(true); // Set loading state to true
 
       if (editingId) {
-        if (!file) return;
-
         try {
-          const data = new FormData();
-          data.append("nama", editingId);
-          data.set("file", file);
-          const res = await fetch("/api/file/upload", {
-            method: "POST",
-            body: data,
-          });
-          const response = await res.json();
+          if (file && file.name !== "") {
+            try {
+              const data = new FormData();
+              data.append("nama", editingId);
+              data.set("file", file);
+              const res = await fetch("/api/file/upload", {
+                method: "POST",
+                body: data,
+              });
+              const response = await res.json();
 
-          console.log("Upload response:", response); // Tambahkan ini untuk memeriksa respons dari endpoint
+              console.log("Upload response:", response);
 
-          if (!response.success) {
-            throw new Error(response.message);
+              if (!response.success) {
+                throw new Error(response.message);
+              }
+
+              const directory = response.targetPath;
+
+              // Update data if editing
+              await updateDoc(doc(db, `${selectedDatabase}`, editingId), {
+                ...formValues,
+                dna: dynamicDNAInputs.filter((item) => item !== ""),
+                rna: dynamicRNAInputs.filter((item) => item !== ""),
+                timestamp: new Date(),
+                directory: directory,
+              });
+
+              console.log("Document updated with ID:", editingId);
+            } catch (error) {
+              console.error("Error updating document:", error);
+            }
+          } else {
+            // Jika tidak ada file yang dipilih, tetapkan directory yang ada sebelumnya
+            const previousDoc = await getDoc(
+              doc(db, `${selectedDatabase}`, editingId)
+            );
+            const previousDirectory = previousDoc.exists()
+              ? previousDoc.data().directory
+              : "";
+
+            await updateDoc(doc(db, `${selectedDatabase}`, editingId), {
+              ...formValues,
+              dna: dynamicDNAInputs.filter((item) => item !== ""),
+              rna: dynamicRNAInputs.filter((item) => item !== ""),
+              timestamp: new Date(),
+              directory: previousDirectory,
+            });
+
+            console.log("Document updated with ID:", editingId);
           }
-
-          // Get directory from API response and store in formValues
-          const directory = response.targetPath;
-
-          console.log("Directory:", directory); // Tambahkan ini untuk memeriksa nilai directory
-
-          // Update data if editing
-          await updateDoc(doc(db, `${selectedDatabase}`, editingId), {
-            ...formValues,
-            dna: dynamicDNAInputs.filter((item) => item !== ""),
-            rna: dynamicRNAInputs.filter((item) => item !== ""),
-            timestamp: new Date(),
-            directory: directory,
-          });
-
-          console.log("Document updated with ID:", editingId);
         } catch (error) {
           console.error("Error updating document:", error);
         }
       } else {
-        if (!file) return;
-
         try {
-          const data = new FormData();
-          const docRef = await addDoc(collection(db, `${selectedDatabase}`), {
-            ...formValues,
-            dna: dynamicDNAInputs.filter((item) => item !== ""),
-            rna: dynamicRNAInputs.filter((item) => item !== ""),
-            timestamp: new Date(),
-          });
+          if (file && file.name !== "") {
+            // Pengecekan apakah nilai string dari input file tidak kosong
+            const data = new FormData();
+            const docRef = await addDoc(collection(db, `${selectedDatabase}`), {
+              ...formValues,
+              dna: dynamicDNAInputs.filter((item) => item !== ""),
+              rna: dynamicRNAInputs.filter((item) => item !== ""),
+              timestamp: new Date(),
+            });
 
-          // Use docRef.id as the filename
-          data.append("nama", docRef.id);
-          data.set("file", file);
-          const res = await fetch("/api/file/upload", {
-            method: "POST",
-            body: data,
-          });
-          const response = await res.json();
+            data.append("nama", docRef.id);
+            data.set("file", file);
+            const res = await fetch("/api/file/upload", {
+              method: "POST",
+              body: data,
+            });
+            const response = await res.json();
 
-          if (!response.success) {
-            throw new Error(response.message);
+            if (!response.success) {
+              throw new Error(response.message);
+            }
+
+            // Get directory from API response and store in formValues
+            const directory = response.targetPath;
+            console.log("Directory:", directory);
+
+            // Update the document with the directory information
+            await updateDoc(doc(db, `${selectedDatabase}`, docRef.id), {
+              directory: directory,
+            });
+            console.log("Document written with ID:", docRef.id);
+          } else {
+            console.log(
+              "Tidak ada file yang dipilih, tidak ada pengubahan data yang dilakukan."
+            );
           }
-
-          // Get directory from API response and store in formValues
-          const directory = response.targetPath;
-          console.log("Directory:", directory);
-
-          // Update the document with the directory information
-          await updateDoc(doc(db, `${selectedDatabase}`, docRef.id), {
-            directory: directory,
-          });
-          console.log("Document written with ID:", docRef.id);
         } catch (error) {
           console.error("Error handling file upload:", error);
           return;
@@ -309,13 +331,13 @@ const InputForm: React.FC = () => {
         dna: "",
         rna: "",
         abt: "",
-        directory: "", // Make sure to clear directory from formValues when clearing the form
+        directory: "", // Pastikan untuk membersihkan directory dari formValues ketika membersihkan formulir
       });
       setDynamicDNAInputs([""]);
       setDynamicRNAInputs([""]);
-      clearInputFile();
+      setFile(undefined); // Menetapkan nilai string input file kembali ke kosong setelah formulir dikosongkan
 
-      // Update data after addition or update
+      // Perbarui data setelah penambahan atau pembaruan
       const updatedData = await fetchData();
       setData(updatedData);
       setIsEditMode(false);

@@ -385,7 +385,7 @@ const CodonConverter: React.FC = () => {
 
     return (
       <>
-        <div className="flex">
+        <div className="flex flex-col">
           {aminoAcid.directory && (
             <Image
               src={`${aminoAcid.directory}`} // Sesuaikan dengan protokol dan port yang sesuai
@@ -395,7 +395,7 @@ const CodonConverter: React.FC = () => {
               className="object-cover"
             />
           )}
-          <div className="ms-3">
+          <div>
             <strong>
               {aminoAcid.name} ({aminoAcid.abbreviation3})
             </strong>

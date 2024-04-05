@@ -27,8 +27,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TableDetails from "./components/tables/TableDetails";
 import Image from "next/image";
-import Image6 from "../public/images/1BZyhUtiI6Wb6XWXbMhe.jpg";
-// Sample codon map data
 
 // Interface for codon objects
 interface Codon {
@@ -73,6 +71,8 @@ const CodonConverter: React.FC = () => {
   const [showSpecificButton, setShowSpecificButton] = useState(false);
   const [useTerminatorAsStopCodon, setUseTerminatorAsStopCodon] =
     useState(false);
+  const [totalAminoAcids, setTotalAminoAcids] = useState<number>(0);
+  const [totalAminoAcidTypes, setTotalAminoAcidTypes] = useState<number>(0);
 
   // fungsi pengganti untuk mengatur nilai state ketika pengguna mengklik radio button
   const handleTerminatorRadioChange = (
@@ -322,50 +322,31 @@ const CodonConverter: React.FC = () => {
     // Reset lazy loading state after 3 seconds (adjust the time as needed)
     setTimeout(resetLazyLoading, 3000);
 
-    const { aminoAcidSequence, stopCodon } =
-      convertNucleicAcidToSingleLetterAminoAcids(
-        preprocessedSequence,
-        isDNA,
-        codonMap,
-        useSpecificStopCodon
-      );
+    const { aminoAcidSequence } = convertNucleicAcidToSingleLetterAminoAcids(
+      preprocessedSequence,
+      isDNA,
+      codonMap,
+      useSpecificStopCodon
+    );
 
     const countResult = countAminoAcidsOccurrences(aminoAcidSequence);
+    setAminoAcidCountResult(countResult);
 
-    // Modify the stopCodon output
-    const stopCodonOutput =
-      stopCodon &&
-      stopCodon !== "TAA" &&
-      stopCodon !== "TAG" &&
-      stopCodon !== "UAA" &&
-      stopCodon !== "UAG"
-        ? ` ${stopCodon} - ${
-            codonMap.find((item) =>
-              isDNA
-                ? item.dna.includes(stopCodon)
-                : item.rna.includes(stopCodon)
-            )?.name
-          }(  ${
-            codonMap.find((item) =>
-              isDNA
-                ? item.dna.includes(stopCodon)
-                : item.rna.includes(stopCodon)
-            )?.abbreviation3
-          } / ${
-            codonMap.find((item) =>
-              isDNA
-                ? item.dna.includes(stopCodon)
-                : item.rna.includes(stopCodon)
-            )?.abbreviation1
-          } ) `
-        : stopCodon;
+    // Hitung jumlah total asam amino
+    let total = 0;
+    for (const aminoAcid in countResult) {
+      total += countResult[aminoAcid];
+    }
+    setTotalAminoAcids(total);
+    const totalTypes = Object.keys(countResult).length;
+    setTotalAminoAcidTypes(totalTypes);
 
     setResult(
-      <div>
-        <p className="font-bold text-[30px]">Amino Acid Sequence:</p>
-        <p className=" break-words">{aminoAcidSequence}</p>
-        <p className="font-bold text-[30px] mt-4">Stop Codon:</p>
-        <p>{stopCodonOutput}</p>
+      <div className="group">
+        <p className="font-bold text-[30px] overflow-hidden line-clamp-3 group-hover:line-clamp-none text-justify">
+          Urutan Asam Amino:
+        </p>
+        <p className=" break-words  mb-5">{aminoAcidSequence}</p>
       </div>
     );
     setAminoAcidCountResult(countResult);
@@ -385,38 +366,23 @@ const CodonConverter: React.FC = () => {
 
     return (
       <>
-        <div className="flex flex-col">
+        <div>
           {aminoAcid.directory && (
             <Image
               src={`${aminoAcid.directory}`} // Sesuaikan dengan protokol dan port yang sesuai
               alt={`${aminoAcid.name}`}
               width={400}
               height={400}
-              className="object-cover"
+              className="object-cover float-left me-5"
             />
           )}
-          <div>
-            <strong>
-              {aminoAcid.name} ({aminoAcid.abbreviation3})
-            </strong>
-            <p className="text-justify">{aminoAcid.about}</p>
-          </div>
+          <strong>
+            {aminoAcid.name} ({aminoAcid.abbreviation3})
+          </strong>
+          <p className="text-justify">{aminoAcid.about}</p>
         </div>
       </>
     );
-  };
-
-  const getAbbr3 = (abbreviation: string) => {
-    const aminoAcid = codonMap.find(
-      (item) => item.abbreviation1 === abbreviation
-    );
-    return aminoAcid?.abbreviation3 || "About information not available.";
-  };
-  const getSequenceName = (abbreviation: string) => {
-    const aminoAcid = codonMap.find(
-      (item) => item.abbreviation1 === abbreviation
-    );
-    return aminoAcid?.name || "About information not available.";
   };
 
   // Function to read file content
@@ -489,7 +455,7 @@ const CodonConverter: React.FC = () => {
                   />
                 </path>
               </svg>
-              <p>Please wait.</p>
+              <p>Mohon tunggu sebentar...</p>
             </div>
           ) : (
             <>
@@ -510,11 +476,13 @@ const CodonConverter: React.FC = () => {
                     />
                   </svg>
                 </button>
-                <h1 className="font-bold text-[35px] text-center  ">RESULT</h1>
+                <h1 className="font-bold text-[35px] text-center  ">
+                  Hasil Konversi
+                </h1>
               </div>
               <div className="lg:flex">
                 <div className="border-2 p-5 rounded-xl lg:w-1/2 lg:me-5">
-                  <h2 className="font-semibold text-[30px]">Overview</h2>
+                  <h2 className="font-semibold text-[30px]">Tinjauan</h2>
                   <ResponsiveContainer height={400}>
                     <BarChart
                       data={Object.entries(aminoAcidCountResult).map(
@@ -570,17 +538,14 @@ const CodonConverter: React.FC = () => {
                       <Bar dataKey="count" fill="#8884d8" />
                     </BarChart>
                   </ResponsiveContainer>
+                  <p className="mt-5">Total Asam Amino: {totalAminoAcids}</p>
+                  <p>Total Jenis Asam Amino: {totalAminoAcidTypes}</p>
                 </div>
                 <div className="max-lg:mt-5 lg:w-1/2 rounded-xl">
-                  {result && (
-                    <div className="text-justify p-5 border-2 rounded-xl">
-                      {result}
-                    </div>
-                  )}
-                  <div className="mt-5 p-5 border-2 rounded-xl">
-                    {" "}
+                  <div className=" p-5 border-2 rounded-xl ">
+                    {result}
                     <h2 className=" font-bold text-[30px]">
-                      About Amino Acids:
+                      Tentang Asam Amino:
                     </h2>
                     <Slider {...settings}>
                       {Object.keys(aminoAcidCountResult).map((aminoAcid) => (
@@ -608,17 +573,17 @@ const CodonConverter: React.FC = () => {
         >
           <div className="text-justify h-screen flex flex-col justify-center items-center">
             <h1 className="font-bold text-[35px] text-center">
-              DNA/RNA Sequence Converter
+              Konverter Urutan DNA/RNA
             </h1>
             <label className="my-5">
-              <p className="text-center font-semibold">Choose DNA/RNA Code:</p>
+              <p className="text-center font-semibold">Pilih Kode DNA:</p>
               <select
                 value={selectedDatabase}
                 onChange={handleDatabaseChange}
                 className="border rounded-xl h-[40px] px-2 w-[400px]"
               >
-                {showChooseOption && <option value="">Choose Code Type</option>}
-                <optgroup label="Mitochondrial Codes">
+                {showChooseOption && <option value="">Pilih Tipe Kode</option>}
+                <optgroup label="Kode Mitokondria">
                   <option value="vertebrateMitochondrial">
                     The Vertebrate Mitochondrial Code
                   </option>
@@ -657,7 +622,7 @@ const CodonConverter: React.FC = () => {
                     Cephalodiscidae Mitochondrial UAA-Tyr Code
                   </option>
                 </optgroup>
-                <optgroup label="Nuclear Codes">
+                <optgroup label="Kode Inti">
                   <option value="ciliateDasycladaceanHexamitaNuclear">
                     The Ciliate, Dasycladacean and Hexamita Nuclear Code
                   </option>
@@ -689,7 +654,7 @@ const CodonConverter: React.FC = () => {
                     Blastocrithidia Nuclear Code
                   </option>
                 </optgroup>
-                <optgroup label="Others">
+                <optgroup label="Lainnya">
                   <option value="standardCode">The Standard Code</option>
                   <option value="bacterialArchaealPlantPlastid">
                     The Bacterial, Archaeal and Plant Plastid Code
@@ -704,7 +669,7 @@ const CodonConverter: React.FC = () => {
               </select>
             </label>
             <div className="flex flex-col">
-              <label className="font-semibold">Choose Sequence Type:</label>
+              <label className="font-semibold">Pilih Tipe Urutan:</label>
               <label className="flex">
                 <input
                   type="radio"
@@ -729,7 +694,7 @@ const CodonConverter: React.FC = () => {
             {showSpecificButton && (
               <div className="flex flex-col my-5">
                 <label className="font-semibold">
-                  Choose Stop Codon Option:
+                  Pilih Opsi Kodon Pemberhenti:
                 </label>
                 <label className="flex">
                   <input
@@ -739,7 +704,7 @@ const CodonConverter: React.FC = () => {
                     onChange={handleTerminatorRadioChange}
                     className="me-1"
                   />
-                  Specific Stop Codon
+                  Kodon Pemberhenti Yang Spesifik
                 </label>
                 <label className="flex">
                   <input
@@ -749,7 +714,7 @@ const CodonConverter: React.FC = () => {
                     checked={useTerminatorAsStopCodon} // jika menggunakan terminator sebagai stop codon
                     onChange={handleTerminatorRadioChange}
                   />
-                  Terminator as Stop Codon
+                  Pemberhenti Kodon
                 </label>
               </div>
             )}
@@ -760,7 +725,7 @@ const CodonConverter: React.FC = () => {
                 htmlFor="fileInput"
                 className="inline-flex rounded-md text-white   bg-[#8884d8] h-[80px] w-[300px] font-semibold text-[25px] text-center justify-center items-center hover:bg-[#5b58a1] "
               >
-                Select TXT File
+                Pilih TXT File
               </label>
               <input
                 id="fileInput"
@@ -770,7 +735,9 @@ const CodonConverter: React.FC = () => {
                 style={{ display: "none" }}
               />
               <p className="mt-5 text-center">
-                {isDragActive ? "Drop the file here" : "Or drop the file here"}
+                {isDragActive
+                  ? "Letakan file di sini"
+                  : "Atau letakan file di sini"}
               </p>
             </div>
           </div>

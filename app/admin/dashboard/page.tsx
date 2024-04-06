@@ -494,19 +494,28 @@ const InputForm: React.FC = () => {
       const rnaMatch = item.rna.some((sequence) =>
         sequence.toLowerCase().includes(criteria.toLowerCase())
       );
-      return namaMatch || abbr1Match || abbr3Match || dnaMatch || rnaMatch;
+      const chargeMatch = item.charge
+        ? new RegExp(`\\b${criteria}\\b`, "i").test(item.charge)
+        : false;
+      return (
+        namaMatch ||
+        abbr1Match ||
+        abbr3Match ||
+        dnaMatch ||
+        rnaMatch ||
+        chargeMatch
+      );
     });
 
-    // Update the state with the filtered result
     setFilteredData(filteredResult);
   };
 
-  // Handler for filter input change
+  // Handler untuk perubahan filter
   const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setFilterValue(value); // Update filter value
+    setFilterValue(value); // Update nilai filter
 
-    // Perform filtering based on the new filter value
+    // Lakukan filtering berdasarkan nilai filter baru
     filterData(value);
   };
 

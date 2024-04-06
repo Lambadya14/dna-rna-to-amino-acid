@@ -18,6 +18,8 @@ interface FormComponentProps {
   isLoading: boolean;
   handleCancel: () => void;
   handleFileSubmit: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChargeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  charge: string;
 }
 
 const FormComponent: React.FC<FormComponentProps> = ({
@@ -36,6 +38,8 @@ const FormComponent: React.FC<FormComponentProps> = ({
   handleCancel,
   handleFileSubmit,
   isLoading,
+  handleChargeChange,
+  charge,
 }) => {
   return (
     <form className="flex flex-col px-5" onSubmit={handleFormSubmit}>
@@ -152,6 +156,53 @@ const FormComponent: React.FC<FormComponentProps> = ({
           id="inputFile"
           onChange={handleFileSubmit}
         />
+      </div>
+      <div>
+        {" "}
+        <label>
+          <input
+            type="radio"
+            id="charge"
+            name="charge"
+            value="polar"
+            checked={charge === "polar"}
+            onChange={handleChargeChange}
+          />
+          Polar
+        </label>
+        <label>
+          <input
+            type="radio"
+            id="charge"
+            name="charge"
+            value="nonpolar"
+            checked={charge === "nonpolar"}
+            onChange={handleChargeChange}
+          />
+          Nonpolar
+        </label>
+        <label>
+          <input
+            type="radio"
+            id="charge"
+            name="charge"
+            value="acidic"
+            checked={charge === "acidic"}
+            onChange={handleChargeChange}
+          />
+          Acidic
+        </label>
+        <label>
+          <input
+            type="radio"
+            id="charge"
+            name="charge"
+            value="basic"
+            checked={charge === "basic"}
+            onChange={handleChargeChange}
+          />
+          Basic
+        </label>
       </div>
       <div className="flex justify-center">
         {isEditMode && (

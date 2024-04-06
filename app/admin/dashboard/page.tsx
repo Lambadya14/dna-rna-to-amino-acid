@@ -7,7 +7,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../lib/firebase/init"; // Sesuaikan path ke file firebase.ts
@@ -25,6 +24,7 @@ interface AminoAcidData {
   abt: string;
   timestamp: any;
   directory: string;
+  charge: string;
 }
 
 const InputForm: React.FC = () => {
@@ -36,6 +36,7 @@ const InputForm: React.FC = () => {
     rna: "",
     abt: "",
     directory: "",
+    charge: "",
   });
   const [file, setFile] = useState<File>();
   const [filteredData, setFilteredData] = useState<AminoAcidData[]>([]);
@@ -49,6 +50,12 @@ const InputForm: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedDatabase, setSelectedDatabase] = useState<string>(""); // State untuk memantau database mana yang dipilih
   const [isLoading, setIsLoading] = useState(false);
+  const [charge, setCharge] = useState<string>("");
+
+  const handleChargeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setCharge(value);
+  };
 
   const handleDeleteConfirmation = (id: string) => {
     setDeletingItemId(id);
@@ -225,39 +232,7 @@ const InputForm: React.FC = () => {
 
       if (editingId) {
         try {
-          if (file && file.name !== "") {
-            try {
-              const data = new FormData();
-              data.append("nama", editingId);
-              data.set("file", file);
-              const res = await fetch("/api/file/upload", {
-                method: "POST",
-                body: data,
-              });
-              const response = await res.json();
-
-              console.log("Upload response:", response);
-
-              if (!response.success) {
-                throw new Error(response.message);
-              }
-
-              const directory = response.targetPath;
-
-              // Update data if editing
-              await updateDoc(doc(db, `${selectedDatabase}`, editingId), {
-                ...formValues,
-                dna: dynamicDNAInputs.filter((item) => item !== ""),
-                rna: dynamicRNAInputs.filter((item) => item !== ""),
-                timestamp: new Date(),
-                directory: directory,
-              });
-
-              console.log("Document updated with ID:", editingId);
-            } catch (error) {
-              console.error("Error updating document:", error);
-            }
-          } else {
+          if (!file || file.name === "") {
             // Jika tidak ada file yang dipilih, tetapkan directory yang ada sebelumnya
             const previousDoc = await getDoc(
               doc(db, `${selectedDatabase}`, editingId)
@@ -272,6 +247,36 @@ const InputForm: React.FC = () => {
               rna: dynamicRNAInputs.filter((item) => item !== ""),
               timestamp: new Date(),
               directory: previousDirectory,
+              charge: charge,
+            });
+
+            console.log("Document updated with ID:", editingId);
+          } else {
+            const data = new FormData();
+            data.append("nama", editingId);
+            data.set("file", file);
+            const res = await fetch("/api/file/upload", {
+              method: "POST",
+              body: data,
+            });
+            const response = await res.json();
+
+            console.log("Upload response:", response);
+
+            if (!response.success) {
+              throw new Error(response.message);
+            }
+
+            const directory = response.targetPath;
+
+            // Update data if editing
+            await updateDoc(doc(db, `${selectedDatabase}`, editingId), {
+              ...formValues,
+              dna: dynamicDNAInputs.filter((item) => item !== ""),
+              rna: dynamicRNAInputs.filter((item) => item !== ""),
+              timestamp: new Date(),
+              directory: directory,
+              charge: charge,
             });
 
             console.log("Document updated with ID:", editingId);
@@ -281,14 +286,18 @@ const InputForm: React.FC = () => {
         }
       } else {
         try {
-          if (file && file.name !== "") {
-            // Pengecekan apakah nilai string dari input file tidak kosong
+          if (!file || file.name === "") {
+            console.log(
+              "Tidak ada file yang dipilih, tidak ada pengubahan data yang dilakukan."
+            );
+          } else {
             const data = new FormData();
             const docRef = await addDoc(collection(db, `${selectedDatabase}`), {
               ...formValues,
               dna: dynamicDNAInputs.filter((item) => item !== ""),
               rna: dynamicRNAInputs.filter((item) => item !== ""),
               timestamp: new Date(),
+              charge: charge,
             });
 
             data.append("nama", docRef.id);
@@ -303,19 +312,14 @@ const InputForm: React.FC = () => {
               throw new Error(response.message);
             }
 
-            // Get directory from API response and store in formValues
             const directory = response.targetPath;
-            console.log("Directory:", directory);
 
             // Update the document with the directory information
             await updateDoc(doc(db, `${selectedDatabase}`, docRef.id), {
+              ...formValues,
               directory: directory,
             });
             console.log("Document written with ID:", docRef.id);
-          } else {
-            console.log(
-              "Tidak ada file yang dipilih, tidak ada pengubahan data yang dilakukan."
-            );
           }
         } catch (error) {
           console.error("Error handling file upload:", error);
@@ -331,7 +335,8 @@ const InputForm: React.FC = () => {
         dna: "",
         rna: "",
         abt: "",
-        directory: "", // Pastikan untuk membersihkan directory dari formValues ketika membersihkan formulir
+        directory: "",
+        charge: "",
       });
       setDynamicDNAInputs([""]);
       setDynamicRNAInputs([""]);
@@ -368,6 +373,7 @@ const InputForm: React.FC = () => {
       rna: "",
       abt: editedData?.abt || "",
       directory: "",
+      charge: "",
     });
 
     setEditingId(id);
@@ -389,6 +395,7 @@ const InputForm: React.FC = () => {
       rna: "",
       abt: "",
       directory: "",
+      charge: "",
     });
 
     setDynamicDNAInputs([""]);
@@ -637,6 +644,8 @@ const InputForm: React.FC = () => {
         handleCancel={handleCancel}
         handleFileSubmit={handleFileSubmit}
         isLoading={isLoading}
+        charge={charge}
+        handleChargeChange={handleChargeChange}
       />
       <DataDisplayComponent
         data={filteredData}

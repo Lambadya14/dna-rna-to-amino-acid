@@ -23,6 +23,7 @@ const DataDisplayComponent: React.FC<DataDisplayComponentProps> = ({
             <th>DNA</th>
             <th>RNA</th>
             <th>Directory</th>
+            <th>Group</th>
             <th>About</th>
             <th>Action</th>
           </tr>
@@ -36,6 +37,7 @@ const DataDisplayComponent: React.FC<DataDisplayComponentProps> = ({
               <td className=" p-3 ">{item.dna.join(", ")}</td>
               <td className=" p-3 ">{item.rna.join(", ")}</td>
               <td className=" p-3 ">{item.directory}</td>
+              <td className=" p-3 ">{item.charge}</td>
               <td className="border-s border-e px-4 py-2 group">
                 <div className="overflow-hidden line-clamp-3 group-hover:line-clamp-none text-justify">
                   {item.abt}

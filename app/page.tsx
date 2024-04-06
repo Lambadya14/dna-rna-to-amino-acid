@@ -482,7 +482,7 @@ const CodonConverter: React.FC = () => {
               </div>
               <div className="lg:flex">
                 <div className="border-2 p-5 rounded-xl lg:w-1/2 lg:me-5">
-                  <h2 className="font-semibold text-[30px]">Tinjauan</h2>
+                  <h2 className="font-bold text-[30px]">Tinjauan</h2>
                   <ResponsiveContainer height={400}>
                     <BarChart
                       data={Object.entries(aminoAcidCountResult).map(

@@ -59,6 +59,7 @@ const settings = {
 // React functional component for the DNA/RNA sequence converter
 const CodonConverter: React.FC = () => {
   const [selectedDatabase, setSelectedDatabase] = useState<string>("");
+  const [selectedContent, setSelectedContent] = useState("");
   const [dnaSequence, setDnaSequence] = useState("");
   const [result, setResult] = useState<JSX.Element | null>(null);
   const [showChooseOption, setShowChooseOption] = useState(true);
@@ -418,6 +419,15 @@ const CodonConverter: React.FC = () => {
     setSelectedDatabase(selectedValue);
 
     setShowChooseOption(selectedValue === "");
+
+    const selectedOption = document.querySelector(
+      `option[value="${selectedValue}"]`
+    );
+    if (selectedOption) {
+      setSelectedContent(selectedOption.textContent || "");
+    } else {
+      setSelectedContent(""); // Penanganan jika selectedOption null
+    }
   };
 
   // React component JSX
@@ -479,7 +489,7 @@ const CodonConverter: React.FC = () => {
                   </svg>
                 </button>
                 <h1 className="font-bold text-[35px] text-center  ">
-                  Hasil Konversi
+                  Hasil Konversi ({selectedContent})
                 </h1>
               </div>
               <div className="lg:flex">
@@ -540,8 +550,17 @@ const CodonConverter: React.FC = () => {
                       <Bar dataKey="count" fill="#8884d8" />
                     </BarChart>
                   </ResponsiveContainer>
-                  <p className="mt-5">Total Asam Amino: {totalAminoAcids}</p>
-                  <p>Total Jenis Asam Amino: {totalAminoAcidTypes}</p>
+                  <div>
+                    <p className=" mt-5 font-bold text-[15px]">Keterangan:</p>
+                    <ul className="list-disc list-inside ">
+                      <li className=" font-semibold">
+                        Total Asam Amino: {totalAminoAcids} Asam Amino
+                      </li>
+                      <li className="font-semibold">
+                        Total Jenis Asam Amino: {totalAminoAcidTypes} Jenis
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 <div className="max-lg:mt-5 lg:w-1/2 rounded-xl">
                   <div className=" p-5 border-2 rounded-xl ">

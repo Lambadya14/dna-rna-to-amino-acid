@@ -355,7 +355,7 @@ const InputForm: React.FC = () => {
 
   // EDIT
   const handleEdit = (id: string) => {
-    const targetElement = document.getElementById("nama");
+    const targetElement = document.getElementById("htmlNama");
     if (targetElement) {
       const offsetTop = targetElement.offsetTop;
       window.scrollTo({

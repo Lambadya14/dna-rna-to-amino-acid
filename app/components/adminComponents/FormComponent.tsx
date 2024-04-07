@@ -45,7 +45,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
     <form className="flex flex-col px-5" onSubmit={handleFormSubmit}>
       <div className="flex justify-between">
         <div className="w-1/2 flex flex-col me-3 font-semibold">
-          <label htmlFor="nama">Nama Asam Amino</label>
+          <label id="htmlNama" htmlFor="nama">Nama Asam Amino</label>
           <input
             className="border p-3 -2 rounded-lg mb-3"
             type="text"
@@ -149,17 +149,20 @@ const FormComponent: React.FC<FormComponentProps> = ({
           />
         </div>
       </div>
-      <div>
-        <input
-          formEncType="multipart/form-data"
-          type="file"
-          id="inputFile"
-          onChange={handleFileSubmit}
-        />
+      <div className="my-5 ">
+        <label htmlFor="inputGambar">
+          <p className="font-bold">Pilih Gambar:</p>
+          <input
+            formEncType="multipart/form-data"
+            type="file"
+            id="inputFile"
+            onChange={handleFileSubmit}
+          />
+        </label>
       </div>
       <div>
-        {" "}
-        <label>
+        <p className="font-bold">Pilih Group:</p>
+        <label className="ms-3 flex">
           <input
             type="radio"
             id="charge"
@@ -170,7 +173,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
           />
           Polar
         </label>
-        <label>
+        <label className="ms-3 flex">
           <input
             type="radio"
             id="charge"
@@ -181,7 +184,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
           />
           Nonpolar
         </label>
-        <label>
+        <label className="ms-3 flex">
           <input
             type="radio"
             id="charge"
@@ -192,7 +195,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
           />
           Acidic
         </label>
-        <label>
+        <label className="ms-3 flex">
           <input
             type="radio"
             id="charge"

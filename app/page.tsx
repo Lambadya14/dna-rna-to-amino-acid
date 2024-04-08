@@ -23,7 +23,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { db } from "./lib/firebase/init";
 import { collection, getDocs } from "firebase/firestore";
-import { ToastContainer, toast } from "react-toastify";
+import { Slide, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TableDetails from "./components/tables/TableDetails";
 import Image from "next/image";
@@ -104,9 +104,7 @@ const CodonConverter: React.FC = () => {
   }, [selectedDatabase]);
 
   const fetchCodonMapFromFirestore = async () => {
-    if (selectedDatabase === "") {
-      console.log("Pilih database terlebih dahulu!");
-    } else {
+    if (selectedDatabase) {
       const querySnapshot = await getDocs(
         collection(db, `${selectedDatabase}`)
       );
@@ -137,6 +135,7 @@ const CodonConverter: React.FC = () => {
         // Display an error toast
         toast.error("Error fetching data from Firestore");
       }
+    } else {
     }
   };
 
@@ -162,6 +161,7 @@ const CodonConverter: React.FC = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    window.location.reload();
   };
 
   const resetLazyLoading = () => {
@@ -187,7 +187,7 @@ const CodonConverter: React.FC = () => {
         }
       } else {
         // Display a warning toast
-        toast.warn("Please select a database before uploading a file.");
+        toast.warn("Mohon untuk memilih tipe kode DNA terlebih dahulu.");
       }
     },
     [selectedDatabase]
@@ -271,12 +271,6 @@ const CodonConverter: React.FC = () => {
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (selectedDatabase === "") {
-      // Display a warning toast
-      toast.warn("Please select a database before uploading a file.");
-      return;
-    }
-
     const file = event.target.files?.[0];
     if (file) {
       try {
@@ -303,7 +297,7 @@ const CodonConverter: React.FC = () => {
   const handleConvertClick = () => {
     if (selectedDatabase === "") {
       // Display a warning toast
-      toast.warn("Please select a database before converting.");
+      toast.warn("Mohon untuk memilih tipe kode DNA terlebih dahulu.");
       return;
     }
 
@@ -429,7 +423,11 @@ const CodonConverter: React.FC = () => {
       setSelectedContent(""); // Penanganan jika selectedOption null
     }
   };
-
+  const handleToastClick = () => {
+    if (selectedDatabase == "") {
+      toast.warn("Mohon untuk memilih tipe kode DNA terlebih dahulu.");
+    }
+  };
   // React component JSX
   return (
     <div className="bg-[#f5f5f5]">
@@ -1010,16 +1008,21 @@ const CodonConverter: React.FC = () => {
               <label
                 htmlFor="fileInput"
                 className="inline-flex rounded-md text-white   bg-[#8884d8] h-[80px] w-[300px] font-semibold text-[25px] text-center justify-center items-center hover:bg-[#5b58a1] "
+                onClick={handleToastClick}
               >
                 Pilih TXT File
               </label>
-              <input
-                id="fileInput"
-                type="file"
-                accept=".txt"
-                onChange={handleFileUpload}
-                style={{ display: "none" }}
-              />
+              {selectedDatabase ? (
+                <input
+                  id="fileInput"
+                  type="file"
+                  accept=".txt"
+                  onChange={handleFileUpload}
+                  style={{ display: "none" }}
+                />
+              ) : (
+                ""
+              )}
               <p className="mt-5 text-center">
                 {isDragActive
                   ? "Letakan file di sini"
@@ -1029,7 +1032,19 @@ const CodonConverter: React.FC = () => {
           </div>
         </div>
       )}
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Slide}
+      />
     </div>
   );
 };

@@ -9,7 +9,7 @@ interface TableDetailsProps {
 const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
   const [blastResult, setBlastResult] = useState<any | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage: number = 5;
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
   const maxPagesToShow: number = 5;
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
       });
 
     function pollResults(rid: string) {
-      const pollInterval = 5000; // 5 seconds
+      const pollInterval = 5000;
 
       const pollTimer = setInterval(() => {
         axios
@@ -55,7 +55,6 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
           .then((response) => {
             const data = response.data;
             if (data.match(/\s+Status=WAITING/m)) {
-              // Still waiting, continue polling
               return;
             } else if (data.match(/\s+Status=FAILED/m)) {
               console.error(
@@ -102,7 +101,110 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
           console.error("Error retrieving results:", error);
         });
     }
-  }, [querySequence]); // Empty dependency array to ensure useEffect runs only once
+  }, [querySequence]);
+
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value);
+    setCurrentPage(1);
+  };
+
+  const renderPerPageOptions = () => {
+    const options = [5, 10, 25, 50, blastResult?.hits.length || 1];
+
+    return (
+      <select
+        value={itemsPerPage}
+        onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+        className="mx-1 px-3 py-1 border border-gray-300 bg-white text-gray-500 rounded"
+      >
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option === blastResult?.hits.length ? "All" : option}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
+  const lastIndex = currentPage * itemsPerPage;
+  const firstIndex = lastIndex - itemsPerPage;
+  const currentItems = blastResult
+    ? blastResult.hits.slice(firstIndex, lastIndex)
+    : [];
+
+  const totalPages = Math.ceil(blastResult?.hits.length / itemsPerPage);
+
+  const renderPageNumbers = () => {
+    if (itemsPerPage === blastResult?.hits.length) {
+      return null; // Jika memilih "All", tombol navigasi tidak ditampilkan
+    }
+
+    const pagesToShow = Math.min(totalPages, maxPagesToShow);
+
+    const halfMaxPagesToShow = Math.floor(maxPagesToShow / 2);
+    const firstPage = Math.max(1, currentPage - halfMaxPagesToShow);
+    const lastPage = Math.min(totalPages, firstPage + maxPagesToShow - 1);
+
+    const pages: JSX.Element[] = [];
+
+    for (let i = firstPage; i <= lastPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => setCurrentPage(i)}
+          className={`mx-1 px-3 py-1 border border-gray-300 ${
+            currentPage === i
+              ? "bg-gray-300 text-gray-700"
+              : "bg-white text-gray-500"
+          } rounded`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (firstPage > 2) {
+      pages.unshift(
+        <span key="ellipsis-1" className="mx-1 text-gray-500">
+          ...
+        </span>
+      );
+    }
+
+    if (firstPage > 1) {
+      pages.unshift(
+        <button
+          key={1}
+          onClick={() => setCurrentPage(1)}
+          className={`mx-1 px-3 py-1 border border-gray-300 bg-white text-gray-500 rounded`}
+        >
+          1
+        </button>
+      );
+    }
+
+    if (lastPage < totalPages) {
+      if (lastPage < totalPages - 1) {
+        pages.push(
+          <span key="ellipsis-2" className="mx-1 text-gray-500">
+            ...
+          </span>
+        );
+      }
+
+      pages.push(
+        <button
+          key={totalPages}
+          onClick={() => setCurrentPage(totalPages)}
+          className={`mx-1 px-3 py-1 border border-gray-300 bg-white text-gray-500 rounded`}
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    return <div className="flex justify-center mt-4">{pages}</div>;
+  };
 
   function calculateMetrics(hit: any) {
     let maxScore = 0;
@@ -138,86 +240,16 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
     });
   }
 
-  // Pagination
-  const lastIndex = currentPage * itemsPerPage;
-  const firstIndex = lastIndex - itemsPerPage;
-  const currentItems = blastResult
-    ? blastResult.hits.slice(firstIndex, lastIndex)
-    : [];
-
-  const totalPages = Math.ceil(blastResult?.hits.length / itemsPerPage);
-
-  const renderPageNumbers = () => {
-    const pagesToShow = Math.min(totalPages, maxPagesToShow);
-
-    const halfMaxPagesToShow = Math.floor(maxPagesToShow / 2);
-    const firstPage = Math.max(1, currentPage - halfMaxPagesToShow);
-    const lastPage = Math.min(totalPages, firstPage + maxPagesToShow - 1);
-
-    const pages: JSX.Element[] = [];
-
-    for (let i = firstPage; i <= lastPage; i++) {
-      pages.push(
-        <button
-          key={i}
-          onClick={() => setCurrentPage(i)}
-          className={`mx-1 px-3 py-1 border border-gray-300 ${
-            currentPage === i
-              ? "bg-gray-300 text-gray-700"
-              : "bg-white text-gray-500"
-          } rounded`}
-        >
-          {i}
-        </button>
-      );
-    }
- if (firstPage > 2) {
-   pages.unshift(
-     <span key="ellipsis-1" className="mx-1 text-gray-500">
-       ...
-     </span>
-   );
- }
-    if (firstPage > 1) {
-      pages.unshift(
-        <button
-          key={1}
-          onClick={() => setCurrentPage(1)}
-          className={`mx-1 px-3 py-1 border border-gray-300 bg-white text-gray-500 rounded`}
-        >
-          1
-        </button>
-      );
-     
-    }
-
-    if (lastPage < totalPages) {
-      if (lastPage < totalPages - 1) {
-        pages.push(
-          <span key="ellipsis-2" className="mx-1 text-gray-500">
-            ...
-          </span>
-        );
-      }
-
-      pages.push(
-        <button
-          key={totalPages}
-          onClick={() => setCurrentPage(totalPages)}
-          className={`mx-1 px-3 py-1 border border-gray-300 bg-white text-gray-500 rounded`}
-        >
-          {totalPages}
-        </button>
-      );
-    }
-
-    return pages;
-  };
-
   return (
     <div className="relative overflow-x-auto pt-5 pb-5">
       {blastResult && (
         <>
+          {" "}
+          <h2 className="font-bold text-[30px]">Table Identifikasi</h2>
+          <div className="flex justify-start items-center my-2">
+            <span className="mr-2">Show per page:</span>
+            {renderPerPageOptions()}
+          </div>
           <table className="w-full text-sm text-left rtl:text-right bg-[#8884d8] rounded-xl">
             <thead className="text-xs text-white  uppercase">
               <tr>

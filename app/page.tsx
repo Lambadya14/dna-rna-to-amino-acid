@@ -38,6 +38,7 @@ interface Codon {
   about: string;
   directory: string;
   charge: string;
+  polarity: string;
 }
 
 // Interface for the conversion result
@@ -128,6 +129,7 @@ const CodonConverter: React.FC = () => {
             about: codonData?.abt,
             directory: codonData?.directory,
             charge: codonData?.charge,
+            polarity: codonData?.polarity,
           });
         });
         setCodonMap(codons);
@@ -428,6 +430,29 @@ const CodonConverter: React.FC = () => {
       toast.warn("Mohon untuk memilih tipe kode DNA terlebih dahulu.");
     }
   };
+
+  const renderAminoAcidsByClassification = (
+    classification: string,
+    aminoAcidCountResult: any[],
+    codonMap: any[]
+  ) => {
+    return Object.entries(aminoAcidCountResult).map(([aminoAcid, count]) => {
+      const aminoAcidData = codonMap.find(
+        (item) => item.abbreviation1 === aminoAcid
+      );
+      if (!aminoAcidData) return null;
+
+      const isClass =
+        aminoAcidData.charge.toLowerCase() === classification.toLowerCase();
+
+      if (isClass) {
+        return <p key={aminoAcid}>{aminoAcidData.name}</p>;
+      } else {
+        return null;
+      }
+    });
+  };
+
   // React component JSX
   return (
     <div className="bg-[#f5f5f5]">
@@ -578,269 +603,200 @@ const CodonConverter: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col border-2 p-5 rounded-xl lg:mt-5">
-                <h1 className="font-bold text-[30px]">Tabel Polaritas:</h1>
-                <div className="lg:flex justify-between gap-3 lg:mt-4">
-                  {Object.entries(aminoAcidCountResult).some(
-                    ([aminoAcid, count]) => {
-                      const aminoAcidData = codonMap.find(
-                        (item) => item.abbreviation1 === aminoAcid
-                      );
-                      if (aminoAcidData) {
-                        const isPolar =
-                          aminoAcidData.charge.toLowerCase() === "polar";
-                        return isPolar;
-                      }
-                      return false;
-                    }
-                  ) && (
-                    <table className="w-full divide-y divide-gray-200 rounded-xl">
-                      <thead className="bg-[#8884d8]">
-                        <tr>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/2"
-                          >
-                            Asam Amino
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/2"
-                          >
-                            Polaritas
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {Object.entries(aminoAcidCountResult).map(
-                          ([aminoAcid, count]) => {
-                            const aminoAcidData = codonMap.find(
-                              (item) => item.abbreviation1 === aminoAcid
-                            );
-                            if (!aminoAcidData) return null;
-
-                            const isPolar =
-                              aminoAcidData.charge.toLowerCase() === "polar";
-
-                            if (isPolar) {
-                              return (
-                                <tr
-                                  key={aminoAcid}
-                                  className="hover:bg-gray-100"
-                                >
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    {`${aminoAcidData?.name} (${aminoAcid})`}
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">
-                                      {aminoAcidData?.charge}
-                                    </div>
-                                  </td>
-                                </tr>
+              <div className="flex flex-col border-2 p-5 rounded-xl mt-5">
+                <h1 className="font-bold text-[30px]">Tabel Klasifikasi:</h1>
+                <div>
+                  <table className="w-full divide-y divide-gray-200 rounded-xl">
+                    <thead className="bg-[#8884d8]">
+                      <tr>
+                        <th className="text-white py-4">Klasifikasi</th>
+                        <th className="text-white py-4">
+                          Polaritas (Polar/Nonpolar)
+                        </th>
+                        <th className="text-white py-4">Nama Asam Amino</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      <tr>
+                        <th>Acidic</th>
+                        <td>Polar</td>
+                        <td>
+                          {Object.entries(aminoAcidCountResult).map(
+                            ([aminoAcid, count]) => {
+                              const aminoAcidData = codonMap.find(
+                                (item) => item.abbreviation1 === aminoAcid
                               );
-                            } else {
-                              return null;
+                              if (!aminoAcidData) return <p>Tidak Tersedia</p>;
+
+                              const isClass =
+                                aminoAcidData.charge.toLowerCase() === "acidic";
+
+                              if (isClass) {
+                                return (
+                                  <p
+                                    key={aminoAcid}
+                                    className="px-6 py-4 whitespace-nowrap"
+                                  >
+                                    {aminoAcidData?.name}
+                                  </p>
+                                );
+                              }
                             }
-                          }
-                        )}
-                      </tbody>
-                    </table>
-                  )}
-                  {Object.entries(aminoAcidCountResult).some(
-                    ([aminoAcid, count]) => {
-                      const aminoAcidData = codonMap.find(
-                        (item) => item.abbreviation1 === aminoAcid
-                      );
-                      if (aminoAcidData) {
-                        const isPolar =
-                          aminoAcidData.charge.toLowerCase() === "nonpolar";
-                        return isPolar;
-                      }
-                      return false;
-                    }
-                  ) && (
-                    <table className="w-full divide-y divide-gray-200 rounded-xl">
-                      <thead className="bg-[#8884d8]">
-                        <tr>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/2"
-                          >
-                            Asam Amino
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/2"
-                          >
-                            Polaritas
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {Object.entries(aminoAcidCountResult).map(
-                          ([aminoAcid, count]) => {
-                            const aminoAcidData = codonMap.find(
-                              (item) => item.abbreviation1 === aminoAcid
-                            );
-                            if (!aminoAcidData) return null;
-
-                            const isPolar =
-                              aminoAcidData.charge.toLowerCase() === "nonpolar";
-
-                            if (isPolar) {
-                              return (
-                                <tr
-                                  key={aminoAcid}
-                                  className="hover:bg-gray-100"
-                                >
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    {`${aminoAcidData?.name} (${aminoAcid})`}
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">
-                                      {aminoAcidData?.charge}
-                                    </div>
-                                  </td>
-                                </tr>
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Basic</th>
+                        <td>Polar</td>
+                        <td>
+                          {Object.entries(aminoAcidCountResult).map(
+                            ([aminoAcid, count]) => {
+                              const aminoAcidData = codonMap.find(
+                                (item) => item.abbreviation1 === aminoAcid
                               );
-                            } else {
-                              return null;
+                              if (!aminoAcidData) return null;
+
+                              const isClass =
+                                aminoAcidData.charge.toLowerCase() === "basic";
+
+                              if (isClass) {
+                                return (
+                                  <p
+                                    key={aminoAcid}
+                                    className="px-6 py-4 whitespace-nowrap"
+                                  >
+                                    {aminoAcidData?.name}
+                                  </p>
+                                );
+                              }
                             }
-                          }
-                        )}
-                      </tbody>
-                    </table>
-                  )}
-                  {Object.entries(aminoAcidCountResult).some(
-                    ([aminoAcid, count]) => {
-                      const aminoAcidData = codonMap.find(
-                        (item) => item.abbreviation1 === aminoAcid
-                      );
-                      if (aminoAcidData) {
-                        const isPolar =
-                          aminoAcidData.charge.toLowerCase() === "basic";
-                        return isPolar;
-                      }
-                      return false;
-                    }
-                  ) && (
-                    <table className="w-full divide-y divide-gray-200 rounded-xl">
-                      <thead className="bg-[#8884d8]">
-                        <tr>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/2"
-                          >
-                            Asam Amino
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/2"
-                          >
-                            Polaritas
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {Object.entries(aminoAcidCountResult).map(
-                          ([aminoAcid, count]) => {
-                            const aminoAcidData = codonMap.find(
-                              (item) => item.abbreviation1 === aminoAcid
-                            );
-                            if (!aminoAcidData) return null;
-
-                            const isPolar =
-                              aminoAcidData.charge.toLowerCase() === "basic";
-
-                            if (isPolar) {
-                              return (
-                                <tr
-                                  key={aminoAcid}
-                                  className="hover:bg-gray-100"
-                                >
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    {`${aminoAcidData?.name} (${aminoAcid})`}
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">
-                                      {aminoAcidData?.charge}
-                                    </div>
-                                  </td>
-                                </tr>
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th rowSpan={2}>Neutral</th>
+                        <td>Polar</td>
+                        <td>
+                          {Object.entries(aminoAcidCountResult).map(
+                            ([aminoAcid, count]) => {
+                              const aminoAcidData = codonMap.find(
+                                (item) => item.abbreviation1 === aminoAcid
                               );
-                            } else {
-                              return null;
+                              if (!aminoAcidData) return <p>Tidak Tersedia</p>;
+
+                              const isClass =
+                                aminoAcidData.charge.toLowerCase() ===
+                                "neutral";
+                              const isPolarity =
+                                aminoAcidData.polarity.toLowerCase() ===
+                                "polar";
+
+                              if (isClass && isPolarity) {
+                                return (
+                                  <p
+                                    key={aminoAcid}
+                                    className="px-6 py-4 whitespace-nowrap"
+                                  >
+                                    {aminoAcidData?.name}
+                                  </p>
+                                );
+                              }
                             }
-                          }
-                        )}
-                      </tbody>
-                    </table>
-                  )}
-                  {Object.entries(aminoAcidCountResult).some(
-                    ([aminoAcid, count]) => {
-                      const aminoAcidData = codonMap.find(
-                        (item) => item.abbreviation1 === aminoAcid
-                      );
-                      if (aminoAcidData) {
-                        const isPolar =
-                          aminoAcidData.charge.toLowerCase() === "acidic";
-                        return isPolar;
-                      }
-                      return false;
-                    }
-                  ) && (
-                    <table className="w-full divide-y divide-gray-200 rounded-xl">
-                      <thead className="bg-[#8884d8]">
-                        <tr>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/2"
-                          >
-                            Asam Amino
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/2"
-                          >
-                            Polaritas
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {Object.entries(aminoAcidCountResult).map(
-                          ([aminoAcid, count]) => {
-                            const aminoAcidData = codonMap.find(
-                              (item) => item.abbreviation1 === aminoAcid
-                            );
-                            if (!aminoAcidData) return null;
-
-                            const isPolar =
-                              aminoAcidData.charge.toLowerCase() === "acidic";
-
-                            if (isPolar) {
-                              return (
-                                <tr
-                                  key={aminoAcid}
-                                  className="hover:bg-gray-100"
-                                >
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    {`${aminoAcidData?.name} (${aminoAcid})`}
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">
-                                      {aminoAcidData?.charge}
-                                    </div>
-                                  </td>
-                                </tr>
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Nonpolar</td>
+                        <td>
+                          {Object.entries(aminoAcidCountResult).map(
+                            ([aminoAcid, count]) => {
+                              const aminoAcidData = codonMap.find(
+                                (item) => item.abbreviation1 === aminoAcid
                               );
-                            } else {
-                              return null;
+                              if (!aminoAcidData) return <p>Tidak Tersedia</p>;
+
+                              const isClass =
+                                aminoAcidData.charge.toLowerCase() ===
+                                "neutral";
+
+                              const isPolarity =
+                                aminoAcidData.polarity.toLowerCase() ===
+                                "nonpolar";
+
+                              if (isClass && isPolarity) {
+                                return (
+                                  <p
+                                    key={aminoAcid}
+                                    className="px-6 py-4 whitespace-nowrap"
+                                  >
+                                    {aminoAcidData?.name}
+                                  </p>
+                                );
+                              }
                             }
-                          }
-                        )}
-                      </tbody>
-                    </table>
-                  )}
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Aliphatic</th>
+                        <td>Nonpolar</td>
+                        <td>
+                          {Object.entries(aminoAcidCountResult).map(
+                            ([aminoAcid, count]) => {
+                              const aminoAcidData = codonMap.find(
+                                (item) => item.abbreviation1 === aminoAcid
+                              );
+                              if (!aminoAcidData) return null;
+
+                              const isClass =
+                                aminoAcidData.charge.toLowerCase() ===
+                                "aliphatic";
+
+                              if (isClass) {
+                                return (
+                                  <p
+                                    key={aminoAcid}
+                                    className="px-6 py-4 whitespace-nowrap"
+                                  >
+                                    {aminoAcidData?.name}
+                                  </p>
+                                );
+                              }
+                            }
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Aromatic</th>
+                        <td>Nonpolar</td>
+                        <td>
+                          {Object.entries(aminoAcidCountResult).map(
+                            ([aminoAcid, count]) => {
+                              const aminoAcidData = codonMap.find(
+                                (item) => item.abbreviation1 === aminoAcid
+                              );
+                              if (!aminoAcidData) return null;
+
+                              const isClass =
+                                aminoAcidData.charge.toLowerCase() ===
+                                "aromatic";
+
+                              if (isClass) {
+                                return (
+                                  <p
+                                    key={aminoAcid}
+                                    className="px-6 py-4 whitespace-nowrap"
+                                  >
+                                    {aminoAcidData?.name}
+                                  </p>
+                                );
+                              }
+                            }
+                          )}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <TableDetails querySequence={dnaSequence} />

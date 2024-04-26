@@ -25,6 +25,7 @@ interface AminoAcidData {
   timestamp: any;
   directory: string;
   charge: string;
+  polaritas: string;
 }
 
 const InputForm: React.FC = () => {
@@ -37,6 +38,7 @@ const InputForm: React.FC = () => {
     abt: "",
     directory: "",
     charge: "",
+    polaritas: "",
   });
   const [file, setFile] = useState<File>();
   const [filteredData, setFilteredData] = useState<AminoAcidData[]>([]);
@@ -51,10 +53,15 @@ const InputForm: React.FC = () => {
   const [selectedDatabase, setSelectedDatabase] = useState<string>(""); // State untuk memantau database mana yang dipilih
   const [isLoading, setIsLoading] = useState(false);
   const [charge, setCharge] = useState<string>("");
+  const [polarity, setPolarity] = useState<string>("");
 
   const handleChargeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setCharge(value);
+  };
+  const handlePolarityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setPolarity(value);
   };
 
   const handleDeleteConfirmation = (id: string) => {
@@ -248,6 +255,7 @@ const InputForm: React.FC = () => {
               timestamp: new Date(),
               directory: previousDirectory,
               charge: charge,
+              polarity:polarity
             });
 
             console.log("Document updated with ID:", editingId);
@@ -298,6 +306,7 @@ const InputForm: React.FC = () => {
               rna: dynamicRNAInputs.filter((item) => item !== ""),
               timestamp: new Date(),
               charge: charge,
+              polarity:polarity
             });
 
             data.append("nama", docRef.id);
@@ -337,6 +346,7 @@ const InputForm: React.FC = () => {
         abt: "",
         directory: "",
         charge: "",
+        polaritas:""
       });
       setDynamicDNAInputs([""]);
       setDynamicRNAInputs([""]);
@@ -374,6 +384,7 @@ const InputForm: React.FC = () => {
       abt: editedData?.abt || "",
       directory: "",
       charge: "",
+      polaritas: "",
     });
 
     setEditingId(id);
@@ -396,6 +407,7 @@ const InputForm: React.FC = () => {
       abt: "",
       directory: "",
       charge: "",
+      polaritas: "",
     });
 
     setDynamicDNAInputs([""]);
@@ -654,7 +666,9 @@ const InputForm: React.FC = () => {
         handleFileSubmit={handleFileSubmit}
         isLoading={isLoading}
         charge={charge}
+        polarity={polarity}
         handleChargeChange={handleChargeChange}
+        handlePolarityChange={handlePolarityChange}
       />
       <DataDisplayComponent
         data={filteredData}

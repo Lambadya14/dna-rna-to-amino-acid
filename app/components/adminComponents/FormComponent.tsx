@@ -19,7 +19,9 @@ interface FormComponentProps {
   handleCancel: () => void;
   handleFileSubmit: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleChargeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handlePolarityChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   charge: string;
+  polarity: string;
 }
 
 const FormComponent: React.FC<FormComponentProps> = ({
@@ -40,12 +42,16 @@ const FormComponent: React.FC<FormComponentProps> = ({
   isLoading,
   handleChargeChange,
   charge,
+  handlePolarityChange,
+  polarity,
 }) => {
   return (
     <form className="flex flex-col px-5" onSubmit={handleFormSubmit}>
       <div className="flex justify-between">
         <div className="w-1/2 flex flex-col me-3 font-semibold">
-          <label id="htmlNama" htmlFor="nama">Nama Asam Amino</label>
+          <label id="htmlNama" htmlFor="nama">
+            Nama Asam Amino
+          </label>
           <input
             className="border p-3 -2 rounded-lg mb-3"
             type="text"
@@ -167,30 +173,8 @@ const FormComponent: React.FC<FormComponentProps> = ({
             type="radio"
             id="charge"
             name="charge"
-            value="polar"
-            checked={charge === "polar"}
-            onChange={handleChargeChange}
-          />
-          Polar
-        </label>
-        <label className="ms-3 flex">
-          <input
-            type="radio"
-            id="charge"
-            name="charge"
-            value="nonpolar"
-            checked={charge === "nonpolar"}
-            onChange={handleChargeChange}
-          />
-          Nonpolar
-        </label>
-        <label className="ms-3 flex">
-          <input
-            type="radio"
-            id="charge"
-            name="charge"
-            value="acidic"
-            checked={charge === "acidic"}
+            value="Acidic"
+            checked={charge === "Acidic"}
             onChange={handleChargeChange}
           />
           Acidic
@@ -200,11 +184,69 @@ const FormComponent: React.FC<FormComponentProps> = ({
             type="radio"
             id="charge"
             name="charge"
-            value="basic"
-            checked={charge === "basic"}
+            value="Basic"
+            checked={charge === "Basic"}
             onChange={handleChargeChange}
           />
           Basic
+        </label>
+        <label className="ms-3 flex">
+          <input
+            type="radio"
+            id="charge"
+            name="charge"
+            value="Neutral"
+            checked={charge === "Neutral"}
+            onChange={handleChargeChange}
+          />
+          Neutral
+        </label>
+        <label className="ms-3 flex">
+          <input
+            type="radio"
+            id="charge"
+            name="charge"
+            value="Aliphatic"
+            checked={charge === "Aliphatic"}
+            onChange={handleChargeChange}
+          />
+          Aliphatic
+        </label>
+        <label className="ms-3 flex">
+          <input
+            type="radio"
+            id="charge"
+            name="charge"
+            value="Aromatic"
+            checked={charge === "Aromatic"}
+            onChange={handleChargeChange}
+          />
+          Aromatic
+        </label>
+      </div>
+      <div>
+        <p className="font-bold">Polaritas:</p>
+        <label className="ms-3 flex">
+          <input
+            type="radio"
+            id="polarity"
+            name="polarity"
+            value="Polar"
+            checked={polarity === "Polar"}
+            onChange={handlePolarityChange}
+          />
+          Polar
+        </label>
+        <label className="ms-3 flex">
+          <input
+            type="radio"
+            id="polarity"
+            name="polarity"
+            value="Nonpolar"
+            checked={polarity === "Nonpolar"}
+            onChange={handlePolarityChange}
+          />
+          Nonpolar
         </label>
       </div>
       <div className="flex justify-center">

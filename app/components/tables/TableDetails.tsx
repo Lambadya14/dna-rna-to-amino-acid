@@ -241,7 +241,7 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
   }
 
   return (
-    <div className="relative overflow-x-auto pt-5 pb-5">
+    <div className="relative overflow-x-auto   border-2 p-5 rounded-xl mt-5">
       {blastResult && (
         <>
           {" "}

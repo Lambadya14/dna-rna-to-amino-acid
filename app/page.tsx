@@ -603,86 +603,84 @@ const CodonConverter: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col border-2 p-5 rounded-xl mt-5">
+              <div className="flex flex-col border-2 p-5 rounded-xl mt-5 relative overflow-x-auto ">
                 <h1 className="font-bold text-[30px]">Tabel Klasifikasi:</h1>
                 <div>
                   <table className="w-full divide-y divide-gray-200 rounded-xl">
                     <thead className="bg-[#8884d8]">
                       <tr>
-                        <th className="text-white py-4">Klasifikasi</th>
-                        <th className="text-white py-4">
+                        <th className="text-white p-4">Klasifikasi</th>
+                        <th className="text-white p-4">
                           Polaritas (Polar/Nonpolar)
                         </th>
-                        <th className="text-white py-4">Nama Asam Amino</th>
+                        <th className="text-white p-4">Nama Asam Amino</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       <tr>
                         <th>Acidic</th>
-                        <td>Polar</td>
+                        <td className="p-4">Polar</td>
                         <td>
-                          {Object.entries(aminoAcidCountResult).map(
-                            ([aminoAcid, count]) => {
+                          {Object.entries(aminoAcidCountResult)
+                            .map(([aminoAcid, count]) => {
                               const aminoAcidData = codonMap.find(
                                 (item) => item.abbreviation1 === aminoAcid
                               );
-                              if (!aminoAcidData) return <p>Tidak Tersedia</p>;
+                              if (!aminoAcidData)
+                                return <p key={aminoAcid}>Tidak Tersedia</p>;
 
                               const isClass =
                                 aminoAcidData.charge.toLowerCase() === "acidic";
 
                               if (isClass) {
-                                return (
-                                  <p
-                                    key={aminoAcid}
-                                    className="px-6 py-4 whitespace-nowrap"
-                                  >
-                                    {aminoAcidData?.name}
-                                  </p>
-                                );
+                                const aminoAcidName = aminoAcidData?.name;
+                                return aminoAcidName ? aminoAcidName : "";
                               }
-                            }
-                          )}
+
+                              return ""; // Return empty string for non-acidic amino acids
+                            })
+                            .filter((name) => name) // Filter out empty strings
+                            .join(", ")}{" "}
+                          {/* Join names with comma */}
                         </td>
                       </tr>
                       <tr>
                         <th>Basic</th>
-                        <td>Polar</td>
+                        <td className="p-4">Polar</td>
                         <td>
-                          {Object.entries(aminoAcidCountResult).map(
-                            ([aminoAcid, count]) => {
+                          {Object.entries(aminoAcidCountResult)
+                            .map(([aminoAcid, count]) => {
                               const aminoAcidData = codonMap.find(
                                 (item) => item.abbreviation1 === aminoAcid
                               );
-                              if (!aminoAcidData) return null;
+                              if (!aminoAcidData)
+                                return <p key={aminoAcid}>Tidak Tersedia</p>;
 
                               const isClass =
                                 aminoAcidData.charge.toLowerCase() === "basic";
 
                               if (isClass) {
-                                return (
-                                  <p
-                                    key={aminoAcid}
-                                    className="px-6 py-4 whitespace-nowrap"
-                                  >
-                                    {aminoAcidData?.name}
-                                  </p>
-                                );
+                                const aminoAcidName = aminoAcidData?.name;
+                                return aminoAcidName ? aminoAcidName : "";
                               }
-                            }
-                          )}
+
+                              return ""; // Return empty string for non-acidic amino acids
+                            })
+                            .filter((name) => name) // Filter out empty strings
+                            .join(", ")}{" "}
+                          {/* Join names with comma */}
                         </td>
                       </tr>
                       <tr>
                         <th rowSpan={2}>Neutral</th>
-                        <td>Polar</td>
+                        <td className="p-4">Polar</td>
                         <td>
-                          {Object.entries(aminoAcidCountResult).map(
-                            ([aminoAcid, count]) => {
+                          {Object.entries(aminoAcidCountResult)
+                            .map(([aminoAcid, count]) => {
                               const aminoAcidData = codonMap.find(
                                 (item) => item.abbreviation1 === aminoAcid
                               );
-                              if (!aminoAcidData) return <p>Tidak Tersedia</p>;
+                              if (!aminoAcidData) return null;
 
                               const isClass =
                                 aminoAcidData.charge.toLowerCase() ===
@@ -692,107 +690,98 @@ const CodonConverter: React.FC = () => {
                                 "polar";
 
                               if (isClass && isPolarity) {
-                                return (
-                                  <p
-                                    key={aminoAcid}
-                                    className="px-6 py-4 whitespace-nowrap"
-                                  >
-                                    {aminoAcidData?.name}
-                                  </p>
-                                );
+                                return aminoAcidData?.name;
+                              } else {
+                                return null; // Return null for non-matching amino acids
                               }
-                            }
-                          )}
+                            })
+                            .filter((name) => name) // Filter out null values
+                            .join(", ")}{" "}
+                          {/* Join names with comma */}
                         </td>
                       </tr>
                       <tr>
-                        <td>Nonpolar</td>
+                        <td className="p-4">Nonpolar</td>
                         <td>
-                          {Object.entries(aminoAcidCountResult).map(
-                            ([aminoAcid, count]) => {
+                          {Object.entries(aminoAcidCountResult)
+                            .map(([aminoAcid, count]) => {
                               const aminoAcidData = codonMap.find(
                                 (item) => item.abbreviation1 === aminoAcid
                               );
-                              if (!aminoAcidData) return <p>Tidak Tersedia</p>;
+                              if (!aminoAcidData) return null;
 
                               const isClass =
                                 aminoAcidData.charge.toLowerCase() ===
                                 "neutral";
-
                               const isPolarity =
                                 aminoAcidData.polarity.toLowerCase() ===
                                 "nonpolar";
 
                               if (isClass && isPolarity) {
-                                return (
-                                  <p
-                                    key={aminoAcid}
-                                    className="px-6 py-4 whitespace-nowrap"
-                                  >
-                                    {aminoAcidData?.name}
-                                  </p>
-                                );
+                                return aminoAcidData?.name;
+                              } else {
+                                return null; // Return null for non-matching amino acids
                               }
-                            }
-                          )}
+                            })
+                            .filter((name) => name) // Filter out null values
+                            .join(", ")}{" "}
+                          {/* Join names with comma */}
                         </td>
                       </tr>
                       <tr>
                         <th>Aliphatic</th>
-                        <td>Nonpolar</td>
+                        <td className="p-4">Nonpolar</td>
                         <td>
-                          {Object.entries(aminoAcidCountResult).map(
-                            ([aminoAcid, count]) => {
+                          {Object.entries(aminoAcidCountResult)
+                            .map(([aminoAcid, count]) => {
                               const aminoAcidData = codonMap.find(
                                 (item) => item.abbreviation1 === aminoAcid
                               );
-                              if (!aminoAcidData) return null;
+                              if (!aminoAcidData)
+                                return <p key={aminoAcid}>Tidak Tersedia</p>;
 
                               const isClass =
                                 aminoAcidData.charge.toLowerCase() ===
                                 "aliphatic";
 
                               if (isClass) {
-                                return (
-                                  <p
-                                    key={aminoAcid}
-                                    className="px-6 py-4 whitespace-nowrap"
-                                  >
-                                    {aminoAcidData?.name}
-                                  </p>
-                                );
+                                const aminoAcidName = aminoAcidData?.name;
+                                return aminoAcidName ? aminoAcidName : "";
                               }
-                            }
-                          )}
+
+                              return ""; // Return empty string for non-acidic amino acids
+                            })
+                            .filter((name) => name) // Filter out empty strings
+                            .join(", ")}{" "}
+                          {/* Join names with comma */}
                         </td>
                       </tr>
                       <tr>
                         <th>Aromatic</th>
-                        <td>Nonpolar</td>
+                        <td className="p-4">Nonpolar</td>
                         <td>
-                          {Object.entries(aminoAcidCountResult).map(
-                            ([aminoAcid, count]) => {
+                          {Object.entries(aminoAcidCountResult)
+                            .map(([aminoAcid, count]) => {
                               const aminoAcidData = codonMap.find(
                                 (item) => item.abbreviation1 === aminoAcid
                               );
-                              if (!aminoAcidData) return null;
+                              if (!aminoAcidData)
+                                return <p key={aminoAcid}>Tidak Tersedia</p>;
 
                               const isClass =
                                 aminoAcidData.charge.toLowerCase() ===
                                 "aromatic";
 
                               if (isClass) {
-                                return (
-                                  <p
-                                    key={aminoAcid}
-                                    className="px-6 py-4 whitespace-nowrap"
-                                  >
-                                    {aminoAcidData?.name}
-                                  </p>
-                                );
+                                const aminoAcidName = aminoAcidData?.name;
+                                return aminoAcidName ? aminoAcidName : "";
                               }
-                            }
-                          )}
+
+                              return ""; // Return empty string for non-acidic amino acids
+                            })
+                            .filter((name) => name) // Filter out empty strings
+                            .join(", ")}{" "}
+                          {/* Join names with comma */}
                         </td>
                       </tr>
                     </tbody>

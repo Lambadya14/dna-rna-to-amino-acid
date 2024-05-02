@@ -92,8 +92,6 @@ const CodonConverter: React.FC = () => {
     if (
       selectedDatabase === "karyorelictNuclear" ||
       selectedDatabase === "condylostomaNuclear" ||
-      selectedDatabase === "mesodiniumNuclear" ||
-      selectedDatabase === "peritrichNuclear" ||
       selectedDatabase === "blastocrithidiaNuclear"
     ) {
       setShowSpecificButton(true);
@@ -429,28 +427,6 @@ const CodonConverter: React.FC = () => {
     if (selectedDatabase == "") {
       toast.warn("Mohon untuk memilih tipe kode DNA terlebih dahulu.");
     }
-  };
-
-  const renderAminoAcidsByClassification = (
-    classification: string,
-    aminoAcidCountResult: any[],
-    codonMap: any[]
-  ) => {
-    return Object.entries(aminoAcidCountResult).map(([aminoAcid, count]) => {
-      const aminoAcidData = codonMap.find(
-        (item) => item.abbreviation1 === aminoAcid
-      );
-      if (!aminoAcidData) return null;
-
-      const isClass =
-        aminoAcidData.charge.toLowerCase() === classification.toLowerCase();
-
-      if (isClass) {
-        return <p key={aminoAcid}>{aminoAcidData.name}</p>;
-      } else {
-        return null;
-      }
-    });
   };
 
   // React component JSX

@@ -308,9 +308,8 @@ const CodonConverter: React.FC = () => {
     if (!isValidSequence(preprocessedSequence, isDNA)) {
       setResult(null);
       setAminoAcidCountResult(null);
-      console.log(
-        " Invalid sequence. Please provide a valid DNA or RNA sequence."
-      );
+
+      toast.warn("Mohon berikan urutan yang sesuai!");
       setIsLazyLoading(false); // Reset lazy loading state in case of an error
       return;
     }

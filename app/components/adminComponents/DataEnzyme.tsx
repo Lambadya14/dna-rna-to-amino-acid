@@ -33,8 +33,8 @@ const DataEnzyme = () => {
         <thead className="border-b-2">
           <tr>
             <th>Enzyme</th>
-            <th>Sequence 5'</th>
-            <th>Sequence 3'</th>
+            <th>Sequence 5&apos;</th>
+            <th>Sequence 3&apos;</th>
             <th>Overhang</th>
           </tr>
         </thead>

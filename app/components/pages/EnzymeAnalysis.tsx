@@ -102,7 +102,7 @@ const EnzymeAnalysis: React.FC<DnaSequenceProps> = ({ querySequence }) => {
             <tr>
               <th>No</th>
               <th>Enzim</th>
-              <th>Sequence Cut (5' & 3')</th>
+              <th>Sequence Cut (5&apos; & 3&apos;)</th>
               <th>Positions</th>
               <th>Frequency</th>
               <th className="text-center">Overhang</th>
@@ -119,12 +119,12 @@ const EnzymeAnalysis: React.FC<DnaSequenceProps> = ({ querySequence }) => {
                 </td>
 
                 <td>
-                  5' = {item.Positions5.join(", ")} <br /> 3' ={" "}
+                  5&apos; = {item.Positions5.join(", ")} <br /> 3&apos; ={" "}
                   {item.Positions3.join(", ")}
                 </td>
 
                 <td>
-                  5' = {item.Frequency5} <br /> 3' = {item.Frequency3}
+                  5&apos; = {item.Frequency5} <br /> 3&apos; = {item.Frequency3}
                 </td>
 
                 <td className="text-center">{item.Overhang}</td>

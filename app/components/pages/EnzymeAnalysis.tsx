@@ -114,8 +114,8 @@ const EnzymeAnalysis: React.FC<DnaSequenceProps> = ({ querySequence }) => {
                 <td>{index + 1}</td>
                 <td>{item.Enzim}</td>
                 <td>
-                  5'-{item.sequence5}-'3 <br />
-                  3'-{item.sequence3}-'5
+                  5&apos;-{item.sequence5}-&apos;3 <br />
+                  3&apos;-{item.sequence3}-&apos;5
                 </td>
 
                 <td>

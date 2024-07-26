@@ -1,0 +1,1412 @@
+[
+  {
+    "name": "AatII",
+    "overhang": "3'ACGT",
+    "sequence5": "GACGT/C",
+    "sequence3": "C/TGCAG"
+  },
+  {
+    "name": "AbaSI",
+    "overhang": "3' NN",
+    "sequence5": "CNNNNNNNNN N N/N N N N N N N N N G",
+    "sequence3": " G N N N N N N N N N/N N N N N N N N N N N C"
+  },
+  {
+    "name": "Acc65I",
+    "sequence5": "G/G T A C C",
+    "sequence3": "C C A T G/G ",
+    "overhang": "5' GTAC"
+  },
+  {
+    "name": "AccI",
+    "sequence5": "G T/M K A C",
+    "sequence3": "C A K M/T G",
+    "overhang": "5' MK"
+  },
+  {
+    "name": "AciI",
+    "recognitionSequence": " C/C G C \n G G C/G ",
+    "cutSite": "C      CGC\nGGC      G",
+    "overhang": "5' CG"
+  },
+  {
+    "name": "AclI",
+    "recognitionSequence": " A A/C G T T \n T T G C/A A ",
+    "cutSite": "AA      CGTT\nTTGC      AA",
+    "overhang": "5' CG"
+  },
+  {
+    "name": "AcuI",
+    "recognitionSequence": " C T G A A G N14 N N/\n G A C T T C N14/N N ",
+    "cutSite": "CTGAAGN14NN      \nGACTTCN14      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "AfeI",
+    "recognitionSequence": " A G C/G C T \n T C G/C G A ",
+    "cutSite": "AGC      GCT\nTCG      CGA",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "AflII",
+    "recognitionSequence": " C/T T A A G \n G A A T T/C ",
+    "cutSite": "C      TTAAG\nGAATT      C",
+    "overhang": "5' TTAA"
+  },
+  {
+    "name": "AflIII",
+    "recognitionSequence": " A/C R Y G T \n T G Y R C/A ",
+    "cutSite": "A      CRYGT\nTGYRC      A",
+    "overhang": "5' CRYG"
+  },
+  {
+    "name": "AgeI",
+    "recognitionSequence": " A/C C G G T \n T G G C C/A ",
+    "cutSite": "A      CCGGT\nTGGCC      A",
+    "overhang": "5' CCGG"
+  },
+  {
+    "name": "AhdI",
+    "recognitionSequence": " G A C N N N/N N G T C \n C T G N N/N N N C A G ",
+    "cutSite": "GACNNN      NNGTC\nCTGNN      NNNCAG",
+    "overhang": "3' N"
+  },
+  {
+    "name": "AleI-v2",
+    "recognitionSequence": " C A C N N/N N G T G \n G T G N N/N N C A C ",
+    "cutSite": "CACNN      NNGTG\nGTGNN      NNCAC",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "AluI",
+    "recognitionSequence": " A G/C T \n T C/G A ",
+    "cutSite": "AG      CT\nTC      GA",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "AlwI",
+    "recognitionSequence": " G G A T C N4/N \n C C T A G N4 N/",
+    "cutSite": "GGATCN4      N\nCCTAGN4N      ",
+    "overhang": "5' N"
+  },
+  {
+    "name": "AlwNI",
+    "recognitionSequence": " C A G N N N/C T G \n G T C/N N N G A C ",
+    "cutSite": "CAGNNN      CTG\nGTC      NNNGAC",
+    "overhang": "3' NNN"
+  },
+  {
+    "name": "ApaI",
+    "recognitionSequence": " G G G C C/C \n C/C C G G G ",
+    "cutSite": "GGGCC      C\nC      CCGGG",
+    "overhang": "3' GGCC"
+  },
+  {
+    "name": "ApaLI",
+    "recognitionSequence": " G/T G C A C \n C A C G T/G ",
+    "cutSite": "G      TGCAC\nCACGT      G",
+    "overhang": "5' TGCA"
+  },
+  {
+    "name": "ApoI",
+    "recognitionSequence": " R/A A T T Y \n Y T T A A/R ",
+    "cutSite": "R      AATTY\nYTTAA      R",
+    "overhang": "5' AATT"
+  },
+  {
+    "name": "AscI",
+    "recognitionSequence": " G G/C G C G C C \n C C G C G C/G G ",
+    "cutSite": "GG      CGCGCC\nCCGCGC      GG",
+    "overhang": "5' CGCG"
+  },
+  {
+    "name": "AseI",
+    "recognitionSequence": " A T/T A A T \n T A A T/T A ",
+    "cutSite": "AT      TAAT\nTAAT      TA",
+    "overhang": "5' TA"
+  },
+  {
+    "name": "AsiSI",
+    "recognitionSequence": " G C G A T/C G C \n C G C/T A G C G ",
+    "cutSite": "GCGAT      CGC\nCGC      TAGCG",
+    "overhang": "3' AT"
+  },
+  {
+    "name": "AvaI BsoBI",
+    "recognitionSequence": " C/Y C G R G \n G R G C Y/C ",
+    "cutSite": "C      YCGRG\nGRGCY      C",
+    "overhang": "5' YCGR"
+  },
+  {
+    "name": "AvaII",
+    "recognitionSequence": " G/G W C C \n C C W G/G ",
+    "cutSite": "G      GWCC\nCCWG      G",
+    "overhang": "5' GWC"
+  },
+  {
+    "name": "AvrII",
+    "recognitionSequence": " C/C T A G G \n G G A T C/C ",
+    "cutSite": "C      CTAGG\nGGATC      C",
+    "overhang": "5' CTAG"
+  },
+  {
+    "name": "BaeGI",
+    "recognitionSequence": " G K G C M/C \n C/M C G K G ",
+    "cutSite": "GKGCM      C\nC      MCGKG",
+    "overhang": "3' KGCM"
+  },
+  {
+    "name": "BaeI",
+    "recognitionSequence": " N N N N N/N10 A C N N N N G T A Y C N7 N N N N N/\n/N N N N N N10 T G N N N N C A T R G N7/N N N N N ",
+    "cutSite": "NNNNN      N10ACNNNNGTAYCN7NNNNN      \n      NNNNNN10TGNNNNCATRGN7      NNNNN",
+    "overhang": "3' NNNNN"
+  },
+  {
+    "name": "BamHI",
+    "recognitionSequence": " G/G A T C C \n C C T A G/G ",
+    "cutSite": "G      GATCC\nCCTAG      G",
+    "overhang": "5' GATC"
+  },
+  {
+    "name": "BanI",
+    "recognitionSequence": " G/G Y R C C \n C C R Y G/G ",
+    "cutSite": "G      GYRCC\nCCRYG      G",
+    "overhang": "5' GYRC"
+  },
+  {
+    "name": "BanII",
+    "recognitionSequence": " G R G C Y/C \n C/Y C G R G ",
+    "cutSite": "GRGCY      C\nC      YCGRG",
+    "overhang": "3' RGCY"
+  },
+  {
+    "name": "BbsI",
+    "recognitionSequence": " G A A G A C N2/N N N N \n C T T C T G N2 N N N N/",
+    "cutSite": "GAAGACN2      NNNN\nCTTCTGN2NNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "BbvCI",
+    "recognitionSequence": " C C/T C A G C \n G G A G T/C G ",
+    "cutSite": "CC      TCAGC\nGGAGT      CG",
+    "overhang": "5' TCA"
+  },
+  {
+    "name": "BbvI",
+    "recognitionSequence": " G C A G C N8/N N N N \n C G T C G N8 N N N N/",
+    "cutSite": "GCAGCN8      NNNN\nCGTCGN8NNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "BccI",
+    "recognitionSequence": " C C A T C N4/N \n G G T A G N4 N/",
+    "cutSite": "CCATCN4      N\nGGTAGN4N      ",
+    "overhang": "5' N"
+  },
+  {
+    "name": "BceAI",
+    "recognitionSequence": " A C G G C N12/N N \n T G C C G N12 N N/",
+    "cutSite": "ACGGCN12      NN\nTGCCGN12NN      ",
+    "overhang": "5' NN"
+  },
+  {
+    "name": "BcgI",
+    "recognitionSequence": " N N/N10 C G A N N N N N N T G C N10 N N/\n/N N N10 G C T N N N N N N A C G N10/N N ",
+    "cutSite": "NN      N10CGANNNNNNTGCN10NN      \n      NNN10GCTNNNNNNACGN10      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "BciVI",
+    "recognitionSequence": " G T A T C C N5 N/\n C A T A G G N5/N ",
+    "cutSite": "GTATCCN5N      \nCATAGGN5      N",
+    "overhang": "3' N"
+  },
+  {
+    "name": "BclI",
+    "recognitionSequence": " T/G A T C A \n A C T A G/T ",
+    "cutSite": "T      GATCA\nACTAG      T",
+    "overhang": "5' GATC"
+  },
+  {
+    "name": "BfaI",
+    "recognitionSequence": " C/T A G \n G A T/C ",
+    "cutSite": "C      TAG\nGAT      C",
+    "overhang": "5' TA"
+  },
+  {
+    "name": "BglI",
+    "recognitionSequence": " G C C N N N N/N G G C \n C G G N/N N N N C C G ",
+    "cutSite": "GCCNNNN      NGGC\nCGGN      NNNNCCG",
+    "overhang": "3' NNN"
+  },
+  {
+    "name": "BglII",
+    "recognitionSequence": " A/G A T C T \n T C T A G/A ",
+    "cutSite": "A      GATCT\nTCTAG      A",
+    "overhang": "5' GATC"
+  },
+  {
+    "name": "BlpI",
+    "recognitionSequence": " G C/T N A G C \n C G A N T/C G ",
+    "cutSite": "GC      TNAGC\nCGANT      CG",
+    "overhang": "5' TNA"
+  },
+  {
+    "name": "BmgBI",
+    "recognitionSequence": " C A C/G T C \n G T G/C A G ",
+    "cutSite": "CAC      GTC\nGTG      CAG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "BmrI",
+    "recognitionSequence": " A C T G G G N4 N/\n T G A C C C N4/N ",
+    "cutSite": "ACTGGGN4N      \nTGACCCN4      N",
+    "overhang": "3' N"
+  },
+  {
+    "name": "BmtI",
+    "recognitionSequence": " G C T A G/C \n C/G A T C G ",
+    "cutSite": "GCTAG      C\nC      GATCG",
+    "overhang": "3' CTAG"
+  },
+  {
+    "name": "BpmI",
+    "recognitionSequence": " C T G G A G N14 N N/\n G A C C T C N14/N N ",
+    "cutSite": "CTGGAGN14NN      \nGACCTCN14      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "Bpu10I",
+    "recognitionSequence": " C C/T N A G C \n G G A N T/C G ",
+    "cutSite": "CC      TNAGC\nGGANT      CG",
+    "overhang": "5' TNA"
+  },
+  {
+    "name": "BpuEI",
+    "recognitionSequence": " C T T G A G N14 N N/\n G A A C T C N14/N N ",
+    "cutSite": "CTTGAGN14NN      \nGAACTCN14      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "BsaAI",
+    "recognitionSequence": " Y A C/G T R \n R T G/C A Y ",
+    "cutSite": "YAC      GTR\nRTG      CAY",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "BsaBI",
+    "recognitionSequence": " G A T N N/N N A T C \n C T A N N/N N T A G ",
+    "cutSite": "GATNN      NNATC\nCTANN      NNTAG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "BsaHI",
+    "recognitionSequence": " G R/C G Y C \n C Y G C/R G ",
+    "cutSite": "GR      CGYC\nCYGC      RG",
+    "overhang": "5' CG"
+  },
+  {
+    "name": "BsaI",
+    "recognitionSequence": " G G T C T C N/N N N N \n C C A G A G N N N N N/",
+    "cutSite": "GGTCTCN      NNNN\nCCAGAGNNNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "BsaJI",
+    "recognitionSequence": " C/C N N G G \n G G N N C/C ",
+    "cutSite": "C      CNNGG\nGGNNC      C",
+    "overhang": "5' CNNG"
+  },
+  {
+    "name": "BsaWI",
+    "recognitionSequence": " W/C C G G W \n W G G C C/W ",
+    "cutSite": "W      CCGGW\nWGGCC      W",
+    "overhang": "5' CCGG"
+  },
+  {
+    "name": "BsaXI",
+    "recognitionSequence": " N N N/N9 A C N N N N N C T C C N7 N N N/\n/N N N N9 T G N N N N N G A G G N7/N N N ",
+    "cutSite": "NNN      N9ACNNNNNCTCCN7NNN      \n      NNNN9TGNNNNNGAGGN7      NNN",
+    "overhang": "3' NNN"
+  },
+  {
+    "name": "BseRI",
+    "recognitionSequence": " G A G G A G N8 N N/\n C T C C T C N8/N N ",
+    "cutSite": "GAGGAGN8NN      \nCTCCTCN8      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "BseYI",
+    "recognitionSequence": " C/C C A G C \n G G G T C/G ",
+    "cutSite": "C      CCAGC\nGGGTC      G",
+    "overhang": "5' CCAG"
+  },
+  {
+    "name": "BsgI",
+    "recognitionSequence": " G T G C A G N14 N N/\n C A C G T C N14/N N ",
+    "cutSite": "GTGCAGN14NN      \nCACGTCN14      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "BsiEI",
+    "recognitionSequence": " C G R Y/C G \n G C/Y R G C ",
+    "cutSite": "CGRY      CG\nGC      YRGC",
+    "overhang": "3' RY"
+  },
+  {
+    "name": "BsiHKAI",
+    "recognitionSequence": " G W G C W/C \n C/W C G W G ",
+    "cutSite": "GWGCW      C\nC      WCGWG",
+    "overhang": "3' WGCW"
+  },
+  {
+    "name": "BsiWI",
+    "recognitionSequence": " C/G T A C G \n G C A T G/C ",
+    "cutSite": "C      GTACG\nGCATG      C",
+    "overhang": "5' GTAC"
+  },
+  {
+    "name": "BslI",
+    "recognitionSequence": " C C N N N N N/N N G G \n G G N N/N N N N N C C ",
+    "cutSite": "CCNNNNN      NNGG\nGGNN      NNNNNCC",
+    "overhang": "3' NNN"
+  },
+  {
+    "name": "BsmAI BcoDI",
+    "recognitionSequence": " G T C T C N/N N N N \n C A G A G N N N N N/",
+    "cutSite": "GTCTCN      NNNN\nCAGAGNNNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "BsmBI-v2",
+    "recognitionSequence": " C G T C T C N/N N N N \n G C A G A G N N N N N/",
+    "cutSite": "CGTCTCN      NNNN\nGCAGAGNNNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "BsmFI",
+    "recognitionSequence": " G G G A C N10/N N N N \n C C C T G N10 N N N N/",
+    "cutSite": "GGGACN10      NNNN\nCCCTGN10NNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "BsmI",
+    "recognitionSequence": " G A A T G C N/\n C T T A C/G N ",
+    "cutSite": "GAATGCN      \nCTTAC      GN",
+    "overhang": "3' CN"
+  },
+  {
+    "name": "Bsp1286I",
+    "recognitionSequence": " G D G C H/C \n C/H C G D G ",
+    "cutSite": "GDGCH      C\nC      HCGDG",
+    "overhang": "3' DGCH"
+  },
+  {
+    "name": "BspCNI",
+    "recognitionSequence": " C T C A G N7 N N/\n G A G T C N7/N N ",
+    "cutSite": "CTCAGN7NN      \nGAGTCN7      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "BspEI",
+    "recognitionSequence": " T/C C G G A \n A G G C C/T ",
+    "cutSite": "T      CCGGA\nAGGCC      T",
+    "overhang": "5' CCGG"
+  },
+  {
+    "name": "BspHI",
+    "recognitionSequence": " T/C A T G A \n A G T A C/T ",
+    "cutSite": "T      CATGA\nAGTAC      T",
+    "overhang": "5' CATG"
+  },
+  {
+    "name": "BspMI BfuAI",
+    "recognitionSequence": " A C C T G C N4/N N N N \n T G G A C G N4 N N N N/",
+    "cutSite": "ACCTGCN4      NNNN\nTGGACGN4NNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "BsrBI",
+    "recognitionSequence": " C C G/C T C \n G G C/G A G ",
+    "cutSite": "CCG      CTC\nGGC      GAG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "BsrDI",
+    "recognitionSequence": " G C A A T G N N/\n C G T T A C/N N ",
+    "cutSite": "GCAATGNN      \nCGTTAC      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "BsrFI-v2",
+    "recognitionSequence": " R/C C G G Y \n Y G G C C/R ",
+    "cutSite": "R      CCGGY\nYGGCC      R",
+    "overhang": "5' CCGG"
+  },
+  {
+    "name": "BsrGI",
+    "recognitionSequence": " T/G T A C A \n A C A T G/T ",
+    "cutSite": "T      GTACA\nACATG      T",
+    "overhang": "5' GTAC"
+  },
+  {
+    "name": "BsrI",
+    "recognitionSequence": " A C T G G N/\n T G A C/C N ",
+    "cutSite": "ACTGGN      \nTGAC      CN",
+    "overhang": "3' GN"
+  },
+  {
+    "name": "BssHII",
+    "recognitionSequence": " G/C G C G C \n C G C G C/G ",
+    "cutSite": "G      CGCGC\nCGCGC      G",
+    "overhang": "5' CGCG"
+  },
+  {
+    "name": "BssSI-v2",
+    "recognitionSequence": " C/A C G A G \n G T G C T/C ",
+    "cutSite": "C      ACGAG\nGTGCT      C",
+    "overhang": "5' ACGA"
+  },
+  {
+    "name": "BstAPI",
+    "recognitionSequence": " G C A N N N N/N T G C \n C G T N/N N N N A C G ",
+    "cutSite": "GCANNNN      NTGC\nCGTN      NNNNACG",
+    "overhang": "3' NNN"
+  },
+  {
+    "name": "BstBI",
+    "recognitionSequence": " T T/C G A A \n A A G C/T T ",
+    "cutSite": "TT      CGAA\nAAGC      TT",
+    "overhang": "5' CG"
+  },
+  {
+    "name": "BstEII BstEII",
+    "recognitionSequence": " G/G T N A C C \n C C A N T G/G ",
+    "cutSite": "G      GTNACC\nCCANTG      G",
+    "overhang": "5' GTNAC"
+  },
+  {
+    "name": "BstNI",
+    "recognitionSequence": " C C/W G G \n G G W/C C ",
+    "cutSite": "CC      WGG\nGGW      CC",
+    "overhang": "5' W"
+  },
+  {
+    "name": "BstUI",
+    "recognitionSequence": " C G/C G \n G C/G C ",
+    "cutSite": "CG      CG\nGC      GC",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "BstXI",
+    "recognitionSequence": " C C A N N N N N/N T G G \n G G T N/N N N N N A C C ",
+    "cutSite": "CCANNNNN      NTGG\nGGTN      NNNNNACC",
+    "overhang": "3' NNNN"
+  },
+  {
+    "name": "BstYI",
+    "recognitionSequence": " R/G A T C Y \n Y C T A G/R ",
+    "cutSite": "R      GATCY\nYCTAG      R",
+    "overhang": "5' GATC"
+  },
+  {
+    "name": "BstZ17I",
+    "recognitionSequence": " G T A/T A C \n C A T/A T G ",
+    "cutSite": "GTA      TAC\nCAT      ATG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "Bsu36I",
+    "recognitionSequence": " C C/T N A G G \n G G A N T/C C ",
+    "cutSite": "CC      TNAGG\nGGANT      CC",
+    "overhang": "5' TNA"
+  },
+  {
+    "name": "BtgI",
+    "recognitionSequence": " C/C R Y G G \n G G Y R C/C ",
+    "cutSite": "C      CRYGG\nGGYRC      C",
+    "overhang": "5' CRYG"
+  },
+  {
+    "name": "BtgZI",
+    "recognitionSequence": " G C G A T G N10/N N N N \n C G C T A C N10 N N N N/",
+    "cutSite": "GCGATGN10      NNNN\nCGCTACN10NNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "BtsCI",
+    "recognitionSequence": " G G A T G N N/\n C C T A C/N N ",
+    "cutSite": "GGATGNN      \nCCTAC      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "BtsI-v2",
+    "recognitionSequence": " G C A G T G N N/\n C G T C A C/N N ",
+    "cutSite": "GCAGTGNN      \nCGTCAC      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "BtsIMutI",
+    "recognitionSequence": " C A G T G N N/\n G T C A C/N N ",
+    "cutSite": "CAGTGNN      \nGTCAC      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "Cac8I",
+    "recognitionSequence": " G C N/N G C \n C G N/N C G ",
+    "cutSite": "GCN      NGC\nCGN      NCG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "ClaI BspDI",
+    "recognitionSequence": " A T/C G A T \n T A G C/T A ",
+    "cutSite": "AT      CGAT\nTAGC      TA",
+    "overhang": "5' CG"
+  },
+  {
+    "name": "CspCI",
+    "recognitionSequence": " N N/N11 C A A N N N N N G T G G N10 N N/\n/N N N11 G T T N N N N N C A C C N10/N N ",
+    "cutSite": "NN      N11CAANNNNNGTGGN10NN      \n      NNN11GTTNNNNNCACCN10      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "CviAII",
+    "recognitionSequence": " C/A T G \n G T A/C ",
+    "cutSite": "C      ATG\nGTA      C",
+    "overhang": "5' AT"
+  },
+  {
+    "name": "CviKI-1",
+    "recognitionSequence": " R G/C Y \n Y C/G R ",
+    "cutSite": "RG      CY\nYC      GR",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "CviQI",
+    "recognitionSequence": " G/T A C \n C A T/G ",
+    "cutSite": "G      TAC\nCAT      G",
+    "overhang": "5' TA"
+  },
+  {
+    "name": "DdeI",
+    "recognitionSequence": " C/T N A G \n G A N T/C ",
+    "cutSite": "C      TNAG\nGANT      C",
+    "overhang": "5' TNA"
+  },
+  {
+    "name": "DpnI",
+    "recognitionSequence": " G A/T C \n C T/A G ",
+    "cutSite": "GA      TC\nCT      AG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "DraI",
+    "recognitionSequence": " T T T/A A A \n A A A/T T T ",
+    "cutSite": "TTT      AAA\nAAA      TTT",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "DraIII",
+    "recognitionSequence": " C A C N N N/G T G \n G T G/N N N C A C ",
+    "cutSite": "CACNNN      GTG\nGTG      NNNCAC",
+    "overhang": "3' NNN"
+  },
+  {
+    "name": "DrdI",
+    "recognitionSequence": " G A C N N N N/N N G T C \n C T G N N/N N N N C A G ",
+    "cutSite": "GACNNNN      NNGTC\nCTGNN      NNNNCAG",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "EaeI",
+    "recognitionSequence": " Y/G G C C R \n R C C G G/Y ",
+    "cutSite": "Y      GGCCR\nRCCGG      Y",
+    "overhang": "5' GGCC"
+  },
+  {
+    "name": "EagI",
+    "recognitionSequence": " C/G G C C G \n G C C G G/C ",
+    "cutSite": "C      GGCCG\nGCCGG      C",
+    "overhang": "5' GGCC"
+  },
+  {
+    "name": "EarI",
+    "recognitionSequence": " C T C T T C N/N N N \n G A G A A G N N N N/",
+    "cutSite": "CTCTTCN      NNN\nGAGAAGNNNN      ",
+    "overhang": "5' NNN"
+  },
+  {
+    "name": "EciI",
+    "recognitionSequence": " G G C G G A N9 N N/\n C C G C C T N9/N N ",
+    "cutSite": "GGCGGAN9NN      \nCCGCCTN9      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "Eco53kI",
+    "recognitionSequence": " G A G/C T C \n C T C/G A G ",
+    "cutSite": "GAG      CTC\nCTC      GAG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "EcoNI",
+    "recognitionSequence": " C C T N N/N N N A G G \n G G A N N N/N N T C C ",
+    "cutSite": "CCTNN      NNNAGG\nGGANNN      NNTCC",
+    "overhang": "5' N"
+  },
+  {
+    "name": "EcoO109I",
+    "recognitionSequence": " R G/G N C C Y \n Y C C N G/G R ",
+    "cutSite": "RG      GNCCY\nYCCNG      GR",
+    "overhang": "5' GNC"
+  },
+  {
+    "name": "EcoP15I",
+    "recognitionSequence": " C A G C A G N25/N N \n G T C G T C N25 N N/",
+    "cutSite": "CAGCAGN25      NN\nGTCGTCN25NN      ",
+    "overhang": "5' NN"
+  },
+  {
+    "name": "EcoRI",
+    "recognitionSequence": " G/A A T T C \n C T T A A/G ",
+    "cutSite": "G      AATTC\nCTTAA      G",
+    "overhang": "5' AATT"
+  },
+  {
+    "name": "EcoRV",
+    "recognitionSequence": " G A T/A T C \n C T A/T A G ",
+    "cutSite": "GAT      ATC\nCTA      TAG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "Esp3I",
+    "recognitionSequence": " C G T C T C N/N N N N \n G C A G A G N N N N N/",
+    "cutSite": "CGTCTCN      NNNN\nGCAGAGNNNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "FatI",
+    "recognitionSequence": "/C A T G \n G T A C/",
+    "cutSite": "      CATG\nGTAC      ",
+    "overhang": "5' CATG"
+  },
+  {
+    "name": "FauI",
+    "recognitionSequence": " C C C G C N4/N N \n G G G C G N4 N N/",
+    "cutSite": "CCCGCN4      NN\nGGGCGN4NN      ",
+    "overhang": "5' NN"
+  },
+  {
+    "name": "Fnu4HI",
+    "recognitionSequence": " G C/N G C \n C G N/C G ",
+    "cutSite": "GC      NGC\nCGN      CG",
+    "overhang": "5' N"
+  },
+  {
+    "name": "FokI",
+    "recognitionSequence": " G G A T G N9/N N N N \n C C T A C N9 N N N N/",
+    "cutSite": "GGATGN9      NNNN\nCCTACN9NNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "FseI",
+    "recognitionSequence": " G G C C G G/C C \n C C/G G C C G G ",
+    "cutSite": "GGCCGG      CC\nCC      GGCCGG",
+    "overhang": "3' CCGG"
+  },
+  {
+    "name": "FspEI",
+    "recognitionSequence": " C C N12/N N N N \n G G N12 N N N N/",
+    "cutSite": "CCN12      NNNN\nGGN12NNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "FspI",
+    "recognitionSequence": " T G C/G C A \n A C G/C G T ",
+    "cutSite": "TGC      GCA\nACG      CGT",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "HaeII",
+    "recognitionSequence": " R G C G C/Y \n Y/C G C G R ",
+    "cutSite": "RGCGC      Y\nY      CGCGR",
+    "overhang": "3' GCGC"
+  },
+  {
+    "name": "HaeIII",
+    "recognitionSequence": " G G/C C \n C C/G G ",
+    "cutSite": "GG      CC\nCC      GG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "HgaI",
+    "recognitionSequence": " G A C G C N5/N N N N N \n C T G C G N5 N N N N N/",
+    "cutSite": "GACGCN5      NNNNN\nCTGCGN5NNNNN      ",
+    "overhang": "5' NNNNN"
+  },
+  {
+    "name": "HhaI",
+    "recognitionSequence": " G C G/C \n C/G C G ",
+    "cutSite": "GCG      C\nC      GCG",
+    "overhang": "3' CG"
+  },
+  {
+    "name": "HinP1I",
+    "recognitionSequence": " G/C G C \n C G C/G ",
+    "cutSite": "G      CGC\nCGC      G",
+    "overhang": "5' CG"
+  },
+  {
+    "name": "HincII",
+    "recognitionSequence": " G T Y/R A C \n C A R/Y T G ",
+    "cutSite": "GTY      RAC\nCAR      YTG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "HindIII",
+    "recognitionSequence": " A/A G C T T \n T T C G A/A ",
+    "cutSite": "A      AGCTT\nTTCGA      A",
+    "overhang": "5' AGCT"
+  },
+  {
+    "name": "HinfI",
+    "recognitionSequence": " G/A N T C \n C T N A/G ",
+    "cutSite": "G      ANTC\nCTNA      G",
+    "overhang": "5' ANT"
+  },
+  {
+    "name": "HpaI",
+    "recognitionSequence": " G T T/A A C \n C A A/T T G ",
+    "cutSite": "GTT      AAC\nCAA      TTG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "HphI",
+    "recognitionSequence": " G G T G A N7 N/\n C C A C T N7/N ",
+    "cutSite": "GGTGAN7N      \nCCACTN7      N",
+    "overhang": "3' N"
+  },
+  {
+    "name": "Hpy166II",
+    "recognitionSequence": " G T N/N A C \n C A N/N T G ",
+    "cutSite": "GTN      NAC\nCAN      NTG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "Hpy188I",
+    "recognitionSequence": " T C N/G A \n A G/N C T ",
+    "cutSite": "TCN      GA\nAG      NCT",
+    "overhang": "3' N"
+  },
+  {
+    "name": "Hpy188III",
+    "recognitionSequence": " T C/N N G A \n A G N N/C T ",
+    "cutSite": "TC      NNGA\nAGNN      CT",
+    "overhang": "5' NN"
+  },
+  {
+    "name": "Hpy99I",
+    "recognitionSequence": " C G W C G/\n/G C W G C ",
+    "cutSite": "CGWCG      \n      GCWGC",
+    "overhang": "3' CGWCG"
+  },
+  {
+    "name": "HpyAV",
+    "recognitionSequence": " C C T T C N5 N/\n G G A A G N5/N ",
+    "cutSite": "CCTTCN5N      \nGGAAGN5      N",
+    "overhang": "3' N"
+  },
+  {
+    "name": "HpyCH4III",
+    "recognitionSequence": " A C N/G T \n T G/N C A ",
+    "cutSite": "ACN      GT\nTG      NCA",
+    "overhang": "3' N"
+  },
+  {
+    "name": "HpyCH4IV",
+    "recognitionSequence": " A/C G T \n T G C/A ",
+    "cutSite": "A      CGT\nTGC      A",
+    "overhang": "5' CG"
+  },
+  {
+    "name": "HpyCH4V",
+    "recognitionSequence": " T G/C A \n A C/G T ",
+    "cutSite": "TG      CA\nAC      GT",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "I-CeuI",
+    "recognitionSequence": " T A A C T A T A A C G G T C C T A A/G G T A G C G A A \n A T T G A T A T T G C C A G/G A T T C C A T C G C T T ",
+    "cutSite": "TAACTATAACGGTCCTAA      GGTAGCGAA\nATTGATATTGCCAG      GATTCCATCGCTT",
+    "overhang": "3' CTAA"
+  },
+  {
+    "name": "I-SceI",
+    "recognitionSequence": " T A G G G A T A A/C A G G G T A A T \n A T C C C/T A T T G T C C C A T T A ",
+    "cutSite": "TAGGGATAA      CAGGGTAAT\nATCCC      TATTGTCCCATTA",
+    "overhang": "3' ATAA"
+  },
+  {
+    "name": "KasI",
+    "recognitionSequence": " G/G C G C C \n C C G C G/G ",
+    "cutSite": "G      GCGCC\nCCGCG      G",
+    "overhang": "5' GCGC"
+  },
+  {
+    "name": "KpnI",
+    "recognitionSequence": " G G T A C/C \n C/C A T G G ",
+    "cutSite": "GGTAC      C\nC      CATGG",
+    "overhang": "3' GTAC"
+  },
+  {
+    "name": "LpnPI",
+    "recognitionSequence": " C C D G N10/N N N N \n G G H C N10 N N N N/",
+    "cutSite": "CCDGN10      NNNN\nGGHCN10NNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "MboI Sau3AI DpnII",
+    "recognitionSequence": "/G A T C \n C T A G/",
+    "cutSite": "      GATC\nCTAG      ",
+    "overhang": "5' GATC"
+  },
+  {
+    "name": "MboII",
+    "recognitionSequence": " G A A G A N7 N/\n C T T C T N7/N ",
+    "cutSite": "GAAGAN7N      \nCTTCTN7      N",
+    "overhang": "3' N"
+  },
+  {
+    "name": "MfeI",
+    "recognitionSequence": " C/A A T T G \n G T T A A/C ",
+    "cutSite": "C      AATTG\nGTTAA      C",
+    "overhang": "5' AATT"
+  },
+  {
+    "name": "MluCI",
+    "recognitionSequence": "/A A T T \n T T A A/",
+    "cutSite": "      AATT\nTTAA      ",
+    "overhang": "5' AATT"
+  },
+  {
+    "name": "MluI",
+    "recognitionSequence": " A/C G C G T \n T G C G C/A ",
+    "cutSite": "A      CGCGT\nTGCGC      A",
+    "overhang": "5' CGCG"
+  },
+  {
+    "name": "MlyI",
+    "recognitionSequence": " G A G T C N5/\n C T C A G N5/",
+    "cutSite": "GAGTCN5      \nCTCAGN5      ",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "MmeI",
+    "recognitionSequence": " T C C R A C N18 N N/\n A G G Y T G N18/N N ",
+    "cutSite": "TCCRACN18NN      \nAGGYTGN18      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "MnlI",
+    "recognitionSequence": " C C T C N6 N/\n G G A G N6/N ",
+    "cutSite": "CCTCN6N      \nGGAGN6      N",
+    "overhang": "3' N"
+  },
+  {
+    "name": "MscI",
+    "recognitionSequence": " T G G/C C A \n A C C/G G T ",
+    "cutSite": "TGG      CCA\nACC      GGT",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "MseI",
+    "recognitionSequence": " T/T A A \n A A T/T ",
+    "cutSite": "T      TAA\nAAT      T",
+    "overhang": "5' TA"
+  },
+  {
+    "name": "MslI",
+    "recognitionSequence": " C A Y N N/N N R T G \n G T R N N/N N Y A C ",
+    "cutSite": "CAYNN      NNRTG\nGTRNN      NNYAC",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "MspA1I",
+    "recognitionSequence": " C M G/C K G \n G K C/G M C ",
+    "cutSite": "CMG      CKG\nGKC      GMC",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "MspI HpaII",
+    "recognitionSequence": " C/C G G \n G G C/C ",
+    "cutSite": "C      CGG\nGGC      C",
+    "overhang": "5' CG"
+  },
+  {
+    "name": "MspJI",
+    "recognitionSequence": " C N N R N9/N N N N \n G N N Y N9 N N N N/",
+    "cutSite": "CNNRN9      NNNN\nGNNYN9NNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "MwoI",
+    "recognitionSequence": " G C N N N N N/N N G C \n C G N N/N N N N N C G ",
+    "cutSite": "GCNNNNN      NNGC\nCGNN      NNNNNCG",
+    "overhang": "3' NNN"
+  },
+  {
+    "name": "NaeI",
+    "recognitionSequence": " G C C/G G C \n C G G/C C G ",
+    "cutSite": "GCC      GGC\nCGG      CCG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "NarI",
+    "recognitionSequence": " G G/C G C C \n C C G C/G G ",
+    "cutSite": "GG      CGCC\nCCGC      GG",
+    "overhang": "5' CG"
+  },
+  {
+    "name": "NciI",
+    "recognitionSequence": " C C/S G G \n G G S/C C ",
+    "cutSite": "CC      SGG\nGGS      CC",
+    "overhang": "5' S"
+  },
+  {
+    "name": "NcoI",
+    "recognitionSequence": " C/C A T G G \n G G T A C/C ",
+    "cutSite": "C      CATGG\nGGTAC      C",
+    "overhang": "5' CATG"
+  },
+  {
+    "name": "NdeI",
+    "recognitionSequence": " C A/T A T G \n G T A T/A C ",
+    "cutSite": "CA      TATG\nGTAT      AC",
+    "overhang": "5' TA"
+  },
+  {
+    "name": "NgoMIV",
+    "recognitionSequence": " G/C C G G C \n C G G C C/G ",
+    "cutSite": "G      CCGGC\nCGGCC      G",
+    "overhang": "5' CCGG"
+  },
+  {
+    "name": "NheI",
+    "recognitionSequence": " G/C T A G C \n C G A T C/G ",
+    "cutSite": "G      CTAGC\nCGATC      G",
+    "overhang": "5' CTAG"
+  },
+  {
+    "name": "NlaIII",
+    "recognitionSequence": " C A T G/\n/G T A C ",
+    "cutSite": "CATG      \n      GTAC",
+    "overhang": "3' CATG"
+  },
+  {
+    "name": "NlaIV",
+    "recognitionSequence": " G G N/N C C \n C C N/N G G ",
+    "cutSite": "GGN      NCC\nCCN      NGG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "NmeAIII",
+    "recognitionSequence": " G C C G A G N19 N N/\n C G G C T C N19/N N ",
+    "cutSite": "GCCGAGN19NN      \nCGGCTCN19      NN",
+    "overhang": "3' NN"
+  },
+  {
+    "name": "NotI",
+    "recognitionSequence": " G C/G G C C G C \n C G C C G G/C G ",
+    "cutSite": "GC      GGCCGC\nCGCCGG      CG",
+    "overhang": "5' GGCC"
+  },
+  {
+    "name": "NruI",
+    "recognitionSequence": " T C G/C G A \n A G C/G C T ",
+    "cutSite": "TCG      CGA\nAGC      GCT",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "NsiI",
+    "recognitionSequence": " A T G C A/T \n T/A C G T A ",
+    "cutSite": "ATGCA      T\nT      ACGTA",
+    "overhang": "3' TGCA"
+  },
+  {
+    "name": "NspI",
+    "recognitionSequence": " R C A T G/Y \n Y/G T A C R ",
+    "cutSite": "RCATG      Y\nY      GTACR",
+    "overhang": "3' CATG"
+  },
+  {
+    "name": "Nt.AlwI",
+    "recognitionSequence": " G G A T C N N N N/\n/C C T A G N N N N ",
+    "cutSite": "GGATCNNNN      \n      CCTAGNNNN",
+    "overhang": "3' GGATCNNNN"
+  },
+  {
+    "name": "Nt.BbvCI",
+    "recognitionSequence": " C C/T C A G C \n/G G A G T C G ",
+    "cutSite": "CC      TCAGC\n      GGAGTCG",
+    "overhang": "3' CC"
+  },
+  {
+    "name": "Nt.BsmAI",
+    "recognitionSequence": " G T C T C N/\n/C A G A G N ",
+    "cutSite": "GTCTCN      \n      CAGAGN",
+    "overhang": "3' GTCTCN"
+  },
+  {
+    "name": "Nt.BspQI",
+    "recognitionSequence": " G C T C T T C N/\n/C G A G A A G N ",
+    "cutSite": "GCTCTTCN      \n      CGAGAAGN",
+    "overhang": "3' GCTCTTCN"
+  },
+  {
+    "name": "Nt.BstNBI",
+    "recognitionSequence": " G A G T C N N N N/\n/C T C A G N N N N ",
+    "cutSite": "GAGTCNNNN      \n      CTCAGNNNN",
+    "overhang": "3' GAGTCNNNN"
+  },
+  {
+    "name": "PI-PspI",
+    "recognitionSequence": " T G G C A A A C A G C T A T T A T/G G G T A T T A T G G G T \n A C C G T T T G T C G A T/A A T A C C C A T A A T A C C C A ",
+    "cutSite": "TGGCAAACAGCTATTAT      GGGTATTATGGGT\nACCGTTTGTCGAT      AATACCCATAATACCCA",
+    "overhang": "3' TTAT"
+  },
+  {
+    "name": "PI-SceI",
+    "recognitionSequence": " A T C T A T G T C G G G T G C/G G A G A A A G A G G T A A T \n T A G A T A C A G C C/C A C G C C T C T T T C T C C A T T A ",
+    "cutSite": "ATCTATGTCGGGTGC      GGAGAAAGAGGTAAT\nTAGATACAGCC      CACGCCTCTTTCTCCATTA",
+    "overhang": "3' GTGC"
+  },
+  {
+    "name": "PacI",
+    "recognitionSequence": " T T A A T/T A A \n A A T/T A A T T ",
+    "cutSite": "TTAAT      TAA\nAAT      TAATT",
+    "overhang": "3' AT"
+  },
+  {
+    "name": "PciI",
+    "recognitionSequence": " A/C A T G T \n T G T A C/A ",
+    "cutSite": "A      CATGT\nTGTAC      A",
+    "overhang": "5' CATG"
+  },
+  {
+    "name": "PflMI",
+    "recognitionSequence": " C C A N N N N/N T G G \n G G T N/N N N N A C C ",
+    "cutSite": "CCANNNN      NTGG\nGGTN      NNNNACC",
+    "overhang": "3' NNN"
+  },
+  {
+    "name": "PleI",
+    "recognitionSequence": " G A G T C N4/N \n C T C A G N4 N/",
+    "cutSite": "GAGTCN4      N\nCTCAGN4N      ",
+    "overhang": "5' N"
+  },
+  {
+    "name": "PluTI",
+    "recognitionSequence": " G G C G C/C \n C/C G C G G ",
+    "cutSite": "GGCGC      C\nC      CGCGG",
+    "overhang": "3' GCGC"
+  },
+  {
+    "name": "PmeI",
+    "recognitionSequence": " G T T T/A A A C \n C A A A/T T T G ",
+    "cutSite": "GTTT      AAAC\nCAAA      TTTG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "PmlI",
+    "recognitionSequence": " C A C/G T G \n G T G/C A C ",
+    "cutSite": "CAC      GTG\nGTG      CAC",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "PpuMI",
+    "recognitionSequence": " R G/G W C C Y \n Y C C W G/G R ",
+    "cutSite": "RG      GWCCY\nYCCWG      GR",
+    "overhang": "5' GWC"
+  },
+  {
+    "name": "PshAI",
+    "recognitionSequence": " G A C N N/N N G T C \n C T G N N/N N C A G ",
+    "cutSite": "GACNN      NNGTC\nCTGNN      NNCAG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "PsiI-v2",
+    "recognitionSequence": " T T A/T A A \n A A T/A T T ",
+    "cutSite": "TTA      TAA\nAAT      ATT",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "PspGI",
+    "recognitionSequence": "/C C W G G \n G G W C C/",
+    "cutSite": "      CCWGG\nGGWCC      ",
+    "overhang": "5' CCWGG"
+  },
+  {
+    "name": "PspOMI",
+    "recognitionSequence": " G/G G C C C \n C C C G G/G ",
+    "cutSite": "G      GGCCC\nCCCGG      G",
+    "overhang": "5' GGCC"
+  },
+  {
+    "name": "PspXI",
+    "recognitionSequence": " V C/T C G A G B \n B G A G C T/C V ",
+    "cutSite": "VC      TCGAGB\nBGAGCT      CV",
+    "overhang": "5' TCGA"
+  },
+  {
+    "name": "PstI",
+    "recognitionSequence": " C T G C A/G \n G/A C G T C ",
+    "cutSite": "CTGCA      G\nG      ACGTC",
+    "overhang": "3' TGCA"
+  },
+  {
+    "name": "PvuI",
+    "recognitionSequence": " C G A T/C G \n G C/T A G C ",
+    "cutSite": "CGAT      CG\nGC      TAGC",
+    "overhang": "3' AT"
+  },
+  {
+    "name": "PvuII",
+    "recognitionSequence": " C A G/C T G \n G T C/G A C ",
+    "cutSite": "CAG      CTG\nGTC      GAC",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "RsaI",
+    "recognitionSequence": " G T/A C \n C A/T G ",
+    "cutSite": "GT      AC\nCA      TG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "RsrII",
+    "recognitionSequence": " C G/G W C C G \n G C C W G/G C ",
+    "cutSite": "CG      GWCCG\nGCCWG      GC",
+    "overhang": "5' GWC"
+  },
+  {
+    "name": "SacI",
+    "recognitionSequence": " G A G C T/C \n C/T C G A G ",
+    "cutSite": "GAGCT      C\nC      TCGAG",
+    "overhang": "3' AGCT"
+  },
+  {
+    "name": "SacII",
+    "recognitionSequence": " C C G C/G G \n G G/C G C C ",
+    "cutSite": "CCGC      GG\nGG      CGCC",
+    "overhang": "3' GC"
+  },
+  {
+    "name": "SalI",
+    "recognitionSequence": " G/T C G A C \n C A G C T/G ",
+    "cutSite": "G      TCGAC\nCAGCT      G",
+    "overhang": "5' TCGA"
+  },
+  {
+    "name": "SapI BspQI",
+    "recognitionSequence": " G C T C T T C N/N N N \n C G A G A A G N N N N/",
+    "cutSite": "GCTCTTCN      NNN\nCGAGAAGNNNN      ",
+    "overhang": "5' NNN"
+  },
+  {
+    "name": "Sau96I",
+    "recognitionSequence": " G/G N C C \n C C N G/G ",
+    "cutSite": "G      GNCC\nCCNG      G",
+    "overhang": "5' GNC"
+  },
+  {
+    "name": "SbfI",
+    "recognitionSequence": " C C T G C A/G G \n G G/A C G T C C ",
+    "cutSite": "CCTGCA      GG\nGG      ACGTCC",
+    "overhang": "3' TGCA"
+  },
+  {
+    "name": "ScaI",
+    "recognitionSequence": " A G T/A C T \n T C A/T G A ",
+    "cutSite": "AGT      ACT\nTCA      TGA",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "ScrFI",
+    "recognitionSequence": " C C/N G G \n G G N/C C ",
+    "cutSite": "CC      NGG\nGGN      CC",
+    "overhang": "5' N"
+  },
+  {
+    "name": "SexAI",
+    "recognitionSequence": " A/C C W G G T \n T G G W C C/A ",
+    "cutSite": "A      CCWGGT\nTGGWCC      A",
+    "overhang": "5' CCWGG"
+  },
+  {
+    "name": "SfaNI",
+    "recognitionSequence": " G C A T C N5/N N N N \n C G T A G N5 N N N N/",
+    "cutSite": "GCATCN5      NNNN\nCGTAGN5NNNN      ",
+    "overhang": "5' NNNN"
+  },
+  {
+    "name": "SfcI",
+    "recognitionSequence": " C/T R Y A G \n G A Y R T/C ",
+    "cutSite": "C      TRYAG\nGAYRT      C",
+    "overhang": "5' TRYA"
+  },
+  {
+    "name": "SfiI",
+    "recognitionSequence": " G G C C N N N N/N G G C C \n C C G G N/N N N N C C G G ",
+    "cutSite": "GGCCNNNN      NGGCC\nCCGGN      NNNNCCGG",
+    "overhang": "3' NNN"
+  },
+  {
+    "name": "SfoI",
+    "recognitionSequence": " G G C/G C C \n C C G/C G G ",
+    "cutSite": "GGC      GCC\nCCG      CGG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "SgrAI",
+    "recognitionSequence": " C R/C C G G Y G \n G Y G G C C/R C ",
+    "cutSite": "CR      CCGGYG\nGYGGCC      RC",
+    "overhang": "5' CCGG"
+  },
+  {
+    "name": "SmaI",
+    "recognitionSequence": " C C C/G G G \n G G G/C C C ",
+    "cutSite": "CCC      GGG\nGGG      CCC",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "SmlI",
+    "recognitionSequence": " C/T Y R A G \n G A R Y T/C ",
+    "cutSite": "C      TYRAG\nGARYT      C",
+    "overhang": "5' TYRA"
+  },
+  {
+    "name": "SnaBI",
+    "recognitionSequence": " T A C/G T A \n A T G/C A T ",
+    "cutSite": "TAC      GTA\nATG      CAT",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "SpeI",
+    "recognitionSequence": " A/C T A G T \n T G A T C/A ",
+    "cutSite": "A      CTAGT\nTGATC      A",
+    "overhang": "5' CTAG"
+  },
+  {
+    "name": "SphI",
+    "recognitionSequence": " G C A T G/C \n C/G T A C G ",
+    "cutSite": "GCATG      C\nC      GTACG",
+    "overhang": "3' CATG"
+  },
+  {
+    "name": "SrfI",
+    "recognitionSequence": " G C C C/G G G C \n C G G G/C C C G ",
+    "cutSite": "GCCC      GGGC\nCGGG      CCCG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "SspI",
+    "recognitionSequence": " A A T/A T T \n T T A/T A A ",
+    "cutSite": "AAT      ATT\nTTA      TAA",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "StuI",
+    "recognitionSequence": " A G G/C C T \n T C C/G G A ",
+    "cutSite": "AGG      CCT\nTCC      GGA",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "StyD4I",
+    "recognitionSequence": "/C C N G G \n G G N C C/",
+    "cutSite": "      CCNGG\nGGNCC      ",
+    "overhang": "5' CCNGG"
+  },
+  {
+    "name": "StyI",
+    "recognitionSequence": " C/C W W G G \n G G W W C/C ",
+    "cutSite": "C      CWWGG\nGGWWC      C",
+    "overhang": "5' CWWG"
+  },
+  {
+    "name": "SwaI",
+    "recognitionSequence": " A T T T/A A A T \n T A A A/T T T A ",
+    "cutSite": "ATTT      AAAT\nTAAA      TTTA",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "TaqI-v2",
+    "recognitionSequence": " T/C G A \n A G C/T ",
+    "cutSite": "T      CGA\nAGC      T",
+    "overhang": "5' CG"
+  },
+  {
+    "name": "TfiI",
+    "recognitionSequence": " G/A W T C \n C T W A/G ",
+    "cutSite": "G      AWTC\nCTWA      G",
+    "overhang": "5' AWT"
+  },
+  {
+    "name": "TseI ApeKI",
+    "recognitionSequence": " G/C W G C \n C G W C/G ",
+    "cutSite": "G      CWGC\nCGWC      G",
+    "overhang": "5' CWG"
+  },
+  {
+    "name": "Tsp45I",
+    "recognitionSequence": "/G T S A C \n C A S T G/",
+    "cutSite": "      GTSAC\nCASTG      ",
+    "overhang": "5' GTSAC"
+  },
+  {
+    "name": "TspRI",
+    "recognitionSequence": " N N C A S T G N N/\n/N N G T S A C N N ",
+    "cutSite": "NNCASTGNN      \n      NNGTSACNN",
+    "overhang": "3' NNCASTGNN"
+  },
+  {
+    "name": "Tth111I PflFI",
+    "recognitionSequence": " G A C N/N N G T C \n C T G N N/N C A G ",
+    "cutSite": "GACN      NNGTC\nCTGNN      NCAG",
+    "overhang": "5' N"
+  },
+  {
+    "name": "XbaI",
+    "recognitionSequence": " T/C T A G A \n A G A T C/T ",
+    "cutSite": "T      CTAGA\nAGATC      T",
+    "overhang": "5' CTAG"
+  },
+  {
+    "name": "XcmI",
+    "recognitionSequence": " C C A N N N N N/N N N N T G G \n G G T N N N N/N N N N N A C C ",
+    "cutSite": "CCANNNNN      NNNNTGG\nGGTNNNN      NNNNNACC",
+    "overhang": "3' N"
+  },
+  {
+    "name": "XhoI PaeR7I",
+    "recognitionSequence": " C/T C G A G \n G A G C T/C ",
+    "cutSite": "C      TCGAG\nGAGCT      C",
+    "overhang": "5' TCGA"
+  },
+  {
+    "name": "XmaI TspMI",
+    "recognitionSequence": " C/C C G G G \n G G G C C/C ",
+    "cutSite": "C      CCGGG\nGGGCC      C",
+    "overhang": "5' CCGG"
+  },
+  {
+    "name": "XmnI",
+    "recognitionSequence": " G A A N N/N N T T C \n C T T N N/N N A A G ",
+    "cutSite": "GAANN      NNTTC\nCTTNN      NNAAG",
+    "overhang": "Blunt"
+  },
+  {
+    "name": "ZraI",
+    "recognitionSequence": "GAC/GTC\nCTG/CAG",
+    "cutSite": "GACGTC\nCTGCAG",
+    "overhang": "Blunt"
+  }
+]

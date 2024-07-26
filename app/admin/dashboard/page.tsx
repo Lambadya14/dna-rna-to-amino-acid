@@ -13,6 +13,8 @@ import { db } from "../../lib/firebase/init"; // Sesuaikan path ke file firebase
 import DeleteConfirmation from "../../components/modals/DeleteConfirmation";
 import FormComponent from "@/app/components/adminComponents/FormComponent";
 import DataDisplayComponent from "@/app/components/adminComponents/DataComponent";
+import FormEnzyme from "@/app/components/adminComponents/FormEnzyme";
+import DataEnzyme from "@/app/components/adminComponents/DataEnzyme";
 
 interface AminoAcidData {
   id: string;
@@ -54,6 +56,13 @@ const InputForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [charge, setCharge] = useState<string>("");
   const [polarity, setPolarity] = useState<string>("");
+
+  const [newEnzyme, setNewEnzyme] = useState({
+    name: "",
+    sequnece3: "",
+    sequence5: "",
+    overhang: "",
+  });
 
   const handleChargeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -255,7 +264,7 @@ const InputForm: React.FC = () => {
               timestamp: new Date(),
               directory: previousDirectory,
               charge: charge,
-              polarity:polarity
+              polarity: polarity,
             });
 
             console.log("Document updated with ID:", editingId);
@@ -306,7 +315,7 @@ const InputForm: React.FC = () => {
               rna: dynamicRNAInputs.filter((item) => item !== ""),
               timestamp: new Date(),
               charge: charge,
-              polarity:polarity
+              polarity: polarity,
             });
 
             data.append("nama", docRef.id);
@@ -346,7 +355,7 @@ const InputForm: React.FC = () => {
         abt: "",
         directory: "",
         charge: "",
-        polaritas:""
+        polaritas: "",
       });
       setDynamicDNAInputs([""]);
       setDynamicRNAInputs([""]);
@@ -681,6 +690,8 @@ const InputForm: React.FC = () => {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
       />
+      <FormEnzyme />
+      <DataEnzyme />
     </>
   );
 };

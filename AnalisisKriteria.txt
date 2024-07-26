@@ -1,0 +1,33 @@
+################## Proses Analisis Restriksi ##################################
+1. ambil urutan DNA
+2. cocokan enzim dengan DNA 
+3. jika ada kesamaan atau ada enzim yang ditemukan dalam urutan DNA maka akan dilakukan pemotongan
+4. Proses pemotongan akan menggunakan 5'-DNA-3' dan 3'-DNA-5'
+5. data field enzim:
+[
+    {
+        nama: "AatII",
+        sequence5: "GACGT/C",
+        sequence3: "C/TGCAG",
+        overhang: "three_prime"
+    }
+]
+
+Hasil output table diharapkan:
+No  |   Enzim   |   Sequnece Cut (5' & 3' )  |   Overhang    |   Position    |   Frequency   |
+
+[
+    {
+        N:["A", "C", "G", "T"],
+        M:["A","C"],
+        R:["A","G"],
+        W:["A","T"],
+        Y:["C","T"],
+        S:["C","G"],
+        K:["G","T"],
+        H:["A","C","T"],
+        B:["C","G", "T"],
+        V:["A","C","G"],
+        D:["A","G","T" ],
+    }
+]

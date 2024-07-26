@@ -27,6 +27,7 @@ import { Slide, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TableDetails from "./components/tables/TableDetails";
 import Image from "next/image";
+import EnzymeAnalysis from "./components/pages/EnzymeAnalysis";
 
 // Interface for codon objects
 interface Codon {
@@ -76,6 +77,7 @@ const CodonConverter: React.FC = () => {
     useState(false);
   const [totalAminoAcids, setTotalAminoAcids] = useState<number>(0);
   const [totalAminoAcidTypes, setTotalAminoAcidTypes] = useState<number>(0);
+  const [analyzeTab, setAnalyzeTab] = useState<string>("AminoAcid");
 
   // fungsi pengganti untuk mengatur nilai state ketika pengguna mengklik radio button
   const handleTerminatorRadioChange = (
@@ -489,281 +491,320 @@ const CodonConverter: React.FC = () => {
                 <h1 className="font-bold text-[35px] text-center  ">
                   Hasil Konversi ({selectedContent})
                 </h1>
+                <div className="flex justify-center gap-5 mb-5">
+                  <button
+                    onClick={() => setAnalyzeTab("AminoAcid")}
+                    className="border-2 w-[220px] rounded-[5px] bg-[#8884d8] text-[18px]  text-white"
+                  >
+                    Analisis Asam Amino
+                  </button>
+                  <button
+                    onClick={() => setAnalyzeTab("Enzyme")}
+                    className="border-2 w-[150px] rounded-[5px] bg-[#8884d8] text-[18px] text-white"
+                  >
+                    Analisis Enzim
+                  </button>
+                </div>
               </div>
-              <div className="lg:flex">
-                <div className="border-2 p-5 rounded-xl lg:w-1/2 lg:me-5">
-                  <h2 className="font-bold text-[30px]">Tinjauan</h2>
-                  <ResponsiveContainer height={400}>
-                    <BarChart
-                      data={Object.entries(aminoAcidCountResult).map(
-                        ([aminoAcid, count]) => ({
-                          aminoAcid: `${
-                            codonMap.find(
-                              (item) => item.abbreviation1 === aminoAcid
-                            )?.name || aminoAcid
-                          } (${aminoAcid})`,
-                          shortName: aminoAcid,
-                          count,
-                        })
-                      )}
-                    >
-                      <XAxis dataKey="shortName" />
-                      <YAxis />
-                      <Tooltip
-                        content={({ payload }) => {
-                          const aminoAcidInfo = payload?.[0]?.payload;
 
-                          if (!aminoAcidInfo) {
-                            return null;
-                          }
+              {analyzeTab === "AminoAcid" && (
+                <>
+                  <div className="lg:flex">
+                    <div className="border-2 p-5 rounded-xl lg:w-1/2 lg:me-5">
+                      <h2 className="font-bold text-[30px]">Tinjauan</h2>
+                      <ResponsiveContainer height={400}>
+                        <BarChart
+                          data={Object.entries(aminoAcidCountResult).map(
+                            ([aminoAcid, count]) => ({
+                              aminoAcid: `${
+                                codonMap.find(
+                                  (item) => item.abbreviation1 === aminoAcid
+                                )?.name || aminoAcid
+                              } (${aminoAcid})`,
+                              shortName: aminoAcid,
+                              count,
+                            })
+                          )}
+                        >
+                          <XAxis dataKey="shortName" />
+                          <YAxis />
+                          <Tooltip
+                            content={({ payload }) => {
+                              const aminoAcidInfo = payload?.[0]?.payload;
 
-                          const { aminoAcid, shortName, count } = aminoAcidInfo;
-                          const aminoAcidData = codonMap.find(
-                            (item) => item.abbreviation1 === shortName
-                          );
+                              if (!aminoAcidInfo) {
+                                return null;
+                              }
 
-                          if (!aminoAcidData) {
-                            return null;
-                          }
+                              const { aminoAcid, shortName, count } =
+                                aminoAcidInfo;
+                              const aminoAcidData = codonMap.find(
+                                (item) => item.abbreviation1 === shortName
+                              );
 
-                          const fullAminoAcid = `${aminoAcidData.name} (${aminoAcidData.abbreviation3})`;
+                              if (!aminoAcidData) {
+                                return null;
+                              }
 
-                          return (
-                            <div className="custom-tooltip">
-                              <p>{`${fullAminoAcid}`}</p>
-                              <p>{`Count: ${count}`}</p>
-                            </div>
-                          );
-                        }}
-                        wrapperStyle={{
-                          background: "white",
-                          padding: "10px",
-                          borderRadius: "10px",
-                          borderColor: "black",
-                          borderWidth: "1px",
-                          borderStyle: "solid",
-                        }}
-                      />
-                      <Legend />
-                      <Bar dataKey="count" fill="#8884d8" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                  <div>
-                    <p className=" mt-5 font-bold text-[15px]">Keterangan:</p>
-                    <ul className="list-disc list-inside ">
-                      <li className=" font-semibold">
-                        Total Asam Amino: {totalAminoAcids} Asam Amino
-                      </li>
-                      <li className="font-semibold">
-                        Total Jenis Asam Amino: {totalAminoAcidTypes} Jenis
-                      </li>
-                    </ul>
+                              const fullAminoAcid = `${aminoAcidData.name} (${aminoAcidData.abbreviation3})`;
+
+                              return (
+                                <div className="custom-tooltip">
+                                  <p>{`${fullAminoAcid}`}</p>
+                                  <p>{`Count: ${count}`}</p>
+                                </div>
+                              );
+                            }}
+                            wrapperStyle={{
+                              background: "white",
+                              padding: "10px",
+                              borderRadius: "10px",
+                              borderColor: "black",
+                              borderWidth: "1px",
+                              borderStyle: "solid",
+                            }}
+                          />
+                          <Legend />
+                          <Bar dataKey="count" fill="#8884d8" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                      <div>
+                        <p className=" mt-5 font-bold text-[15px]">
+                          Keterangan:
+                        </p>
+                        <ul className="list-disc list-inside ">
+                          <li className=" font-semibold">
+                            Total Asam Amino: {totalAminoAcids} Asam Amino
+                          </li>
+                          <li className="font-semibold">
+                            Total Jenis Asam Amino: {totalAminoAcidTypes} Jenis
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="max-lg:mt-5 lg:w-1/2 rounded-xl">
+                      <div className=" p-5 border-2 rounded-xl ">
+                        {result}
+                        <h2 className=" font-bold text-[30px]">
+                          Tentang Asam Amino:
+                        </h2>
+                        <Slider {...settings}>
+                          {Object.keys(aminoAcidCountResult).map(
+                            (aminoAcid) => (
+                              <div key={aminoAcid} className="px-1">
+                                <p className="text-justify">
+                                  {getAboutInformation(aminoAcid)}
+                                </p>
+                              </div>
+                            )
+                          )}
+                        </Slider>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="max-lg:mt-5 lg:w-1/2 rounded-xl">
-                  <div className=" p-5 border-2 rounded-xl ">
-                    {result}
-                    <h2 className=" font-bold text-[30px]">
-                      Tentang Asam Amino:
-                    </h2>
-                    <Slider {...settings}>
-                      {Object.keys(aminoAcidCountResult).map((aminoAcid) => (
-                        <div key={aminoAcid} className="px-1">
-                          <p className="text-justify">
-                            {getAboutInformation(aminoAcid)}
-                          </p>
-                        </div>
-                      ))}
-                    </Slider>
+                  <div className="flex flex-col border-2 p-5 rounded-xl mt-5 relative overflow-x-auto ">
+                    <h1 className="font-bold text-[30px]">
+                      Tabel Klasifikasi:
+                    </h1>
+                    <div>
+                      <table className="w-full divide-y divide-gray-200 rounded-xl">
+                        <thead className="bg-[#8884d8]">
+                          <tr>
+                            <th className="text-white p-4">Klasifikasi</th>
+                            <th className="text-white p-4">
+                              Polaritas (Polar/Nonpolar)
+                            </th>
+                            <th className="text-white p-4">Nama Asam Amino</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          <tr>
+                            <th>Acidic</th>
+                            <td className="p-4">Polar</td>
+                            <td>
+                              {Object.entries(aminoAcidCountResult)
+                                .map(([aminoAcid, count]) => {
+                                  const aminoAcidData = codonMap.find(
+                                    (item) => item.abbreviation1 === aminoAcid
+                                  );
+                                  if (!aminoAcidData)
+                                    return (
+                                      <p key={aminoAcid}>Tidak Tersedia</p>
+                                    );
+
+                                  const isClass =
+                                    aminoAcidData.charge.toLowerCase() ===
+                                    "acidic";
+
+                                  if (isClass) {
+                                    const aminoAcidName = aminoAcidData?.name;
+                                    return aminoAcidName ? aminoAcidName : "";
+                                  }
+
+                                  return ""; // Return empty string for non-acidic amino acids
+                                })
+                                .filter((name) => name) // Filter out empty strings
+                                .join(", ")}{" "}
+                              {/* Join names with comma */}
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Basic</th>
+                            <td className="p-4">Polar</td>
+                            <td>
+                              {Object.entries(aminoAcidCountResult)
+                                .map(([aminoAcid, count]) => {
+                                  const aminoAcidData = codonMap.find(
+                                    (item) => item.abbreviation1 === aminoAcid
+                                  );
+                                  if (!aminoAcidData)
+                                    return (
+                                      <p key={aminoAcid}>Tidak Tersedia</p>
+                                    );
+
+                                  const isClass =
+                                    aminoAcidData.charge.toLowerCase() ===
+                                    "basic";
+
+                                  if (isClass) {
+                                    const aminoAcidName = aminoAcidData?.name;
+                                    return aminoAcidName ? aminoAcidName : "";
+                                  }
+
+                                  return ""; // Return empty string for non-acidic amino acids
+                                })
+                                .filter((name) => name) // Filter out empty strings
+                                .join(", ")}{" "}
+                              {/* Join names with comma */}
+                            </td>
+                          </tr>
+                          <tr>
+                            <th rowSpan={2}>Neutral</th>
+                            <td className="p-4">Polar</td>
+                            <td>
+                              {Object.entries(aminoAcidCountResult)
+                                .map(([aminoAcid, count]) => {
+                                  const aminoAcidData = codonMap.find(
+                                    (item) => item.abbreviation1 === aminoAcid
+                                  );
+                                  if (!aminoAcidData) return null;
+
+                                  const isClass =
+                                    aminoAcidData.charge.toLowerCase() ===
+                                    "neutral";
+                                  const isPolarity =
+                                    aminoAcidData.polarity.toLowerCase() ===
+                                    "polar";
+
+                                  if (isClass && isPolarity) {
+                                    return aminoAcidData?.name;
+                                  } else {
+                                    return null; // Return null for non-matching amino acids
+                                  }
+                                })
+                                .filter((name) => name) // Filter out null values
+                                .join(", ")}{" "}
+                              {/* Join names with comma */}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="p-4">Nonpolar</td>
+                            <td>
+                              {Object.entries(aminoAcidCountResult)
+                                .map(([aminoAcid, count]) => {
+                                  const aminoAcidData = codonMap.find(
+                                    (item) => item.abbreviation1 === aminoAcid
+                                  );
+                                  if (!aminoAcidData) return null;
+
+                                  const isClass =
+                                    aminoAcidData.charge.toLowerCase() ===
+                                    "neutral";
+                                  const isPolarity =
+                                    aminoAcidData.polarity.toLowerCase() ===
+                                    "nonpolar";
+
+                                  if (isClass && isPolarity) {
+                                    return aminoAcidData?.name;
+                                  } else {
+                                    return null; // Return null for non-matching amino acids
+                                  }
+                                })
+                                .filter((name) => name) // Filter out null values
+                                .join(", ")}{" "}
+                              {/* Join names with comma */}
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Aliphatic</th>
+                            <td className="p-4">Nonpolar</td>
+                            <td>
+                              {Object.entries(aminoAcidCountResult)
+                                .map(([aminoAcid, count]) => {
+                                  const aminoAcidData = codonMap.find(
+                                    (item) => item.abbreviation1 === aminoAcid
+                                  );
+                                  if (!aminoAcidData)
+                                    return (
+                                      <p key={aminoAcid}>Tidak Tersedia</p>
+                                    );
+
+                                  const isClass =
+                                    aminoAcidData.charge.toLowerCase() ===
+                                    "aliphatic";
+
+                                  if (isClass) {
+                                    const aminoAcidName = aminoAcidData?.name;
+                                    return aminoAcidName ? aminoAcidName : "";
+                                  }
+
+                                  return ""; // Return empty string for non-acidic amino acids
+                                })
+                                .filter((name) => name) // Filter out empty strings
+                                .join(", ")}{" "}
+                              {/* Join names with comma */}
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Aromatic</th>
+                            <td className="p-4">Nonpolar</td>
+                            <td>
+                              {Object.entries(aminoAcidCountResult)
+                                .map(([aminoAcid, count]) => {
+                                  const aminoAcidData = codonMap.find(
+                                    (item) => item.abbreviation1 === aminoAcid
+                                  );
+                                  if (!aminoAcidData)
+                                    return (
+                                      <p key={aminoAcid}>Tidak Tersedia</p>
+                                    );
+
+                                  const isClass =
+                                    aminoAcidData.charge.toLowerCase() ===
+                                    "aromatic";
+
+                                  if (isClass) {
+                                    const aminoAcidName = aminoAcidData?.name;
+                                    return aminoAcidName ? aminoAcidName : "";
+                                  }
+
+                                  return ""; // Return empty string for non-acidic amino acids
+                                })
+                                .filter((name) => name) // Filter out empty strings
+                                .join(", ")}{" "}
+                              {/* Join names with comma */}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="flex flex-col border-2 p-5 rounded-xl mt-5 relative overflow-x-auto ">
-                <h1 className="font-bold text-[30px]">Tabel Klasifikasi:</h1>
-                <div>
-                  <table className="w-full divide-y divide-gray-200 rounded-xl">
-                    <thead className="bg-[#8884d8]">
-                      <tr>
-                        <th className="text-white p-4">Klasifikasi</th>
-                        <th className="text-white p-4">
-                          Polaritas (Polar/Nonpolar)
-                        </th>
-                        <th className="text-white p-4">Nama Asam Amino</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      <tr>
-                        <th>Acidic</th>
-                        <td className="p-4">Polar</td>
-                        <td>
-                          {Object.entries(aminoAcidCountResult)
-                            .map(([aminoAcid, count]) => {
-                              const aminoAcidData = codonMap.find(
-                                (item) => item.abbreviation1 === aminoAcid
-                              );
-                              if (!aminoAcidData)
-                                return <p key={aminoAcid}>Tidak Tersedia</p>;
-
-                              const isClass =
-                                aminoAcidData.charge.toLowerCase() === "acidic";
-
-                              if (isClass) {
-                                const aminoAcidName = aminoAcidData?.name;
-                                return aminoAcidName ? aminoAcidName : "";
-                              }
-
-                              return ""; // Return empty string for non-acidic amino acids
-                            })
-                            .filter((name) => name) // Filter out empty strings
-                            .join(", ")}{" "}
-                          {/* Join names with comma */}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>Basic</th>
-                        <td className="p-4">Polar</td>
-                        <td>
-                          {Object.entries(aminoAcidCountResult)
-                            .map(([aminoAcid, count]) => {
-                              const aminoAcidData = codonMap.find(
-                                (item) => item.abbreviation1 === aminoAcid
-                              );
-                              if (!aminoAcidData)
-                                return <p key={aminoAcid}>Tidak Tersedia</p>;
-
-                              const isClass =
-                                aminoAcidData.charge.toLowerCase() === "basic";
-
-                              if (isClass) {
-                                const aminoAcidName = aminoAcidData?.name;
-                                return aminoAcidName ? aminoAcidName : "";
-                              }
-
-                              return ""; // Return empty string for non-acidic amino acids
-                            })
-                            .filter((name) => name) // Filter out empty strings
-                            .join(", ")}{" "}
-                          {/* Join names with comma */}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th rowSpan={2}>Neutral</th>
-                        <td className="p-4">Polar</td>
-                        <td>
-                          {Object.entries(aminoAcidCountResult)
-                            .map(([aminoAcid, count]) => {
-                              const aminoAcidData = codonMap.find(
-                                (item) => item.abbreviation1 === aminoAcid
-                              );
-                              if (!aminoAcidData) return null;
-
-                              const isClass =
-                                aminoAcidData.charge.toLowerCase() ===
-                                "neutral";
-                              const isPolarity =
-                                aminoAcidData.polarity.toLowerCase() ===
-                                "polar";
-
-                              if (isClass && isPolarity) {
-                                return aminoAcidData?.name;
-                              } else {
-                                return null; // Return null for non-matching amino acids
-                              }
-                            })
-                            .filter((name) => name) // Filter out null values
-                            .join(", ")}{" "}
-                          {/* Join names with comma */}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="p-4">Nonpolar</td>
-                        <td>
-                          {Object.entries(aminoAcidCountResult)
-                            .map(([aminoAcid, count]) => {
-                              const aminoAcidData = codonMap.find(
-                                (item) => item.abbreviation1 === aminoAcid
-                              );
-                              if (!aminoAcidData) return null;
-
-                              const isClass =
-                                aminoAcidData.charge.toLowerCase() ===
-                                "neutral";
-                              const isPolarity =
-                                aminoAcidData.polarity.toLowerCase() ===
-                                "nonpolar";
-
-                              if (isClass && isPolarity) {
-                                return aminoAcidData?.name;
-                              } else {
-                                return null; // Return null for non-matching amino acids
-                              }
-                            })
-                            .filter((name) => name) // Filter out null values
-                            .join(", ")}{" "}
-                          {/* Join names with comma */}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>Aliphatic</th>
-                        <td className="p-4">Nonpolar</td>
-                        <td>
-                          {Object.entries(aminoAcidCountResult)
-                            .map(([aminoAcid, count]) => {
-                              const aminoAcidData = codonMap.find(
-                                (item) => item.abbreviation1 === aminoAcid
-                              );
-                              if (!aminoAcidData)
-                                return <p key={aminoAcid}>Tidak Tersedia</p>;
-
-                              const isClass =
-                                aminoAcidData.charge.toLowerCase() ===
-                                "aliphatic";
-
-                              if (isClass) {
-                                const aminoAcidName = aminoAcidData?.name;
-                                return aminoAcidName ? aminoAcidName : "";
-                              }
-
-                              return ""; // Return empty string for non-acidic amino acids
-                            })
-                            .filter((name) => name) // Filter out empty strings
-                            .join(", ")}{" "}
-                          {/* Join names with comma */}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>Aromatic</th>
-                        <td className="p-4">Nonpolar</td>
-                        <td>
-                          {Object.entries(aminoAcidCountResult)
-                            .map(([aminoAcid, count]) => {
-                              const aminoAcidData = codonMap.find(
-                                (item) => item.abbreviation1 === aminoAcid
-                              );
-                              if (!aminoAcidData)
-                                return <p key={aminoAcid}>Tidak Tersedia</p>;
-
-                              const isClass =
-                                aminoAcidData.charge.toLowerCase() ===
-                                "aromatic";
-
-                              if (isClass) {
-                                const aminoAcidName = aminoAcidData?.name;
-                                return aminoAcidName ? aminoAcidName : "";
-                              }
-
-                              return ""; // Return empty string for non-acidic amino acids
-                            })
-                            .filter((name) => name) // Filter out empty strings
-                            .join(", ")}{" "}
-                          {/* Join names with comma */}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <TableDetails querySequence={dnaSequence} />
+                  <TableDetails querySequence={dnaSequence} />
+                </>
+              )}
+              {analyzeTab === "Enzyme" && (
+                <EnzymeAnalysis querySequence={dnaSequence} />
+              )}
             </>
           )}
         </div>

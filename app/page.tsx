@@ -818,7 +818,7 @@ const CodonConverter: React.FC = () => {
         >
           <div className="text-justify h-screen flex flex-col justify-center items-center">
             <h1 className="font-bold text-[35px] text-center">
-              DNA/RNA to Amino Acid Sequence Converter
+              DNA/RNA Sequence Converter
             </h1>
             <label className="my-5">
               <p className="text-center font-semibold">Choose DNA Code:</p>

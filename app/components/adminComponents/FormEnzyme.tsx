@@ -73,7 +73,10 @@ const FormEnzyme = () => {
             className="border"
           />
         </div>
-        <button className="border" type="submit">
+        <button
+          className="rounded-md h-[40px] w-full my-3 bg-[#098c28] text-white"
+          type="submit"
+        >
           Add Enzyme
         </button>
       </form>

@@ -189,7 +189,7 @@ const CodonConverter: React.FC = () => {
         }
       } else {
         // Display a warning toast
-        toast.warn("Mohon untuk memilih tipe kode DNA terlebih dahulu.");
+        toast.warn("Please select a DNA code type first.");
       }
     },
     [selectedDatabase]
@@ -299,7 +299,7 @@ const CodonConverter: React.FC = () => {
   const handleConvertClick = () => {
     if (selectedDatabase === "") {
       // Display a warning toast
-      toast.warn("Mohon untuk memilih tipe kode DNA terlebih dahulu.");
+      toast.warn("Please select a DNA code type first.");
       return;
     }
 
@@ -311,7 +311,7 @@ const CodonConverter: React.FC = () => {
       setResult(null);
       setAminoAcidCountResult(null);
 
-      toast.warn("Mohon berikan urutan yang sesuai!");
+      toast.warn("Please provide appropriate order!");
       setIsLazyLoading(false); // Reset lazy loading state in case of an error
       return;
     }
@@ -342,7 +342,7 @@ const CodonConverter: React.FC = () => {
     setResult(
       <div className="group">
         <p className="font-bold text-[30px] overflow-hidden line-clamp-3 group-hover:line-clamp-none text-justify">
-          Urutan Asam Amino:
+          Amino Acid Sequence:
         </p>
         <p className=" break-words  mb-5">{aminoAcidSequence}</p>
       </div>
@@ -467,7 +467,7 @@ const CodonConverter: React.FC = () => {
                   />
                 </path>
               </svg>
-              <p>Mohon tunggu sebentar...</p>
+              <p>Please wait...</p>
             </div>
           ) : (
             <>
@@ -489,9 +489,9 @@ const CodonConverter: React.FC = () => {
                   </svg>
                 </button>
                 <h1 className="font-bold text-[35px] text-center  ">
-                  Hasil Konversi ({selectedContent})
+                  Conversion Results ({selectedContent})
                 </h1>
-                <div className="flex justify-center gap-5 mb-5">
+                {/* <div className="flex justify-center gap-5 mb-5">
                   <button
                     onClick={() => setAnalyzeTab("AminoAcid")}
                     className="border-2 w-[220px] rounded-[5px] bg-[#8884d8] text-[18px]  text-white"
@@ -504,14 +504,14 @@ const CodonConverter: React.FC = () => {
                   >
                     Analisis Enzim
                   </button>
-                </div>
+                </div> */}
               </div>
 
               {analyzeTab === "AminoAcid" && (
                 <>
                   <div className="lg:flex">
                     <div className="border-2 p-5 rounded-xl lg:w-1/2 lg:me-5">
-                      <h2 className="font-bold text-[30px]">Tinjauan</h2>
+                      <h2 className="font-bold text-[30px]">Overview</h2>
                       <ResponsiveContainer height={400}>
                         <BarChart
                           data={Object.entries(aminoAcidCountResult).map(
@@ -570,14 +570,14 @@ const CodonConverter: React.FC = () => {
                       </ResponsiveContainer>
                       <div>
                         <p className=" mt-5 font-bold text-[15px]">
-                          Keterangan:
+                          Information:
                         </p>
                         <ul className="list-disc list-inside ">
                           <li className=" font-semibold">
-                            Total Asam Amino: {totalAminoAcids} Asam Amino
+                           Total of Amino Acid: {totalAminoAcids} Amino Acids
                           </li>
                           <li className="font-semibold">
-                            Total Jenis Asam Amino: {totalAminoAcidTypes} Jenis
+                           Total of Amino Acid Type: {totalAminoAcidTypes} Types
                           </li>
                         </ul>
                       </div>
@@ -586,7 +586,7 @@ const CodonConverter: React.FC = () => {
                       <div className=" p-5 border-2 rounded-xl ">
                         {result}
                         <h2 className=" font-bold text-[30px]">
-                          Tentang Asam Amino:
+                         About Amino Acids:
                         </h2>
                         <Slider {...settings}>
                           {Object.keys(aminoAcidCountResult).map(
@@ -604,17 +604,17 @@ const CodonConverter: React.FC = () => {
                   </div>
                   <div className="flex flex-col border-2 p-5 rounded-xl mt-5 relative overflow-x-auto ">
                     <h1 className="font-bold text-[30px]">
-                      Tabel Klasifikasi:
+                      Classification Table:
                     </h1>
                     <div>
                       <table className="w-full divide-y divide-gray-200 rounded-xl">
                         <thead className="bg-[#8884d8]">
                           <tr>
-                            <th className="text-white p-4">Klasifikasi</th>
+                            <th className="text-white p-4">Classification</th>
                             <th className="text-white p-4">
-                              Polaritas (Polar/Nonpolar)
+                              Polarity (Polar/Nonpolar)
                             </th>
-                            <th className="text-white p-4">Nama Asam Amino</th>
+                            <th className="text-white p-4">Amino Acid Name</th>
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -629,7 +629,7 @@ const CodonConverter: React.FC = () => {
                                   );
                                   if (!aminoAcidData)
                                     return (
-                                      <p key={aminoAcid}>Tidak Tersedia</p>
+                                      <p key={aminoAcid}>Not Available</p>
                                     );
 
                                   const isClass =
@@ -659,7 +659,7 @@ const CodonConverter: React.FC = () => {
                                   );
                                   if (!aminoAcidData)
                                     return (
-                                      <p key={aminoAcid}>Tidak Tersedia</p>
+                                      <p key={aminoAcid}>Not Available</p>
                                     );
 
                                   const isClass =
@@ -746,7 +746,7 @@ const CodonConverter: React.FC = () => {
                                   );
                                   if (!aminoAcidData)
                                     return (
-                                      <p key={aminoAcid}>Tidak Tersedia</p>
+                                      <p key={aminoAcid}>Not Available</p>
                                     );
 
                                   const isClass =
@@ -776,7 +776,7 @@ const CodonConverter: React.FC = () => {
                                   );
                                   if (!aminoAcidData)
                                     return (
-                                      <p key={aminoAcid}>Tidak Tersedia</p>
+                                      <p key={aminoAcid}>Not Available</p>
                                     );
 
                                   const isClass =
@@ -818,17 +818,17 @@ const CodonConverter: React.FC = () => {
         >
           <div className="text-justify h-screen flex flex-col justify-center items-center">
             <h1 className="font-bold text-[35px] text-center">
-              Konverter Urutan DNA/RNA
+              DNA/RNA to Amino Acid Sequence Converter
             </h1>
             <label className="my-5">
-              <p className="text-center font-semibold">Pilih Kode DNA:</p>
+              <p className="text-center font-semibold">Choose DNA Code:</p>
               <select
                 value={selectedDatabase}
                 onChange={handleDatabaseChange}
                 className="border rounded-xl h-[40px] px-2 w-[400px]"
               >
-                {showChooseOption && <option value="">Pilih Tipe Kode</option>}
-                <optgroup label="Kode Mitokondria">
+                {showChooseOption && <option value="">Select Code Type:</option>}
+                <optgroup label="Mitochondrial Code">
                   <option value="vertebrateMitochondrial">
                     The Vertebrate Mitochondrial Code
                   </option>
@@ -867,7 +867,7 @@ const CodonConverter: React.FC = () => {
                     Cephalodiscidae Mitochondrial UAA-Tyr Code
                   </option>
                 </optgroup>
-                <optgroup label="Kode Inti">
+                <optgroup label="Nuclear Code">
                   <option value="ciliateDasycladaceanHexamitaNuclear">
                     The Ciliate, Dasycladacean and Hexamita Nuclear Code
                   </option>
@@ -899,7 +899,7 @@ const CodonConverter: React.FC = () => {
                     Blastocrithidia Nuclear Code
                   </option>
                 </optgroup>
-                <optgroup label="Lainnya">
+                <optgroup label="Others">
                   <option value="standardCode">The Standard Code</option>
                   <option value="bacterialArchaealPlantPlastid">
                     The Bacterial, Archaeal and Plant Plastid Code
@@ -914,7 +914,7 @@ const CodonConverter: React.FC = () => {
               </select>
             </label>
             <div className="flex flex-col">
-              <label className="font-semibold">Pilih Tipe Urutan:</label>
+              <label className="font-semibold">Choose Sequence Type:</label>
               <label className="flex">
                 <input
                   type="radio"
@@ -923,7 +923,7 @@ const CodonConverter: React.FC = () => {
                   onChange={handleRadioChange}
                   className="me-1"
                 />
-                DNA (A, C, T, dan G)
+                DNA (A, C, T, and G)
               </label>
               <label className="flex">
                 <input
@@ -933,13 +933,13 @@ const CodonConverter: React.FC = () => {
                   checked={!isDNA}
                   onChange={handleRadioChange}
                 />
-                RNA (A, C, U, dan G)
+                RNA (A, C, U, and G)
               </label>
             </div>
             {showSpecificButton && (
               <div className="flex flex-col my-5">
                 <label className="font-semibold">
-                  Pilih Opsi Kodon Pemberhenti:
+                 Choose Stop Codon Type:
                 </label>
                 <label className="flex">
                   <input
@@ -949,7 +949,7 @@ const CodonConverter: React.FC = () => {
                     onChange={handleTerminatorRadioChange}
                     className="me-1"
                   />
-                  Kodon Pemberhenti Yang Spesifik
+                  Specific Stop Codon
                 </label>
                 <label className="flex">
                   <input
@@ -959,7 +959,7 @@ const CodonConverter: React.FC = () => {
                     checked={useTerminatorAsStopCodon} // jika menggunakan terminator sebagai stop codon
                     onChange={handleTerminatorRadioChange}
                   />
-                  Pemberhenti Kodon
+                  Stop Codon
                 </label>
               </div>
             )}
@@ -971,7 +971,7 @@ const CodonConverter: React.FC = () => {
                 className="inline-flex rounded-md text-white   bg-[#8884d8] h-[80px] w-[300px] font-semibold text-[25px] text-center justify-center items-center hover:bg-[#5b58a1] "
                 onClick={handleToastClick}
               >
-                Pilih TXT File
+                Choose TXT File
               </label>
               {selectedDatabase ? (
                 <input
@@ -986,8 +986,8 @@ const CodonConverter: React.FC = () => {
               )}
               <p className="mt-5 text-center">
                 {isDragActive
-                  ? "Letakan file di sini"
-                  : "Atau letakan file di sini"}
+                  ? "Drop the file here ..."
+                  : "Or drag and drop a TXT file here"}
               </p>
             </div>
           </div>

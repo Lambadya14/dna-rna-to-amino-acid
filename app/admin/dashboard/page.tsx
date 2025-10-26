@@ -57,12 +57,7 @@ const InputForm: React.FC = () => {
   const [charge, setCharge] = useState<string>("");
   const [polarity, setPolarity] = useState<string>("");
 
-  const [newEnzyme, setNewEnzyme] = useState({
-    name: "",
-    sequnece3: "",
-    sequence5: "",
-    overhang: "",
-  });
+
 
   const handleChargeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;

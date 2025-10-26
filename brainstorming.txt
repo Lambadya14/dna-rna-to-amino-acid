@@ -1,0 +1,11 @@
+Keperluan di dalam Aplikasi
+1. Perbaiki Logika Analisis Restriksi (N_5)
+2. Tambahkan Modals untuk menghapus data enzim
+3. 
+4. Perbaiki Login Admin (Bisa dikerjakan lain waktu)
+5. Tampilan berpindah antara DNA dan Enzyme pada Dashboard Admin
+6. urutkan nama enzim
+7. pencari nama enzim
+8. pohon filogenik
+9. upload file fasta
+10. npm

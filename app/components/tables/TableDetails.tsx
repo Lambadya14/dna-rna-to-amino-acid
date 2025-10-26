@@ -242,10 +242,9 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
 
   return (
     <div className="relative overflow-x-auto   border-2 p-5 rounded-xl mt-5">
-      {blastResult && (
+      {blastResult ?(
         <>
-          {" "}
-          <h2 className="font-bold text-[30px]">Table Identifikasi</h2>
+          <h2 className="font-bold text-[30px]">BLAST Identification Results Table</h2>
           <div className="flex justify-start items-center my-2">
             <span className="mr-2">Show per page:</span>
             {renderPerPageOptions()}
@@ -319,6 +318,8 @@ const TableDetails: React.FC<TableDetailsProps> = ({ querySequence }) => {
           </table>
           <div className="flex justify-center mt-4">{renderPageNumbers()}</div>
         </>
+      ): (
+        <p className="text-center"><i>Loading BLAST results...</i></p>
       )}
     </div>
   );

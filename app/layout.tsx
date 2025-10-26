@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DNA/RNA Coverter",
-  description: "Converter",
+  title: "DNA/RNA Analysis",
+  description: "Analysis",
 };
 
 export default function RootLayout({
